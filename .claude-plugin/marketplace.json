@@ -1,0 +1,16 @@
+{
+  "name": "proyecto-loop-local",
+  "owner": {
+    "name": "Gabriel"
+  },
+  "metadata": {
+    "description": "Marketplace local de un solo plugin para el arsenal proyecto-loop."
+  },
+  "plugins": [
+    {
+      "name": "proyecto-loop",
+      "source": "./",
+      "description": "Arsenal de skills estilo loop, mobile-first, para arrancar y avanzar proyectos nuevos de forma iterativa y reanudable."
+    }
+  ]
+}

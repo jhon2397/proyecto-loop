@@ -1,0 +1,9 @@
+{
+  "name": "proyecto-loop",
+  "description": "Arsenal de skills encadenadas estilo loop (inicio → análisis → plan → ejecución → revisión → test → corrección) para arrancar proyectos nuevos. Mobile-first (Expo/React Native), con capa web. Estado reanudable en .loop/.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Gabriel"
+  },
+  "license": "MIT"
+}

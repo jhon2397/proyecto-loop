@@ -21,14 +21,22 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 
 ## 1. Implementar
 - Sigue las **convenciones del repo** (mira archivos vecinos: estilo, naming, imports).
-- **Mobile (RN/Expo, default):** aplica React Native Skills (FlashList, Reanimated,
-  performance) y, si la tarea es de UI con motion, Emil Kowalski (traducido a
-  Reanimated). La **dirección estética** está fijada en `state.md` (`aesthetic`):
-  respétala; consulta UI-UX-PRO-MAX solo para paletas/tipografía, no para decidir.
-- **Web:** Frontend Design (dirección) + Taste (parámetros) + Emil (motion).
-- Cumple el criterio **done** de la tarea y deja el código en estado testeable.
-- Pasa los datos a través de la **capa adaptadora** de backend (no llames a Supabase
-  directo desde el dominio). Nada de pagos/email hardcodeados (Tier 2 va tras interfaz).
+- Pasa los datos por la **capa adaptadora** de backend (no llames a Supabase directo
+  desde el dominio). Nada de pagos/email hardcodeados (Tier 2 va tras interfaz).
+- Cumple el criterio **done** y deja el código en estado testeable.
+
+### 1.1 ¿La tarea toca UI? → el diseño NO es opcional
+Si la tarea crea o modifica pantallas/componentes visibles, el diseño es parte del
+trabajo, no un extra. ANTES de codear la UI, **invoca de verdad** (con la herramienta
+Skill; no las menciones como texto) las skills de diseño:
+- **Reusá el design system** (`.loop/design-system.md` si existe + tokens del repo).
+  Nunca estilos ad-hoc por pantalla: tokens y componentes existentes primero.
+- **Web:** `frontend-design` (dirección) + `design-taste-frontend` (anti-template);
+  `ui-ux-pro-max` solo para paletas/tipografía; motion con `animate`.
+- **Mobile (RN/Expo):** `react-native-best-practices` (FlashList/perf) + `animate` (motion).
+- Respetá la `aesthetic` fijada en `state.md`: **una sola dirección**, sin mezclar 3 opiniones.
+- El criterio **done** de una tarea de UI incluye **calidad visual y consistencia con el
+  design system**, no solo compilar/pasar tests. Pantalla fea con tests verdes = **NO** está "done".
 
 ## 2. Sanity local
 - Corre lint + typecheck rápidos. Si fallan por algo que introdujiste, arréglalo

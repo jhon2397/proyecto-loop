@@ -39,6 +39,14 @@ Crea, de forma idempotente:
 - Para **mobile/Expo**: `app.json`/`app.config.ts`, navegación base, una pantalla de
   ejemplo. Usa las convenciones de React Native Skills si está disponible.
 
+## 2.5 Dirección estética (si el proyecto tiene UI)
+- Define la **dirección estética** invocando `frontend-design` (propósito, audiencia, tono)
+  y `design-taste-frontend` (anti-template); usa `ui-ux-pro-max` para paletas/tipografía.
+- No es "un color": tono, densidad, tipografía y principios. Guárdala **completa** en
+  `state.md` (`aesthetic`) para que no se reinvente en cada pantalla.
+- El **design system** en sí (tokens/componentes) NO se construye aquí: `plan-architect`
+  lo agenda como **primera tarea de UI** y se documenta en `.loop/design-system.md`.
+
 ## 3. Tier 1 de servicios (cablear desde el día 1 — barato y caro de retrofittear)
 - **Observabilidad → Sentry:** instala e inicializa (crash + performance) desde el
   primer commit. En Expo cuida source maps / symbolication de Hermes.
@@ -53,7 +61,8 @@ Crea, de forma idempotente:
   en su etapa). Si no puedes leer esa ruta, genera los archivos con el contenido
   equivalente.
 - Rellena `state.md`: meta (proyecto, platform, stack, autonomía=full-auto por
-  defecto, aesthetic si ya se definió) y pon **etapa = analisis**.
+  defecto, y la **dirección estética completa** en `aesthetic` si el proyecto tiene UI)
+  y pon **etapa = analisis**.
 - Rellena `stack.md` Tier 1 con Sentry/Supabase = activo; Tier 2 = diferido.
 - Commit atómico: `chore: scaffold inicial + tooling + tier1 + loop state`.
 

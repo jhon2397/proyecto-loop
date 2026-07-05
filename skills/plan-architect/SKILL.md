@@ -40,6 +40,13 @@ Copia `${CLAUDE_PLUGIN_ROOT}/templates/loop/plan.md` a `.loop/plan.md` y genera
 - Cada tarea: criterio **done** verificable, **tests** esperados, archivos estimados.
 - Granularidad: una tarea ≈ un commit revisable. Si algo no cabe en un commit, pártelo.
 - Cubre las historias de `analysis.md`; lo diferido va al backlog.
+- **Si el proyecto tiene UI:** la **primera tarea de UI** del plan debe ser **construir el
+  design system** (tokens, escala de espaciado, componentes base, estados) apoyada en
+  `design:design-system` + `frontend-design`; documentala en `.loop/design-system.md`.
+  Las tareas de pantallas **dependen** de ella (`depende_de`).
+- Para cada tarea de UI, el criterio **done** incluye **calidad visual + consistencia con
+  el design system**, y sus checks incluyen **crítica de diseño** (`design:design-critique`)
+  y a11y (`accesslint` / `web-design-guidelines`), no solo el comportamiento.
 
 ## 4. Cierre
 - Actualiza `state.md`: `plan.md = listo`, conteo de ADRs, **tarea_activa = T-001**,

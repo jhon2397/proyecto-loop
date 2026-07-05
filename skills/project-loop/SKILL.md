@@ -32,7 +32,7 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 | analisis | `requirements-analysis` | plan |
 | plan | `plan-architect` | ejecucion |
 | ejecucion | `code-exec` (siguiente tarea) | revision |
-| revision | `engineering:code-review` (+ a11y/Vercel según platform) | test |
+| revision | `engineering:code-review`; **si la tarea es de UI** también `design:design-critique` + `accesslint` + `web-design-guidelines` (web) / `react-native-best-practices` (mobile) → hallazgos a `review-log.md` | test |
 | test | correr la suite de la tarea (`engineering:testing-strategy` / runner) | correccion si rojo, si verde → cerrar tarea |
 | correccion | `fix-loop` | test (reverificar) |
 
@@ -42,13 +42,18 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 - Cuando una tarea queda **verde y sin hallazgos abiertos**: márcala `[x]` en
   `plan.md`, limpia `tarea_activa`, y toma la **siguiente** tarea pendiente
   (deps satisfechas) → vuelve a `ejecucion`.
-- **Revisión secuencial, no simultánea:** en web, corre Vercel guidelines y AccessLint
-  como pasos separados con output a `review-log.md`. En mobile, usa el auditor a11y de RN.
+- **Revisión secuencial, no simultánea:** corre cada revisor como paso separado con
+  output a `review-log.md`. En web: `web-design-guidelines` + `accesslint`. En mobile:
+  `react-native-best-practices` + auditoría a11y. Las tareas de UI suman `design:design-critique`.
 
-## 2. Estética (anti "demasiados cocineros")
-- La **dirección estética** se fija UNA vez en `state.md` (`aesthetic`). Frontend
-  Design manda; Taste solo ajusta parámetros; UI-UX-PRO-MAX es consulta. No dejes que
-  las 3 compitan en cada tarea.
+## 2. Estética y diseño (de primera clase, no incidental)
+- El **design system** se construye temprano (primera tarea de UI) y se documenta en
+  `.loop/design-system.md`. Toda pantalla lo reusa; **nada de estilos ad-hoc**.
+- La **dirección estética** se fija UNA vez en `state.md` (`aesthetic`): `frontend-design`
+  manda, `design-taste-frontend` ajusta parámetros, `ui-ux-pro-max` es consulta. No compiten por tarea.
+- En `code-exec`, las tareas de UI **invocan explícitamente** las skills de diseño y su
+  "done" exige **calidad visual**; en Revisión pasan `design:design-critique`.
+- Si te salteás esto, el loop produce UI funcional pero **plana**: el diseño es parte del "done".
 
 ## 3. Guardas anti-bucle infinito
 - Lleva la cuenta `iteracion` por tarea en `state.md`. Si una tarea no pasa a verde

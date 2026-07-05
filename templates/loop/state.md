@@ -7,7 +7,7 @@
 - **proyecto:** <nombre>
 - **platform:** mobile | web | full-stack | data        # 95% mobile por defecto
 - **stack:** <p.ej. Expo/React Native + Supabase>
-- **aesthetic:** <dirección estética fijada (Frontend Design); ver §10 del blueprint>
+- **aesthetic:** <dirección estética COMPLETA: tono, densidad, tipografía, principios (frontend-design + design-taste-frontend). No solo un color.>
 - **autonomía:** full-auto | checkpoint-tras-review
 
 ## Estado actual
@@ -21,6 +21,7 @@
 - analysis.md: pendiente | listo
 - plan.md: pendiente | listo
 - stack.md: pendiente | listo
+- design-system.md: pendiente | listo | n/a (sin UI)
 - adr/: <conteo de ADRs>
 - review-log.md: <conteo de hallazgos abiertos>
 

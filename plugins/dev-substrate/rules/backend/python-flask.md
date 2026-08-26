@@ -5,6 +5,9 @@ paths:
 
 # Python / Flask
 
+> Alternativa a `backend/python-fastapi.md`. **Nunca instales las dos**: matchean
+> los mismos archivos y se contradicen.
+
 - Follow the project's existing Python version, formatting, typing, and dependency conventions.
 - Keep HTTP concerns in routes/controllers and business rules in services/use cases when those layers exist.
 - Keep persistence logic in repositories/data-access modules when that pattern exists.

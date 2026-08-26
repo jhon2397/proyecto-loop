@@ -1,0 +1,6 @@
+api/rest.md
+backend/python-fastapi.md
+database/postgres.md
+devops/docker.md
+integrations/sap-business-one.md
+frontend/react-typescript.md

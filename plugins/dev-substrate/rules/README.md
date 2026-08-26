@@ -46,3 +46,21 @@ que son largas y solo importan dentro de sus directorios.
 `"**/*.{ts,tsx}"` expande correctamente. Verificado: una regla con tres grupos de
 llaves cargó con sus 16 globs ya expandidos. Las reglas de este catálogo que usan
 llaves (`rest.md`, `react-typescript.md`, `react-native.md`) no corren riesgo.
+
+## Reglas mutuamente excluyentes
+
+Algunas reglas cubren el mismo terreno con tecnologías distintas y matchean los
+mismos archivos. **Instalá una, nunca las dos:**
+
+| No convivir | Motivo |
+|-------------|--------|
+| `backend/python-flask.md` · `backend/python-fastapi.md` | los dos matchean `**/*.py` |
+| `database/mysql.md` · `database/postgres.md` | los dos matchean `**/*.sql` y migraciones |
+| `frontend/react-typescript.md` · `mobile/react-native.md` (en repo plano) | no se distinguen por ruta |
+
+## Sobre `domain/money-pyg.md`
+
+Codifica una **decisión de proyecto** (guaraní entero, sin centavos), no una verdad
+universal. Un sistema de pagos que maneja moneda extranjera usa `NUMERIC` con escala,
+y esa también es una decisión correcta. Instalala solo donde esa decisión esté tomada;
+la parte universal —nunca `float` para dinero— ya está en las reglas de base de datos.

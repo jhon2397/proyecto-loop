@@ -6,6 +6,7 @@ description: >-
   "implementa T-00X", "avanza el plan", o invocada por project-loop. Es la etapa
   (4) Ejecución del arsenal proyecto-loop.
 effort: high
+context: fork
 allowed-tools: Bash(npm run *) Bash(npx tsc *) Bash(npx eslint *) Bash(git add *) Bash(git commit *) Bash(git status *)
 ---
 

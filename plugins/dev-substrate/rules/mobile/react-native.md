@@ -1,7 +1,10 @@
 ---
 paths:
-  - "mobile/**/*.{ts,tsx,js,jsx}"
-  - "apps/mobile/**/*.{ts,tsx,js,jsx}"
+  - "mobile/**/*.{ts,tsx}"
+  - "apps/mobile/**/*.{ts,tsx}"
+  - "/App.tsx"
+  - "/index.ts"
+  - "/app.config.{ts,js}"
 ---
 
 # React Native

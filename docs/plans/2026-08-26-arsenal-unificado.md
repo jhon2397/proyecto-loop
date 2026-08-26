@@ -1217,3 +1217,47 @@ Se dejan afuera a propósito, para que este plan cierre en algo que funcione:
 | `Read(**/.env)` bloquea un `.env.example` que necesitás | Las deny van enumeradas, no con comodín `.env*` |
 | Cambios en `~/.claude/` sin versionar se pierden | Tarea 0 se espeja en `dev-substrate/templates/` |
 | Un agente de `dev-substrate` no resuelve desde una skill de `proyecto-loop` | Tarea 9 paso 5: fallback sin fork, conservando modelo y restricción de herramientas |
+
+---
+
+## Estado de ejecución (2026-08-26)
+
+| Tarea | Estado |
+|---|---|
+| T0 · regla de ingeniería de usuario | hecha y verificada — quedó **sin `paths`** (ver abajo) |
+| T1 · frontmatter de las 6 skills | hecha · proyecto-loop 0.3.1 |
+| T2 · `context: fork` en `code-exec` | hecha y verificada en la app (`completed (forked execution)`) |
+| T3 · esqueleto + 3 subagentes | hecha |
+| T4 · librería de reglas + presets | hecha, y ampliada en el piloto (FastAPI, Postgres, preset sap-pagos) |
+| T5 · plantillas con permisos y hooks | hecha |
+| T6 · skills del sustrato | hecha |
+| T7 · publicación en el marketplace | hecha · dos plugins, sin restructurar (no hizo falta el fallback) |
+| T8 · `loop-rules` | hecha · proyecto-loop 0.4.0 |
+| T9 · `loop-verify` + `loop-security` | hecha |
+| T10 · piloto en repo real | **hecha** — ver abajo |
+
+### Lo que cambió respecto de lo planificado
+
+**Las reglas con `paths` se disparan con la herramienta `Read`, no con lecturas por
+Bash** (`cat`, `head`, `sed`). Verificado con el hook `InstructionsLoaded` sobre dos
+sesiones. En modo auto, que prefiere Bash para leer, una regla con `paths` puede no
+activarse en una lectura rápida; sí se activa cuando Claude va a editar. Por eso la
+regla de ingeniería de T0 quedó sin `paths`. La expansión de llaves en globs funciona.
+
+**Los agentes de plugin se referencian con namespace** (`dev-substrate:security-reviewer`).
+El nombre pelado no resuelve. `loop-security` ya lo usa así.
+
+**El piloto obligó a ampliar la librería.** El catálogo heredado cubría Flask y MySQL;
+el repo real usa FastAPI + Postgres, así que el preset le habría instalado tres reglas
+equivocadas. Se agregaron `backend/python-fastapi.md` y `database/postgres.md`, escritas
+leyendo código en producción.
+
+**Hallazgo del piloto que corrigió la skill:** una regla de permiso matchea el texto del
+comando tipeado, no lo que ese comando ejecuta. Un target de `Makefile` que envuelve una
+migración pasaba sin preguntar aunque existiera un `ask` sobre la herramienta de adentro.
+`substrate-init` ahora obliga a revisar wrappers (v0.2.1).
+
+### Sigue pendiente
+
+`loop-ship` (deploy), `loop-adopt`, `loop-status`, evaluar `sandbox`, y limpiar la copia
+vieja de `~/.claude/plugins/proyecto-loop` junto con su referencia en `settings.json`.

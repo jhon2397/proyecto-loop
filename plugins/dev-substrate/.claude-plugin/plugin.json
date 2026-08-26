@@ -1,7 +1,7 @@
 {
   "name": "dev-substrate",
   "description": "Sustrato de convenciones para repos existentes: librería de reglas con paths (SAP B1, HANA, WMS, Docker, REST, React, RN, Python), subagentes de alto razonamiento, permisos endurecidos y hooks de calidad. Complementa a proyecto-loop, que cubre proyectos nuevos.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Gabriel"
   },

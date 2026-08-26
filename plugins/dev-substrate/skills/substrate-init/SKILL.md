@@ -59,6 +59,16 @@ adaptalo:
 - si el repo tiene typecheck, agregá el hook `Stop`:
   `{ "type": "command", "command": "<comando real> || exit 2" }`.
 
+**Cuidado con los wrappers.** Una regla de permiso matchea el **texto del comando
+tipeado**, no lo que ese comando termina ejecutando. Si el repo envuelve una operación
+riesgosa en un `make`, un script de npm o un `.sh` —por ejemplo un target `migrate` que
+por dentro corre `alembic upgrade head`— la regla tiene que cubrir **el wrapper**:
+`Bash(*make migrate*)`. Cubrir solo la herramienta de adentro deja la puerta abierta.
+
+Revisá el `Makefile`, los `scripts` del `package.json` y los `.sh` del repo buscando
+wrappers de: migraciones, borrado de volúmenes o datos, despliegue, rotación de
+credenciales y aprovisionamiento.
+
 ## 5. Cierre
 Informá en una lista breve: qué se creó, qué reglas se instalaron y por qué, qué
 reglas del catálogo se descartaron y por qué, y qué queda por completar a mano en el

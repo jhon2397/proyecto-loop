@@ -34,7 +34,8 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 |--------------|--------------------|---------------------|
 | inicio | `project-init` | analisis |
 | analisis | `requirements-analysis` | plan |
-| plan | `plan-architect` | ejecucion |
+| plan | `plan-architect` | reglas |
+| reglas | `loop-rules` (saltear si `.claude/rules/` ya tiene contenido) | ejecucion |
 | ejecucion | `code-exec` (siguiente tarea) | revision |
 | revision | `engineering:code-review`; **si la tarea es de UI** también `design:design-critique` + `accesslint` + `web-design-guidelines` (web) / `react-native-best-practices` (mobile) → hallazgos a `review-log.md` | test |
 | test | correr la suite de la tarea (`engineering:testing-strategy` / runner) | correccion si rojo, si verde → cerrar tarea |

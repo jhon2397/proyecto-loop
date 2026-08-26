@@ -53,4 +53,5 @@ Copia `${CLAUDE_PLUGIN_ROOT}/templates/loop/plan.md` a `.loop/plan.md` y genera
 ## 4. Cierre
 - Actualiza `state.md`: `plan.md = listo`, conteo de ADRs, **tarea_activa = T-001**,
   **etapa = ejecucion**, bitácora.
-- Sugiere la siguiente skill: `code-exec` (o devuelve control a `project-loop`).
+- Sugiere la siguiente skill: `loop-rules` (una sola vez, para instalar las
+  convenciones del stack) y después `code-exec`. Si corre `project-loop`, devuelve control.

@@ -6,6 +6,8 @@ description: >-
   registra decisiones como ADRs y elige vendors por slot de servicio. Trigger tras
   requirements-analysis o "arma el plan", "diseña la arquitectura", "desglosa en tareas".
   Es la etapa (3) del arsenal proyecto-loop.
+model: opus
+effort: high
 ---
 
 # plan-architect — Etapa (3) Plan

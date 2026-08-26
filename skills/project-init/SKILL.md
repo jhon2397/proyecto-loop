@@ -6,6 +6,8 @@ description: >-
   "scaffold", "arranca repo", "crea la app". Crea estructura, tooling, CI base,
   cablea Tier 1 (Sentry + adaptador de backend Supabase) y arranca el mecanismo
   .loop/. Es la etapa (1) del arsenal proyecto-loop.
+argument-hint: [nombre-del-proyecto]
+allowed-tools: Bash(git init) Bash(git add *) Bash(git commit *) Bash(npx create-expo-app *) Bash(npm install *) Bash(npm run *)
 ---
 
 # project-init — Etapa (1) Inicio

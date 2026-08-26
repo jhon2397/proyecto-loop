@@ -5,6 +5,8 @@ description: >-
   restricciones, supuestos, riesgos y preguntas abiertas. Trigger tras
   project-init o cuando el usuario dice "analiza estos requerimientos",
   "qué necesitamos", "desglosa el alcance". Es la etapa (2) del arsenal proyecto-loop.
+model: opus
+effort: high
 ---
 
 # requirements-analysis — Etapa (2) Análisis

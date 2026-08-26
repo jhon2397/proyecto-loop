@@ -6,6 +6,7 @@ description: >-
   re-dispara el test. Trigger cuando una revisión deja hallazgos o los tests están
   en rojo, o "corrige los hallazgos", "arregla el test". Es la etapa (6) Corrección
   del arsenal proyecto-loop.
+effort: high
 ---
 
 # fix-loop — Etapa (6) Corrección

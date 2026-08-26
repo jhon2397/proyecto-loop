@@ -5,6 +5,8 @@ description: >-
   repo y hace un commit atómico. Trigger con "ejecuta la siguiente tarea",
   "implementa T-00X", "avanza el plan", o invocada por project-loop. Es la etapa
   (4) Ejecución del arsenal proyecto-loop.
+effort: high
+allowed-tools: Bash(npm run *) Bash(npx tsc *) Bash(npx eslint *) Bash(git add *) Bash(git commit *) Bash(git status *)
 ---
 
 # code-exec — Etapa (4) Ejecución

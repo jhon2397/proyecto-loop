@@ -4,13 +4,18 @@
     "name": "Gabriel"
   },
   "metadata": {
-    "description": "Marketplace local de un solo plugin para el arsenal proyecto-loop."
+    "description": "Marketplace del arsenal: proyecto-loop (proyectos nuevos) + dev-substrate (repos existentes)."
   },
   "plugins": [
     {
       "name": "proyecto-loop",
       "source": "./",
       "description": "Arsenal de skills estilo loop, mobile-first, para arrancar y avanzar proyectos nuevos de forma iterativa y reanudable."
+    },
+    {
+      "name": "dev-substrate",
+      "source": "./plugins/dev-substrate",
+      "description": "Sustrato para repos existentes: reglas con paths (SAP B1, HANA, WMS, Docker, REST, React, RN, Python), subagentes de alto razonamiento, permisos endurecidos y hooks."
     }
   ]
 }

@@ -6,7 +6,7 @@ description: >-
   hasta agotar el plan. Full-auto: para solo al fallar o al terminar. Trigger con
   "corre el loop", "automatiza el ciclo", "sigue con el proyecto", "avanza solo".
 argument-hint: [ruta-del-proyecto]
-version: 0.3.0
+version: 0.4.0
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---
@@ -38,7 +38,8 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 | reglas | `loop-rules` (saltear si `.claude/rules/` ya tiene contenido) | ejecucion |
 | ejecucion | `code-exec` (siguiente tarea) | revision |
 | revision | `engineering:code-review`; **si la tarea es de UI** también `design:design-critique` + `accesslint` + `web-design-guidelines` (web) / `react-native-best-practices` (mobile) → hallazgos a `review-log.md` | test |
-| test | correr la suite de la tarea (`engineering:testing-strategy` / runner) | correccion si rojo, si verde → cerrar tarea |
+| test | `loop-verify` | correccion si rojo · si verde y la tarea toca auth/tenant/dinero/secretos → seguridad · si no, cerrar tarea |
+| seguridad | `loop-security` | correccion si hay hallazgos, si no cerrar tarea |
 | correccion | `fix-loop` | test (reverificar) |
 
 ### Reglas del bucle interno (la clave del loop)

@@ -18,3 +18,12 @@
 
 ## Decisiones (enlazar a adr/)
 - <slot> → <vendor> · ADR-00X · motivo
+
+## Comandos del proyecto (contrato para loop-verify)
+| Acción | Comando |
+|--------|---------|
+| test (suite completa) | `<comando>` |
+| test (archivo/patrón) | `<comando> <patrón>` |
+| typecheck | `<comando>` |
+| lint | `<comando>` |
+| build | `<comando>` |

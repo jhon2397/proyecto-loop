@@ -1,11 +1,10 @@
----
-paths:
-  - "**/*.{ts,tsx,js,jsx,mjs,cjs}"
-  - "**/*.{py,sql,sh,rb,php}"
-  - "**/*.{java,kt,swift,go,rs}"
----
-
 # Ingeniería
+
+> Sin `paths` a propósito: es la base que debe regir toda edición de código.
+> Las reglas con `paths` solo se cargan cuando Claude abre un archivo con la
+> herramienta `Read`; en modo auto, que lee con `cat`, muchas veces no se disparan.
+> Para 38 líneas de base, la carga incondicional es más barata que el riesgo de
+> que no aplique.
 
 ## Prioridades
 Correctitud > simplicidad > mantenibilidad > seguridad > rendimiento.

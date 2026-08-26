@@ -23,3 +23,26 @@ si dos aplican, Claude puede seguir cualquiera.
 El caso conocido es `frontend/react-typescript.md` vs `mobile/react-native.md`.
 En monorepo se separan solos por directorio. **En un repo plano no se pueden
 distinguir por ruta**: ahí hay que elegir cuál instalar, no las dos.
+
+## Cuándo se dispara una regla con `paths` (verificado)
+
+Se dispara cuando Claude abre un archivo que matchea **con la herramienta `Read`**.
+Una lectura por Bash (`cat`, `head`, `sed`) **no** la activa.
+
+Verificado con el hook `InstructionsLoaded` sobre dos sesiones: la que leyó el
+archivo solo con `cat` no cargó ninguna regla; la que además usó `Read` cargó las
+tres que matcheaban, con `load_reason: path_glob_match` y los globs ya expandidos.
+
+Consecuencia práctica: **en modo auto**, que prefiere Bash para leer, una regla con
+`paths` puede no activarse en lecturas rápidas. Sí se activa en el caso que más
+importa —cuando Claude va a editar el archivo— porque ahí lo abre con `Read`.
+
+Criterio: si la regla es corta y debe regir siempre, no le pongas `paths` y aceptá
+el costo de contexto. Reservá `paths` para las reglas de dominio (SAP, HANA, WMS),
+que son largas y solo importan dentro de sus directorios.
+
+## Expansión de llaves: funciona
+
+`"**/*.{ts,tsx}"` expande correctamente. Verificado: una regla con tres grupos de
+llaves cargó con sus 16 globs ya expandidos. Las reglas de este catálogo que usan
+llaves (`rest.md`, `react-typescript.md`, `react-native.md`) no corren riesgo.

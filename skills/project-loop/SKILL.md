@@ -6,7 +6,7 @@ description: >-
   hasta agotar el plan. Full-auto: para solo al fallar o al terminar. Trigger con
   "corre el loop", "automatiza el ciclo", "sigue con el proyecto", "avanza solo".
 argument-hint: [ruta-del-proyecto]
-version: 0.4.0
+version: 0.5.0
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---
@@ -68,7 +68,9 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 
 ## 4. Cierre
 - Cuando no quedan tareas `[ ]` en `plan.md`: pon **etapa = entrega**, resume lo
-  hecho (tareas cerradas, ADRs, hallazgos resueltos) y **sugiere `deploy-checklist`**,
-  más `documentation` y `standup`/retro según corresponda.
+  hecho (tareas cerradas, ADRs, hallazgos resueltos) y **sugiere `deploy-checklist`**
+  y después `loop-ship`, más `documentation` y `standup`/retro según corresponda.
+- **`loop-ship` no la disparás vos.** Toca producción: la invoca una persona. El loop
+  llega hasta sugerirla.
 - Mantén la bitácora de `state.md` actualizada en cada transición para que el loop
   sea siempre reanudable.

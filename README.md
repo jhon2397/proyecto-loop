@@ -26,6 +26,9 @@ Native por defecto), con capa web.
 | 7 | `proyecto-loop:loop-security` | Seguridad | Revisa el diff si toca auth, tenant, dinero o secretos |
 | 8 | `proyecto-loop:fix-loop` | Corrección | Prioriza hallazgos, corrige, re-testea |
 | 9 | `proyecto-loop:project-loop` | Orquestador | Driver full-auto del ciclo completo |
+| 10 | `proyecto-loop:loop-ship` | Entrega | Despliegue al servidor. **Manual: toca producción** |
+| 11 | `proyecto-loop:loop-adopt` | Entrada brownfield | Reconstruye `.loop/` en un repo que ya existe |
+| 12 | `proyecto-loop:loop-status` | — | Lectura barata del estado (haiku, solo lectura) |
 
 Reusa del plugin `engineering`: `code-review` (revisión), `debug` (fix-loop),
 y `deploy-checklist`/`documentation`/`standup` al cierre. La etapa de test dejó de

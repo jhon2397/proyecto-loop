@@ -1261,3 +1261,43 @@ migración pasaba sin preguntar aunque existiera un `ask` sobre la herramienta d
 
 `loop-ship` (deploy), `loop-adopt`, `loop-status`, evaluar `sandbox`, y limpiar la copia
 vieja de `~/.claude/plugins/proyecto-loop` junto con su referencia en `settings.json`.
+
+---
+
+## Evaluación de `sandbox` (decidido: no, por ahora)
+
+El `sandbox` aísla los comandos de Bash a nivel del sistema operativo. Sería la única
+forma de cerrar el hueco que las `deny` de permisos no cubren: un script de Python o
+Node que abre un archivo de secretos por su cuenta pasa igual, porque las `deny` solo
+cubren las herramientas de archivo que Claude Code reconoce.
+
+**Aun así, hoy no conviene:**
+
+1. **`docker` es incompatible con el sandbox.** Hay que excluirlo con
+   `excludedCommands: ["docker *"]`, y Docker es el centro de todos los proyectos:
+   los composes locales, las bases de datos de desarrollo y el servidor entero. Se
+   estaría excluyendo justo la superficie más grande.
+2. **`jest` cuelga**: `watchman` tampoco es compatible; hay que correrlo con
+   `--no-watchman`.
+3. **El panel `/sandbox` es de terminal**, y acá se trabaja en la app de escritorio.
+   Habría que escribir la configuración a mano en `settings.json`, sin la validación
+   del panel.
+
+**Cuándo reevaluarlo:** si aparece trabajo autónomo largo sin supervisión (un loop
+corriendo solo mucho tiempo, o tareas programadas), donde el costo de configurarlo se
+amortiza. Y si se hace, hay que agregar `sandbox.credentials` para `~/.ssh` y `~/.aws`:
+la política de lectura por defecto **sí** permite leer esos archivos.
+
+Mientras tanto lo que protege son las `deny` de `settings.json` y que las operaciones
+riesgosas estén en `ask` — incluidos los wrappers de `Makefile`, que fue el hallazgo
+del piloto.
+
+## Limpieza de la copia huérfana
+
+`~/.claude/plugins/proyecto-loop` era la copia manual v0.1.0 anterior al marketplace.
+No la cargaba nadie —el plugin real vive en `~/.claude/plugins/cache/`— pero aparecía
+en los listados y confundía. Retirada.
+
+Queda una referencia inerte en `~/.claude/settings.json`: la clave `path` dentro de
+`extraKnownMarketplaces.proyecto-loop-local.source`, que ninguno de los otros tres
+marketplaces tiene. Hay que borrar esa línea a mano.

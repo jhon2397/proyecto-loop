@@ -4,7 +4,6 @@ description: >-
   Revisión de seguridad de la tarea activa, para tareas que tocan autenticación,
   autorización, aislamiento de tenant, dinero, secretos o entrada externa. Trigger
   vía project-loop cuando la tarea toca esas áreas, o "revisá la seguridad de esto".
-disable-model-invocation: true
 context: fork
 agent: dev-substrate:security-reviewer
 ---

@@ -6,7 +6,7 @@ description: >-
   hasta agotar el plan. Full-auto: para solo al fallar o al terminar. Trigger con
   "corre el loop", "automatiza el ciclo", "sigue con el proyecto", "avanza solo".
 argument-hint: [ruta-del-proyecto]
-version: 0.5.0
+version: 0.5.1
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---
@@ -60,6 +60,18 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 - En `code-exec`, las tareas de UI **invocan explícitamente** las skills de diseño y su
   "done" exige **calidad visual**; en Revisión pasan `design:design-critique`.
 - Si te salteás esto, el loop produce UI funcional pero **plana**: el diseño es parte del "done".
+
+## 2.b Qué puede disparar el orquestador
+Una skill que **vos encadenás** no puede llevar `disable-model-invocation: true`: ese
+flag la reserva para invocación humana y el harness te la va a rechazar en medio del
+ciclo. El flag es para **puntos de entrada** (`project-loop`, `loop-adopt`,
+`loop-ship`, `loop-status`), no para etapas.
+
+`loop-ship` es la excepción deliberada: la **sugerís** al llegar a entrega, nunca la
+disparás. Toca producción.
+
+Si una etapa te devuelve "cannot be invoked via the Skill tool", **no repliques su
+trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 
 ## 3. Guardas anti-bucle infinito
 - Lleva la cuenta `iteracion` por tarea en `state.md`. Si una tarea no pasa a verde

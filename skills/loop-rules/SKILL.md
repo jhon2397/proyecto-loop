@@ -5,7 +5,6 @@ description: >-
   del catálogo de dev-substrate, y las ancla a los directorios reales del repo.
   Se ejecuta una vez, después de plan-architect. Trigger con "instalá las reglas",
   "configurá las convenciones del stack".
-disable-model-invocation: true
 effort: medium
 ---
 

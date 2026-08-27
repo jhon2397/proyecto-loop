@@ -5,7 +5,6 @@ description: >-
   salida como evidencia y decide verde o rojo. No marca nada verde sin haber
   ejecutado el comando. Trigger con "verificá la tarea", "corré los tests", o vía
   project-loop.
-disable-model-invocation: true
 effort: medium
 ---
 

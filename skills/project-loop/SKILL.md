@@ -6,7 +6,7 @@ description: >-
   hasta agotar el plan. Full-auto: para solo al fallar o al terminar. Trigger con
   "corre el loop", "automatiza el ciclo", "sigue con el proyecto", "avanza solo".
 argument-hint: [ruta-del-proyecto]
-version: 0.6.0
+version: 0.6.1
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---

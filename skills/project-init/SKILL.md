@@ -65,10 +65,19 @@ Crea, de forma idempotente:
 - Rellena `state.md`: meta (proyecto, platform, stack, autonomía=full-auto por
   defecto, y la **dirección estética completa** en `aesthetic` si el proyecto tiene UI)
   y pon **etapa = analisis**.
-- Rellena `stack.md` Tier 1 con Sentry/Supabase = activo; Tier 2 = diferido.
+- Rellena `stack.md` Tier 1 con Sentry/Supabase = **cableado**, NO activo: instalaste
+  el código, pero sin credenciales los dos son inertes. `activo` lo pone quien verifica
+  que un evento real llegó.
 - Commit atómico: `chore: scaffold inicial + tooling + tier1 + loop state`.
 
 ## 5. Cierre
-Confirma qué se creó (lista breve), el commit, y **sugiere la siguiente skill**:
+Confirma qué se creó (lista breve), el commit, y **decí explícitamente qué queda
+inerte hasta que el usuario pegue credenciales**: sin DSN, Sentry no reporta; sin
+claves, el adaptador de Supabase no habla con nada. Listá las variables exactas que
+hacen falta (están en `stack.md`) en vez de dejarlo implícito — es el paso que se
+olvida y se descubre meses después, cuando hace falta un error de producción que
+nunca se registró.
+
+Después **sugiere la siguiente skill**:
 `requirements-analysis`. Si el usuario corre el arsenal en automático, indícalo a
 `project-loop`.

@@ -42,4 +42,6 @@ y rellénala:
 ## 4. Cierre
 - Actualiza `state.md`: artefacto `analysis.md = listo`, **etapa = plan**, añade
   línea a la bitácora.
-- Sugiere la siguiente skill: `plan-architect`.
+- Sugiere la siguiente skill: `loop-design` si el proyecto tiene UI (el diseño va
+  antes del plan, para que las tareas se desglosen por pantalla); si no tiene UI,
+  `plan-architect` directo.

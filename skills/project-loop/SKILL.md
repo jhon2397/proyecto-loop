@@ -6,7 +6,7 @@ description: >-
   hasta agotar el plan. Full-auto: para solo al fallar o al terminar. Trigger con
   "corre el loop", "automatiza el ciclo", "sigue con el proyecto", "avanza solo".
 argument-hint: [ruta-del-proyecto]
-version: 0.5.1
+version: 0.6.0
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---
@@ -18,8 +18,11 @@ skills de cada etapa leyendo y actualizando `.loop/state.md`.
 
 ## Modo
 - **Autonomía: full-auto** (default, ver `state.md`). Avanza sin pedir permiso entre
-  etapas. **Te detienes solo en dos casos:** (a) un fallo que el sub-bucle de
-  corrección no logra resolver tras reintentos razonables, o (b) se agota el plan.
+  etapas. **Te detienes solo en tres casos:** (a) un fallo que el sub-bucle de
+  corrección no logra resolver tras reintentos razonables, (b) se agota el plan, o
+  (c) `etapa = diseno-revision`: el diseño está listo y espera que una persona lo
+  revise. Ese alto **no es una falla**: reportá el link de Figma y qué se armó, y
+  retomá en `plan` cuando el usuario apruebe.
 - Si `state.md` dice `autonomía = checkpoint-tras-review`, párate tras cada revisión
   a esperar el OK del usuario antes de testear/seguir.
 
@@ -33,7 +36,9 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 | etapa actual | skill que disparas | al terminar pasas a |
 |--------------|--------------------|---------------------|
 | inicio | `project-init` | analisis |
-| analisis | `requirements-analysis` | plan |
+| analisis | `requirements-analysis` | diseno |
+| diseno | `loop-design` (saltear si el proyecto no tiene UI) | diseno-revision |
+| diseno-revision | — **alto de checkpoint**: entregá el link de Figma y esperá | plan |
 | plan | `plan-architect` | reglas |
 | reglas | `loop-rules` (saltear si `.claude/rules/` ya tiene contenido) | ejecucion |
 | ejecucion | `code-exec` (siguiente tarea) | revision |

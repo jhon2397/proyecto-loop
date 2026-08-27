@@ -29,7 +29,8 @@ def main():
     loop = open(LOOP).read()
     filas = re.findall(r"^\| (\w+) \| `([a-z:-]+)`", loop, re.M)
     encadenadas = {s for _, s in filas}
-    etapas_tabla = {e for e, _ in filas}
+    # toda fila de la tabla aporta una etapa, tenga skill o sea un checkpoint
+    etapas_tabla = set(re.findall(r"^\| ([a-z-]+) \|", loop, re.M)) - {"etapa actual"}
 
     # 1. Una etapa encadenada no puede estar reservada a invocación humana.
     for n in sorted(encadenadas):

@@ -32,6 +32,11 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 Si la tarea crea o modifica pantallas/componentes visibles, el diseño es parte del
 trabajo, no un extra. ANTES de codear la UI, **invoca de verdad** (con la herramienta
 Skill; no las menciones como texto) las skills de diseño:
+- **Implementá contra el diseño, no de memoria.** Si la tarea tiene un nodo de Figma
+  en `.loop/design.md`, traé su contexto de diseño con el MCP de Figma
+  (`figma:figma-design-to-code` / `get_design_context`) y usá esos valores. Inventar
+  espaciados cuando la medida está a una llamada de distancia es la forma más común
+  de que la pantalla salga "parecida pero mal".
 - **Reusá el design system** (`.loop/design-system.md` si existe + tokens del repo).
   Nunca estilos ad-hoc por pantalla: tokens y componentes existentes primero.
 - **Web:** `frontend-design` (dirección) + `design-taste-frontend` (anti-template);

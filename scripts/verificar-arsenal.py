@@ -6,6 +6,7 @@
 Verifica lo que no se ve hasta que el loop se traba en medio de un ciclo.
 """
 import glob
+import os
 import re
 import sys
 
@@ -54,6 +55,20 @@ def main():
     for n, fm in skills.items():
         if fm.get("name") != n:
             errores.append(f"`{n}`: el campo name dice {fm.get('name')!r}")
+
+    # 4. Toda ruta ${CLAUDE_PLUGIN_ROOT}/... citada por una skill tiene que existir.
+    #    Si no, la skill se entera en medio de una corrida.
+    for f in sorted(glob.glob(SKILLS)):
+        for ruta in re.findall(r"\$\{CLAUDE_PLUGIN_ROOT\}/([\w./-]+)", open(f).read()):
+            ruta = ruta.rstrip("/.,;:)")
+            if not os.path.exists(ruta):
+                errores.append(f"`{f.split('/')[1]}` cita {ruta}, que no existe en el repo")
+
+    # 5. state.md declara los campos que las skills dan por sentados.
+    estado = open(ESTADO).read()
+    for campo in ("mobile", "supabase_hosting", "matriz_dispositivos"):
+        if f"**{campo}:**" not in estado:
+            errores.append(f"state.md no declara el campo `{campo}`")
 
     if errores:
         print("FALLA:")

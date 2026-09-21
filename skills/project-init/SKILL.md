@@ -33,7 +33,9 @@ listo para entrar al loop, **sin** implementar features todavía.
 
 ## 2. Scaffold (según platform)
 Crea, de forma idempotente:
-- Estructura de carpetas idiomática del stack.
+- **La estructura estándar** de `${CLAUDE_PLUGIN_ROOT}/templates/estructura/monorepo.md`.
+  Es la fuente única: no la describas de memoria ni la adaptes "porque este proyecto es
+  distinto". Lo que el proyecto no usa, no se crea.
 - `.editorconfig`, linter + formatter (ESLint + Prettier para TS; ruff/black para Python).
 - `.gitignore` apropiado, y `git init` si no es repo.
 - **CI base** (GitHub Actions): lint + typecheck + test en push/PR.

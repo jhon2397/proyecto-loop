@@ -6,6 +6,8 @@
 ## Meta
 - **proyecto:** <nombre>
 - **platform:** mobile | web | full-stack | data        # 95% mobile por defecto
+- **mobile:** si | no                                   # lo PREGUNTA project-init, no lo infiere
+- **supabase_hosting:** self-hosted | cloud | n/a       # dónde corre Supabase en PRODUCCIÓN
 - **stack:** <p.ej. Expo/React Native + Supabase>
 - **aesthetic:** <dirección estética COMPLETA: tono, densidad, tipografía, principios (frontend-design + design-taste-frontend). No solo un color.>
 - **autonomía:** full-auto | checkpoint-tras-review
@@ -16,6 +18,7 @@
 - **iteracion:** <n>            # nº de vuelta del loop para la tarea activa
 - **ultima_skill:** <nombre>    # qué skill escribió por última vez
 - **timestamp:** <YYYY-MM-DD>
+- **matriz_dispositivos:** <estado de los 4: listos | parcial (cuáles) | sin preparar>
 
 ## Artefactos
 - analysis.md: pendiente | listo

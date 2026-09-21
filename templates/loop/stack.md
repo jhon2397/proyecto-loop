@@ -18,7 +18,7 @@ cree que está cubierto.
 | Slot | Vendor | Estado | Notas |
 |------|--------|--------|-------|
 | Observabilidad | Sentry | <cableado/activo> | source maps / symbolication Hermes en Expo |
-| Backend/Auth/DB | Supabase | <cableado/activo> | diseñar RLS desde el inicio |
+| Backend/Auth/DB | Supabase | <cableado/activo> | hosting: <self-hosted/cloud> · RLS desde el inicio |
 
 ### Qué falta para pasar de cableado a activo
 
@@ -61,3 +61,17 @@ el service_role. Una tabla con RLS habilitado y sin política probada no aísla 
 | typecheck | `<comando>` |
 | lint | `<comando>` |
 | build | `<comando>` |
+| build nativo (iOS) | `<comando>` |
+| build nativo (Android) | `<comando>` |
+| e2e en un dispositivo | `maestro --device <id> test e2e/<flow>.yaml` |
+
+## Dispositivos de la matriz
+
+Los cuatro se bootean una vez al arrancar la corrida y quedan vivos. Ver `loop-verify`.
+
+| Rol | Id | Plataforma |
+|-----|----|-----------|
+| Celular Android | `<avd-celular-android>` | android |
+| Tablet Android | `<avd-tablet-android>` | android |
+| iPhone | `iPhone 17 Pro` | ios |
+| iPad | `iPad Pro 11-inch (M5)` | ios |

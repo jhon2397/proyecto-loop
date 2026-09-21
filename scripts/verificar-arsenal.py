@@ -75,6 +75,11 @@ def main():
     #    Un principio disfrazado de regla chequeable da falsos verdes en la revisión.
     catalogo = open(CATALOGO).read()
     reglas = re.split(r"^## (UI-\d+)[^\n]*$", catalogo, flags=re.M)[1:]
+    if not reglas:
+        errores.append(
+            f"{CATALOGO} no tiene ninguna regla UI-XXX: "
+            "¿se truncó el archivo o cambió el nivel de encabezado?"
+        )
     for nombre, cuerpo in zip(reglas[::2], reglas[1::2]):
         encabezado = catalogo[catalogo.index(f"## {nombre}"):].split("\n", 1)[0]
         if "[chequeable]" not in encabezado and "[principio]" not in encabezado:

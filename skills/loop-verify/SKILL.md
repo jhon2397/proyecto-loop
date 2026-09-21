@@ -26,6 +26,37 @@ Corre, en este orden, parando en el primer rojo:
 
 Guarda la salida completa en `.loop/test-<TAREA>.log`.
 
+## 1.5 Gate de dispositivo
+
+Si `state.md` dice `mobile: si`, la tarea **no cierra** hasta que su flow pase en los
+cuatro dispositivos de la matriz (los ids están en `.loop/stack.md`). No hay dispositivo
+primario ni verificación diferida: un layout que rompe solo en tablet, descubierto al
+final, ya tiene cinco pantallas construidas encima.
+
+**Rebuild nativo solo si cambió lo nativo.** Si la tarea tocó únicamente JS/TS, reusá el
+binario ya instalado y recargá el bundle. El build nativo completo se paga solo cuando
+cambian dependencias nativas o la configuración de Expo. Sin esta distinción, la matriz
+por tarea es impagable.
+
+Corré un `maestro` por dispositivo — cuatro invocaciones, no una — que es además lo que
+deja un log por dispositivo:
+
+```bash
+maestro --device <id> test e2e/<flow>.yaml
+```
+
+Guardá cada salida en `.loop/device-<dispositivo>-<TAREA>.log`.
+
+**Si `mobile: no`,** el gate equivalente es que la web levante y responda en el navegador;
+registralo igual, con un solo log. Un proyecto `data`, sin UI, no tiene gate de arranque:
+le basta el contrato de test/typecheck/lint.
+
+Un rojo en cualquier dispositivo manda la tarea a `fix-loop`, y al volver se reverifica en
+**los cuatro**, no solo en el que falló.
+
+Si un dispositivo no arranca, el estado es **bloqueado**, no verde: decilo y explicá qué
+falta. Nunca declares verde un dispositivo en el que no corriste el flow.
+
 ## 2. Cotejar contra el plan
 Los "tests esperados" de la tarea en `plan.md` tienen que existir de verdad y haber
 corrido. Si la tarea declaraba un test que no existe, eso es un hallazgo de severidad

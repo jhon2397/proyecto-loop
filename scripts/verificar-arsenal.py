@@ -88,6 +88,16 @@ def main():
             if parte not in cuerpo:
                 errores.append(f"{nombre} no tiene la sección {parte}")
 
+    # 7. Los puntos de entrada manuales llevan el flag; y ninguno está encadenado.
+    ENTRADAS = ("project-loop", "loop-adopt", "loop-status", "loop-ship", "loop-pitch")
+    for n in ENTRADAS:
+        if n not in skills:
+            errores.append(f"falta la skill de entrada `{n}`")
+        elif not skills[n].get("disable-model-invocation"):
+            errores.append(f"`{n}` es punto de entrada y le falta disable-model-invocation")
+        elif n in encadenadas:
+            errores.append(f"`{n}` lleva el flag pero la tabla la encadena: se va a rechazar")
+
     if errores:
         print("FALLA:")
         for e in errores:

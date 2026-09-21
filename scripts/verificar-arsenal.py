@@ -34,7 +34,7 @@ def main():
     # toda fila de la tabla aporta una etapa, tenga skill o sea un checkpoint
     etapas_tabla = set(re.findall(r"^\| ([a-z-]+) \|", loop, re.M)) - {"etapa actual"}
 
-    # Sin filas, los chequeos 1 y 7 iteran sobre el vacío y aprueban sin mirar nada.
+    # 0a. Sin filas, los chequeos 1 y 7 iteran sobre el vacío y aprueban sin mirar nada.
     if not filas:
         errores.append(
             f"{LOOP}: la tabla de la máquina de estados no produjo ninguna fila "
@@ -42,18 +42,23 @@ def main():
             "no verifican nada."
         )
 
-    # Pérdida parcial: una fila con skill que el patrón no captura es una etapa que
-    # dejó de verificarse mientras el validador sigue diciendo OK. Es el caso peor,
-    # porque no se nota.
+    # 0b. Pérdida parcial: una fila cuya SEGUNDA celda empieza con un nombre entre
+    #     backticks nombra una skill. Si el patrón de extracción no la capturó, esa
+    #     etapa dejó de verificarse mientras el validador sigue diciendo OK. Es el
+    #     caso peor, porque no se nota. Se mira la estructura de celdas y no la
+    #     presencia de backticks: una fila de checkpoint puede citar un archivo.
     for linea in loop.splitlines():
-        if (
-            linea.startswith("|")
-            and "`" in linea
-            and not re.match(r"^\| (\w+) \| `([a-z:-]+)`", linea)
-        ):
+        cruda = linea.strip()
+        if not cruda.startswith("|"):
+            continue
+        celdas = [c.strip() for c in cruda.strip("|").split("|")]
+        if len(celdas) < 2 or not re.match(r"^`[a-z:-]+`", celdas[1]):
+            continue
+        if not re.match(r"^\| (\w+) \| `([a-z:-]+)`", linea):
             errores.append(
-                f"{LOOP}: la fila {linea.strip()[:50]!r} nombra una skill pero no "
-                "matchea el patrón de la tabla: esa etapa NO se está verificando"
+                f"{LOOP}: la fila {cruda[:50]!r} nombra la skill {celdas[1]} en su "
+                "segunda celda pero el patrón de extracción no la captura: esa etapa "
+                "NO se está verificando"
             )
 
     # 1. Una etapa encadenada no puede estar reservada a invocación humana.
@@ -120,7 +125,7 @@ def main():
         elif n in encadenadas:
             errores.append(f"`{n}` lleva el flag pero la tabla la encadena: se va a rechazar")
 
-    # Y al revés: una skill con el flag que no sea punto de entrada es el error original.
+    # 7b. Y al revés: una skill con el flag que no sea punto de entrada es el error original.
     for n, fm in sorted(skills.items()):
         if fm.get("disable-model-invocation") and n not in ENTRADAS:
             errores.append(

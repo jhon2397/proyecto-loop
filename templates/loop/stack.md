@@ -67,7 +67,8 @@ el service_role. Una tabla con RLS habilitado y sin política probada no aísla 
 
 ## Dispositivos de la matriz
 
-Los cuatro se bootean una vez al arrancar la corrida y quedan vivos. Ver `loop-verify`.
+Se corren **por pares** (primero Android, después iOS), nunca los cuatro vivos a la vez:
+cuatro emuladores simultáneos agotan la memoria de la máquina. Ver `loop-verify`.
 
 | Rol | Id | Plataforma |
 |-----|----|-----------|

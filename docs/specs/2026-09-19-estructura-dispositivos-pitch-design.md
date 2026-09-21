@@ -27,8 +27,10 @@ criterio es minimizar errores, no minimizar minutos.
 El costo es real y se administra con dos optimizaciones que forman parte del diseño, no
 son un detalle de implementación:
 
-- **Dispositivos calientes.** Los cuatro se bootean **una vez al arrancar la corrida** y
-  quedan vivos hasta el cierre. El loop nunca paga un boot en frío por tarea.
+- **Pares secuenciales, no los cuatro vivos.** Medido el 2026-09-21: cuatro emuladores
+  simultáneos dejan 267 MB libres de 24 GB, con el swap al 95%, antes de compilar nada.
+  Se corre el par Android, se apaga, se corre el par iOS. Dentro de cada par se bootea una
+  vez. La cobertura por tarea no cambia; la simultaneidad sí.
 - **Rebuild nativo solo cuando cambia lo nativo.** Si la tarea toca únicamente JS/TS, se
   reusa el binario ya instalado y se recarga el bundle. El build nativo completo se paga
   solo cuando cambian dependencias nativas o configuración de Expo.

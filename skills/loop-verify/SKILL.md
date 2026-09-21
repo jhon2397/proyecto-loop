@@ -33,13 +33,23 @@ cuatro dispositivos de la matriz (los ids están en `.loop/stack.md`). No hay di
 primario ni verificación diferida: un layout que rompe solo en tablet, descubierto al
 final, ya tiene cinco pantallas construidas encima.
 
+**Los dispositivos se corren por pares, nunca los cuatro juntos.** Medido: cuatro
+emuladores vivos a la vez dejan la máquina sin memoria para los builds que la propia
+verificación necesita. El orden es:
+
+1. Bootear el par Android (teléfono + tablet), build/instalar, correr los flows, **apagarlos**.
+2. Bootear el par iOS (iPhone + iPad), correr los flows, **apagarlos**.
+
+La cobertura es la misma; lo que cambia es que nunca hay más de dos dispositivos vivos.
+Dentro de cada par sí vale bootear una vez y reusar: el costo que se evita es el boot por
+dispositivo, no el boot por par.
+
 **Rebuild nativo solo si cambió lo nativo.** Si la tarea tocó únicamente JS/TS, reusá el
 binario ya instalado y recargá el bundle. El build nativo completo se paga solo cuando
-cambian dependencias nativas o la configuración de Expo. Sin esta distinción, la matriz
-por tarea es impagable.
+cambian dependencias nativas o la configuración de Expo.
 
-Corré un `maestro` por dispositivo — cuatro invocaciones, no una — que es además lo que
-deja un log por dispositivo:
+Corré un `maestro` por dispositivo — cuatro invocaciones en total, dos por par — que es
+además lo que deja un log por dispositivo:
 
 ```bash
 maestro --device <id> test e2e/<flow>.yaml

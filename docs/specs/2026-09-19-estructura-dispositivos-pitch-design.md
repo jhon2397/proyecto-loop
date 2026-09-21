@@ -363,8 +363,11 @@ Estado al 2026-09-19:
   boot por par** — dos ciclos de boot por tarea en vez de ninguno — no el de mantener
   cuatro dispositivos vivos, que ya no es el diseño. La palanca de escape, si duele, es
   bajar la matriz a las tareas que tocan UI.
-- **Cuatro emuladores vivos consumen RAM.** Dos emuladores Android más dos simuladores
-  iOS simultáneos es carga real en la máquina. Hay que medirlo en la misma primera tarea.
+- **La RAM ya se midió, y por eso el diseño cambió.** El 2026-09-21, con los cuatro
+  dispositivos vivos y sin compilar nada: 267 MB libres de 24 GB, 9 GB en compresión y el
+  swap en 19,5 de 20,5 GB. De ahí salieron los pares secuenciales. Lo que queda por medir
+  es el costo del ciclo nuevo — dos boots de par por tarea — y eso lo hace la última tarea
+  del plan.
 - **La estructura fija puede no calzar** en un proyecto atípico (solo data, sin UI). La
   regla de "no se crea lo que no se usa" lo absorbe: ese proyecto tendría `packages/core`,
   `supabase/` y nada más.

@@ -33,7 +33,7 @@ trazables.
   - **El hosting de Supabase ya viene decidido** por `project-init` (`supabase_hosting` en
     `state.md`): self-hosted en el servidor interno, o cloud. Escribí su **ADR** acá —
     contexto, las dos opciones, la decisión y sus consecuencias operativas (quién hace
-    backups, qué pasa en un corte). Si el campo está vacio, **no planifiques
+    backups, qué pasa en un corte). Si el campo está vacío, **no planifiques
     infraestructura**: pará y pedí la decisión. Es cara de revertir una vez que hay datos.
   - Tier 2 (pagos, email) — elige solo si una historia lo exige; recuerda: **mobile
     digital → RevenueCat + IAP, no Stripe**; Stripe solo físico/web; email de auth
@@ -58,7 +58,7 @@ Copia `${CLAUDE_PLUGIN_ROOT}/templates/loop/plan.md` a `.loop/plan.md` y genera
 - **Si el proyecto tiene UI:** el design system y las pantallas ya vienen decididos de
   la etapa de diseño. Leé `.loop/design.md` y **desglosá las tareas por pantalla**,
   anotando en cada una el **nodo de Figma** que le corresponde y los estados que tiene
-  que cubrir (vacio, carga, error). El nombre del frame **se deriva, no se adivina**:
+  que cubrir (default, vacio, carga, error). El nombre del frame **se deriva, no se adivina**:
   `<id de historia> · <Pantalla> · <estado>`, con el id tal como quedó en `analysis.md`.
   Si no encontrás el frame con ese nombre, el problema es el mapa, no el nombre: pará y
   reportalo en vez de implementar contra una pantalla que no existe. La primera tarea de UI es **llevar los tokens de

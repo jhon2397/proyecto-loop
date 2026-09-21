@@ -42,34 +42,57 @@ Dos correcciones a lo que parecía estar pasando, que importan más que el núme
 El APK instala sin problema en el emulador (`adb install -r` → `Success`,
 `com.gambriel97.pilotomobileloop`).
 
-## Lo que NO se midió
+## Supervivencia de la app al reencendido — **SÍ**
 
-Se declara explícitamente en vez de estimarse:
+`loop-verify` afirma que la app instalada sobrevive al apagado del emulador, y de eso
+depende toda la regla de "rebuild nativo solo si cambió lo nativo". **Verificado:**
 
-- **Si la app instalada sobrevive al apagado y reencendido del emulador.** `loop-verify`
-  lo **afirma** y de eso depende la regla de "rebuild nativo solo si cambió lo nativo". Dos
-  intentos fallaron por errores de comando —el lock del AVD todavía tomado en el primero,
-  y `setsid`, que no existe en macOS, en el segundo—, no por comportamiento del sistema.
-  **Sigue sin verificar.**
-- **Build nativo vs recarga de bundle.** Sin ese número, no se sabe cuánto ahorra la
-  optimización.
-- **El par iOS.** Ni boot, ni build, ni flows.
-- **El ciclo completo de una tarea** (par Android + par iOS, de punta a punta).
+1. Emulador booteado (25 s), APK instalado, paquete confirmado con `pm list packages`.
+2. Emulador apagado; se esperó a que muriera el proceso y se liberaran los locks del AVD.
+3. Reencendido **sin** `-wipe-data` (30 s).
+4. `pm list packages` → el paquete **seguía instalado**.
+
+La optimización es real. Dos intentos anteriores habían fallado por errores de comando
+—el lock del AVD todavía tomado, y `setsid`, que no existe en macOS—, no por
+comportamiento del sistema; uno llegó a imprimir un "no sobrevivió" que era un falso
+negativo, porque el emulador nunca había terminado de arrancar.
+
+## Build nativo vs recarga de bundle
+
+| Operación | Tiempo |
+|---|---|
+| Build nativo en frío (`assembleDebug`, incluye compilación NDK) | **1019 s** |
+| Gradle incremental, sin cambios | **16 s** |
+| Gradle incremental **tras tocar un `.tsx`** | **16 s** |
+| Bundle JS con Metro (`expo export`, 2,6 MB Hermes) | **10 s** |
+
+Los dos incrementales dan **idéntico**: tocar TypeScript **no dispara rebuild nativo**.
+Un cambio de JS/TS cuesta entre 10 y 16 segundos, contra 1019 del build en frío —
+**unas 60 a 100 veces menos**.
+
+## Lo que sigue sin medirse
+
+- **El par iOS**: ni boot, ni build, ni flows. Todas las cifras son de Android.
+- **El ciclo completo de una tarea** de punta a punta (par Android + par iOS con sus flows).
+- Los flows de Maestro en sí: se verificó que Maestro está instalado y responde, pero no
+  se corrió un flow real contra la app.
 
 ## Conclusión
 
-**La matriz por tarea es viable en pares, pero cara en esta máquina y por una razón
-distinta a la que el diseño suponía.**
+**La matriz por tarea es viable en pares, y la optimización que la sostiene funciona.**
 
-El par de emuladores entra en memoria y el build completa. Lo que no entra es la
-expectativa de que verificar sea barato: 17 minutos de build nativo, sobre una máquina que
-ya arranca con 302 MB libres, multiplicado por las tareas de un plan.
+Las dos condiciones de las que dependía el diseño se verificaron: el par de emuladores
+entra en memoria, y la app instalada sobrevive al apagado, así que reusar el binario no es
+una suposición. Con eso, el costo real de verificar una tarea que toca solo JS/TS es de
+**segundos**, no de minutos.
 
-El diseño ya contempla que el build nativo se paga **solo cuando cambia algo nativo**, y en
-las tareas que tocan únicamente JS/TS se recarga el bundle. Esa es la optimización que
-sostiene todo — y es justamente la que quedó sin medir.
+El costo alto —17 minutos— aparece solo cuando cambian dependencias nativas o la
+configuración de Expo, que es exactamente cuando el diseño dice pagarlo.
 
-**Recomendación:** antes de correr el loop con la matriz en cada tarea, medir las dos cosas
-que faltan (supervivencia de la app al reencendido, y recarga de bundle vs build nativo).
-Si la app no sobreviviera al apagado, la optimización no existe y habría que bajar la
-matriz a las tareas de UI. La palanca de escape sigue escrita en el spec.
+Dos advertencias para quien lea esto después:
+
+1. **La máquina no estaba descargada** (302 MB libres y 13,9 GB de swap al empezar). En una
+   máquina con menos presión, todos estos números mejoran.
+2. **Los emuladores no eran el cuello de botella.** Matarlos a mitad del build no lo
+   aceleró. Si algún día el ciclo se vuelve lento, mirar la carga general antes de culpar a
+   la matriz.

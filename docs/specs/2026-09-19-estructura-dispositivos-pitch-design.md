@@ -162,10 +162,11 @@ plataformas. Cada dispositivo deja su log en `.loop/device-<dispositivo>-<TAREA>
 Un rojo en cualquiera entra a `fix-loop` y se reverifica en los cuatro; el sub-bucle de
 corrección ya existe, solo se le suma esta entrada.
 
-El arranque de la corrida incluye una **fase de preparación de dispositivos**: bootear
-los cuatro y dejarlos vivos. `project-loop` la ejecuta una vez y registra en `state.md`
-qué dispositivos quedaron listos; si alguno no arranca, la corrida no empieza — es
-preferible fallar ahí que descubrirlo en la tarea 12.
+El arranque de la corrida incluye una **fase de preparación de dispositivos**: comprobar,
+de a pares (primero el par Android, después el par iOS), que los cuatro puedan arrancar,
+y apagarlos al terminar la comprobación. `project-loop` la ejecuta una vez y registra en
+`state.md` qué dispositivos quedaron listos; si alguno no arranca, la corrida no empieza
+— es preferible fallar ahí que descubrirlo en la tarea 12.
 
 **Si `mobile: no`, la matriz no aplica.** El gate equivalente es que la web levante y
 responda en el navegador; `loop-verify` lo registra igual, con un solo log. Un proyecto
@@ -355,10 +356,12 @@ Estado al 2026-09-19:
 
 - **La matriz en cada tarea es cara.** Es una decisión tomada a conciencia: se prefiere
   el costo de minutos al costo de un bug de forma descubierto tarde. Depende de que las
-  dos optimizaciones (dispositivos calientes, rebuild nativo solo cuando cambia lo
-  nativo) funcionen de verdad; si no, una corrida larga se vuelve impracticable. **Es el
-  riesgo principal de este spec** y la primera tarea del plan debería medirlo con un
-  proyecto real antes de dar el diseño por bueno. La palanca de escape, si duele, es
+  dos optimizaciones (pares secuenciales en vez de los cuatro vivos, rebuild nativo solo
+  cuando cambia lo nativo) funcionen de verdad; si no, una corrida larga se vuelve
+  impracticable. La primera ya se validó en parte: mantener los cuatro vivos se descartó
+  por falta de memoria, y de ahí salieron los pares. **El riesgo remanente es el costo del
+  boot por par** — dos ciclos de boot por tarea en vez de ninguno — no el de mantener
+  cuatro dispositivos vivos, que ya no es el diseño. La palanca de escape, si duele, es
   bajar la matriz a las tareas que tocan UI.
 - **Cuatro emuladores vivos consumen RAM.** Dos emuladores Android más dos simuladores
   iOS simultáneos es carga real en la máquina. Hay que medirlo en la misma primera tarea.

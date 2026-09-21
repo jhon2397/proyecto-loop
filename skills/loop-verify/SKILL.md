@@ -38,7 +38,7 @@ emuladores vivos a la vez dejan la máquina sin memoria para los builds que la p
 verificación necesita. El orden es:
 
 1. Bootear el par Android (teléfono + tablet), build/instalar, correr los flows, **apagarlos**.
-2. Bootear el par iOS (iPhone + iPad), correr los flows, **apagarlos**.
+2. Bootear el par iOS (iPhone + iPad), build/instalar, correr los flows, **apagarlos**.
 
 La cobertura es la misma; lo que cambia es que nunca hay más de dos dispositivos vivos.
 Dentro de cada par sí vale bootear una vez y reusar: el costo que se evita es el boot por
@@ -47,6 +47,9 @@ dispositivo, no el boot por par.
 **Rebuild nativo solo si cambió lo nativo.** Si la tarea tocó únicamente JS/TS, reusá el
 binario ya instalado y recargá el bundle. El build nativo completo se paga solo cuando
 cambian dependencias nativas o la configuración de Expo.
+
+La app instalada sobrevive al apagado y reencendido del dispositivo: apagar un par no
+obliga a reinstalar en la vuelta siguiente, siempre que no borres los datos del emulador.
 
 Corré un `maestro` por dispositivo — cuatro invocaciones en total, dos por par — que es
 además lo que deja un log por dispositivo:

@@ -30,6 +30,11 @@ trazables.
 ## 2. Slots de servicio → vendor (stack.md)
 - Decide vendor por slot según "qué tan caro es retrofittear":
   - Tier 1 ya cableado por project-init (Sentry, Supabase) — confirma/ajusta.
+  - **El hosting de Supabase ya viene decidido** por `project-init` (`supabase_hosting` en
+    `state.md`): self-hosted en el servidor interno, o cloud. Escribí su **ADR** acá —
+    contexto, las dos opciones, la decisión y sus consecuencias operativas (quién hace
+    backups, qué pasa en un corte). Si el campo está vacio, **no planifiques
+    infraestructura**: pará y pedí la decisión. Es cara de revertir una vez que hay datos.
   - Tier 2 (pagos, email) — elige solo si una historia lo exige; recuerda: **mobile
     digital → RevenueCat + IAP, no Stripe**; Stripe solo físico/web; email de auth
     lo cubre Supabase.
@@ -41,11 +46,22 @@ Copia `${CLAUDE_PLUGIN_ROOT}/templates/loop/plan.md` a `.loop/plan.md` y genera
 - Ordenadas por **dependencia** (`depende_de`), las independientes primero.
 - Cada tarea: criterio **done** verificable, **tests** esperados, archivos estimados.
 - Granularidad: una tarea ≈ un commit revisable. Si algo no cabe en un commit, pártelo.
-- Cubre las historias de `analysis.md`; lo diferido va al backlog.
+- **Cada tarea es una rebanada vertical**: pantalla + adaptador + datos + test. Nunca un
+  fragmento que deje la app sin arrancar. Si algo no entra en una rebanada, partilo en
+  rebanadas más chicas — **no en capas horizontales**. Una tarea "crear todos los modelos"
+  seguida de otra "crear todas las pantallas" deja el proyecto sin poder levantarse
+  durante la mitad del plan, y rompe el gate de verificación de cada tarea.
+- **El plan completo llega de scaffold a producto usable.** Lo que se difiere va al
+  backlog explícito de `plan.md` **con una línea de por qué**. No se admiten huecos
+  implícitos para "después": si no está en las tareas ni en el backlog, no existe.
+- Cubre las historias de `analysis.md`.
 - **Si el proyecto tiene UI:** el design system y las pantallas ya vienen decididos de
   la etapa de diseño. Leé `.loop/design.md` y **desglosá las tareas por pantalla**,
   anotando en cada una el **nodo de Figma** que le corresponde y los estados que tiene
-  que cubrir (vacío, carga, error). La primera tarea de UI es **llevar los tokens de
+  que cubrir (vacio, carga, error). El nombre del frame **se deriva, no se adivina**:
+  `<id de historia> · <Pantalla> · <estado>`, con el id tal como quedó en `analysis.md`.
+  Si no encontrás el frame con ese nombre, el problema es el mapa, no el nombre: pará y
+  reportalo en vez de implementar contra una pantalla que no existe. La primera tarea de UI es **llevar los tokens de
   `.loop/design-system.md` al código** (tema, escala, componentes base); las de pantallas
   dependen de ella (`depende_de`).
 - Si `.loop/design.md` no existe y el proyecto tiene UI, avisá: falta correr `loop-design`.

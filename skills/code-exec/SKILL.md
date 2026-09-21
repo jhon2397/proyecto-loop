@@ -39,6 +39,15 @@ Skill; no las menciones como texto) las skills de diseño:
   de que la pantalla salga "parecida pero mal".
 - **Reusá el design system** (`.loop/design-system.md` si existe + tokens del repo).
   Nunca estilos ad-hoc por pantalla: tokens y componentes existentes primero.
+- **Pasá la pantalla por el catálogo**
+  `${CLAUDE_PLUGIN_ROOT}/references/ui-patterns.md`. Las reglas `[chequeable]` son
+  condiciones del "done", no sugerencias. Las que más se olvidan al implementar:
+  **UI-005** (validación por campo, no un banner global al enviar), **UI-006** (los
+  requisitos visibles antes del error), y **UI-009** (toda acción asincrónica muestra
+  estado de carga en su control y termina en éxito o error accionable).
+- **UI-009 es la contraparte de los estados del diseño.** Si la pantalla tiene los tres
+  estados en Figma (default, vacio, carga, error) pero el código solo implementa el camino
+  feliz, la tarea **no** está terminada.
 - **Web:** `frontend-design` (dirección) + `design-taste-frontend` (anti-template);
   `ui-ux-pro-max` solo para paletas/tipografía; motion con `animate`.
 - **Mobile (RN/Expo):** `react-native-best-practices` (FlashList/perf) + `animate` (motion).
@@ -47,8 +56,13 @@ Skill; no las menciones como texto) las skills de diseño:
   design system**, no solo compilar/pasar tests. Pantalla fea con tests verdes = **NO** está "done".
 
 ## 2. Sanity local
-- Corre lint + typecheck rápidos. Si fallan por algo que introdujiste, arréglalo
-  antes del commit (esto es trivial; los fallos de lógica los caza la etapa de test).
+
+- Corre lint + typecheck rápidos. Si fallan por algo que introdujiste, arréglalo antes del
+  commit (esto es trivial; los fallos de lógica los caza la etapa de test).
+- **La app tiene que levantar.** Typecheck en verde con la app rota no es una tarea
+  terminada. Si el proyecto tiene mobile, confirmá que arranca en al menos un dispositivo
+  antes de cerrar; la matriz completa la corre `loop-verify`, pero no le pases una tarea
+  que ni siquiera abre.
 
 ## 3. Commit atómico
 - Un commit por tarea: `feat(T-00X): <título>` (o `fix:`/`chore:` según corresponda).

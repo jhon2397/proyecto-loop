@@ -60,6 +60,21 @@ maestro --device <id> test e2e/<flow>.yaml
 
 Guardá cada salida en `.loop/device-<dispositivo>-<TAREA>.log`.
 
+### Requisitos para que el flow corra (verificados el 2026-09-21, a los golpes)
+
+1. **`JAVA_HOME` tiene que estar exportado.** Maestro es una herramienta JVM y sin eso
+   falla con `Unable to locate a Java Runtime`, que no dice nada sobre la causa real.
+2. **Un build debug NO trae la JS adentro**: la sirve Metro en runtime. Si el flow corre
+   sin Metro levantado, la app abre en pantalla de error y la aserción falla por el motivo
+   equivocado. Levantá Metro y conectá el emulador con `adb reverse tcp:8081 tcp:8081`.
+3. **`launchApp` seguido de `assertVisible` es inestable.** La primera carga arma el bundle
+   (~12 s medidos, 1131 módulos) y la aserción corre antes de que haya pantalla. Usá una
+   espera explícita —`extendedWaitUntil` con su `timeout`— en vez de asumir que la app ya
+   renderizó. Verificado: una corrida falló con la pantalla en `Bundling 99%`.
+4. **El emulador puede morir por presión de memoria** en medio del flow. Si el dispositivo
+   desaparece a mitad de una corrida, el estado es **bloqueado**, no rojo: no es un fallo
+   de la app, y reportarlo como tal manda a `fix-loop` a buscar un bug que no existe.
+
 **Si `mobile: no`,** el gate equivalente es que la web levante y responda en el navegador;
 registralo igual, con un solo log. Un proyecto `data`, sin UI, no tiene gate de arranque:
 le basta el contrato de test/typecheck/lint.

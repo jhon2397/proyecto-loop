@@ -70,6 +70,27 @@ Los dos incrementales dan **idéntico**: tocar TypeScript **no dispara rebuild n
 Un cambio de JS/TS cuesta entre 10 y 16 segundos, contra 1019 del build en frío —
 **unas 60 a 100 veces menos**.
 
+## El flow de Maestro, de punta a punta
+
+Se intentó correr el gate completo contra la app compilada. **No pasó**, y lo que falló
+importa más que el resultado:
+
+| Paso | Resultado |
+|---|---|
+| Maestro conecta al dispositivo | ✅ |
+| Lanza la app por su package id | ✅ `Launch app ... COMPLETED` |
+| `assertVisible: "Mis tareas"` | ❌ |
+| Reintento con el bundle cacheado | ❌ el emulador murió por falta de memoria |
+
+La captura que dejó Maestro mostró la app en **`Bundling 99%…`** con el diálogo de Android
+`System UI isn't responding`. O sea: la app arrancó bien, pero la aserción corrió contra
+una pantalla que todavía no existía. **No es un fallo de la app ni del flow: es que en un
+build debug la JS se carga en runtime.**
+
+De acá salieron cuatro requisitos operativos, ahora escritos en `loop-verify`: exportar
+`JAVA_HOME`, levantar Metro con `adb reverse`, usar una espera explícita en vez de asumir
+que la app renderizó, y tratar la muerte del emulador como **bloqueado** y no como rojo.
+
 ## Lo que sigue sin medirse
 
 - **El par iOS**: ni boot, ni build, ni flows. Todas las cifras son de Android.

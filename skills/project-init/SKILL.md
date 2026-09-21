@@ -24,6 +24,10 @@ listo para entrar al loop, **sin** implementar features todavía.
 
 ## 1. Recoger contexto (pregunta solo lo que no puedas inferir)
 - **platform:** mobile | web | full-stack | data. Default **mobile** (~95% de casos).
+- **¿el proyecto tiene mobile?** — **preguntalo siempre, en voz alta.** No lo infieras del
+  nombre ni de la descripción: es la respuesta que decide si nace `apps/mobile` y si el
+  resto del loop corre la matriz de dispositivos. Si es **sí**, el stack es **Expo**; no
+  ofrezcas alternativas ni abras la discusión. Guardalo en `state.md` como `mobile`.
 - **nombre** del proyecto y **descripción** en una frase.
 - **stack:** propón el default según platform y confirma con trade-offs breves:
   - mobile → **Expo + React Native + TypeScript** (default). Reanimated + FlashList listos.
@@ -59,13 +63,33 @@ Crea, de forma idempotente:
   en RLS desde el inicio.
 - **NO** hardcodees pagos ni email (Tier 2). Quedan diferidos tras su interfaz.
 
+### 3.1 Dónde corre Supabase en producción (preguntá siempre)
+
+No es una decisión de entorno de desarrollo: **en desarrollo se usa el CLI local con
+Docker en los dos casos.** Lo que se decide acá es dónde vive Supabase cuando el producto
+esté en producción, y es caro de revertir una vez que hay datos.
+
+Presentá las dos opciones con su consecuencia real:
+
+- **Self-hosted en el servidor interno** — Supabase en Docker detrás del reverse proxy,
+  siguiendo el patrón de deploy que ya usan los demás proyectos. Se scaffoldea `infra/`
+  con su compose. Cuesta operarlo (backups, updates, disco); no cuesta licencias ni saca
+  datos de la red interna.
+- **Supabase Cloud** — proyecto gestionado, sin `infra/`. Menos operación; los datos salen
+  a un tercero y el día 1 depende de credenciales externas.
+
+Guardá la respuesta en `state.md` como `supabase_hosting` y en la fila de Supabase de
+`stack.md`. El **ADR** lo escribe `plan-architect`, que es quien lleva las decisiones de
+arquitectura. `loop-ship` lee este campo para saber si el despliegue incluye levantar
+Supabase o solo apuntar a un proyecto cloud.
+
 ## 4. Arrancar el loop
 - Crea la carpeta `.loop/` copiando las plantillas desde
   `${CLAUDE_PLUGIN_ROOT}/templates/loop/` (`state.md`, `stack.md`; las demás se crean
   en su etapa). Si no puedes leer esa ruta, genera los archivos con el contenido
   equivalente.
-- Rellena `state.md`: meta (proyecto, platform, stack, autonomía=full-auto por
-  defecto, y la **dirección estética completa** en `aesthetic` si el proyecto tiene UI)
+- Rellena `state.md`: meta (proyecto, platform, **mobile**, **supabase_hosting**, stack,
+  autonomía=full-auto por defecto, y la **dirección estética completa** en `aesthetic` si el proyecto tiene UI)
   y pon **etapa = analisis**.
 - Rellena `stack.md` Tier 1 con Sentry/Supabase = **cableado**, NO activo: instalaste
   el código, pero sin credenciales los dos son inertes. `activo` lo pone quien verifica

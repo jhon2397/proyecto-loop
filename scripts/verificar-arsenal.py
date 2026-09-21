@@ -34,6 +34,28 @@ def main():
     # toda fila de la tabla aporta una etapa, tenga skill o sea un checkpoint
     etapas_tabla = set(re.findall(r"^\| ([a-z-]+) \|", loop, re.M)) - {"etapa actual"}
 
+    # Sin filas, los chequeos 1 y 7 iteran sobre el vacío y aprueban sin mirar nada.
+    if not filas:
+        errores.append(
+            f"{LOOP}: la tabla de la máquina de estados no produjo ninguna fila "
+            "(¿cambió el formato?). Los chequeos 1 y 7 dependen de ella: sin filas "
+            "no verifican nada."
+        )
+
+    # Pérdida parcial: una fila con skill que el patrón no captura es una etapa que
+    # dejó de verificarse mientras el validador sigue diciendo OK. Es el caso peor,
+    # porque no se nota.
+    for linea in loop.splitlines():
+        if (
+            linea.startswith("|")
+            and "`" in linea
+            and not re.match(r"^\| (\w+) \| `([a-z:-]+)`", linea)
+        ):
+            errores.append(
+                f"{LOOP}: la fila {linea.strip()[:50]!r} nombra una skill pero no "
+                "matchea el patrón de la tabla: esa etapa NO se está verificando"
+            )
+
     # 1. Una etapa encadenada no puede estar reservada a invocación humana.
     for n in sorted(encadenadas):
         if ":" in n:
@@ -97,6 +119,14 @@ def main():
             errores.append(f"`{n}` es punto de entrada y le falta disable-model-invocation")
         elif n in encadenadas:
             errores.append(f"`{n}` lleva el flag pero la tabla la encadena: se va a rechazar")
+
+    # Y al revés: una skill con el flag que no sea punto de entrada es el error original.
+    for n, fm in sorted(skills.items()):
+        if fm.get("disable-model-invocation") and n not in ENTRADAS:
+            errores.append(
+                f"`{n}` lleva disable-model-invocation pero no es punto de entrada: "
+                "si alguna skill la encadena, el harness la va a rechazar en medio del ciclo"
+            )
 
     if errores:
         print("FALLA:")

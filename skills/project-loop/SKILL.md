@@ -29,6 +29,13 @@ skills de cada etapa leyendo y actualizando `.loop/state.md`.
 ## 0. Arranque
 - Lee `.loop/state.md`. Si no existe, no hay proyecto inicializado → sugiere `project-init`.
 - Determina la `etapa` actual y la `tarea_activa`.
+- **Comprobación de dispositivos (una sola vez por corrida).** Si `state.md` dice
+  `mobile: si`, verificá que los cuatro dispositivos de la matriz **puedan** arrancar —
+  de a pares, no los cuatro juntos — y **apagalos al terminar la comprobación**. No los
+  dejes vivos: cuatro emuladores simultáneos agotan la memoria de la máquina y los builds
+  que la verificación necesita no entran.
+- Registrá el resultado en `state.md` como `matriz_dispositivos`. **Si alguno no arranca,
+  la corrida no empieza**: es preferible fallar acá que descubrirlo en la tarea 12.
 
 ## 1. Máquina de estados (encadena según la etapa)
 Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
@@ -70,10 +77,13 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 Una skill que **vos encadenás** no puede llevar `disable-model-invocation: true`: ese
 flag la reserva para invocación humana y el harness te la va a rechazar en medio del
 ciclo. El flag es para **puntos de entrada** (`project-loop`, `loop-adopt`,
-`loop-ship`, `loop-status`), no para etapas.
+`loop-ship`, `loop-status`, `loop-pitch`), no para etapas.
 
 `loop-ship` es la excepción deliberada: la **sugerís** al llegar a entrega, nunca la
 disparás. Toca producción.
+
+`loop-pitch` es la otra excepción: renderizar video es caro en tiempo y es un entregable
+para humanos, no un paso del ciclo. La **sugerís** al llegar a entrega, nunca la disparás.
 
 Si una etapa te devuelve "cannot be invoked via the Skill tool", **no repliques su
 trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
@@ -84,9 +94,11 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
   (hallazgos abiertos, último error de test, hipótesis), marcando la tarea `[!]`.
 
 ## 4. Cierre
-- Cuando no quedan tareas `[ ]` en `plan.md`: pon **etapa = entrega**, resume lo
-  hecho (tareas cerradas, ADRs, hallazgos resueltos) y **sugiere `deploy-checklist`**
-  y después `loop-ship`, más `documentation` y `standup`/retro según corresponda.
+- Cuando no quedan tareas `[ ]` en `plan.md`: verificá primero que **el gate de arranque
+  esté verde** — la matriz de cuatro si hay mobile, la web levantada si no. Recién ahí
+  pon **etapa = entrega**, resume lo hecho (tareas cerradas, ADRs, hallazgos resueltos) y
+  **sugiere `deploy-checklist`**, después `loop-ship`, y **`loop-pitch`** si querés la
+  presentación del producto. Sumá `documentation` y `standup`/retro según corresponda.
 - **`loop-ship` no la disparás vos.** Toca producción: la invoca una persona. El loop
   llega hasta sugerirla.
 - Mantén la bitácora de `state.md` actualizada en cada transición para que el loop

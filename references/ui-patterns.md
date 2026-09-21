@@ -69,7 +69,12 @@ le devuelve al usuario la decisión de profundizar.
 el design system sin control de expandir.
 
 **Matiz.** No aplica a contenido que el usuario necesita para decidir en esa misma
-pantalla (precios, condiciones, advertencias): ahí esconder es peor que scrollear.
+pantalla —precios, condiciones, advertencias—: ahí esconder es peor que scrollear.
+
+**Precedencia sobre UI-008.** En una tarjeta de resultado, `UI-008` gana: los datos de
+decisión (nombre, precio, acción) se muestran siempre completos. `UI-004` aplica al texto
+descriptivo que acompaña, no a esos datos. Cuando dos reglas chocan, la que preserva
+información para decidir tiene prioridad sobre la que ahorra espacio.
 
 ---
 

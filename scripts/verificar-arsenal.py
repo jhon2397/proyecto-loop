@@ -15,6 +15,7 @@ import yaml
 SKILLS = "skills/*/SKILL.md"
 LOOP = "skills/project-loop/SKILL.md"
 ESTADO = "templates/loop/state.md"
+CATALOGO = "references/ui-patterns.md"
 
 
 def frontmatter(path):
@@ -69,6 +70,18 @@ def main():
     for campo in ("mobile", "supabase_hosting", "matriz_dispositivos"):
         if f"**{campo}:**" not in estado:
             errores.append(f"state.md no declara el campo `{campo}`")
+
+    # 6. Cada regla del catálogo de UI tiene sus tres partes y su marca.
+    #    Un principio disfrazado de regla chequeable da falsos verdes en la revisión.
+    catalogo = open(CATALOGO).read()
+    reglas = re.split(r"^## (UI-\d+)[^\n]*$", catalogo, flags=re.M)[1:]
+    for nombre, cuerpo in zip(reglas[::2], reglas[1::2]):
+        encabezado = catalogo[catalogo.index(f"## {nombre}"):].split("\n", 1)[0]
+        if "[chequeable]" not in encabezado and "[principio]" not in encabezado:
+            errores.append(f"{nombre} no está marcada [chequeable] ni [principio]")
+        for parte in ("**Qué.**", "**Por qué.**", "**Cómo se verifica.**"):
+            if parte not in cuerpo:
+                errores.append(f"{nombre} no tiene la sección {parte}")
 
     if errores:
         print("FALLA:")

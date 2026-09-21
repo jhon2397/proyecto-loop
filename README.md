@@ -33,11 +33,26 @@ Native por defecto), con capa web.
 | 11 | `proyecto-loop:loop-ship` | Entrega | Despliegue al servidor. **Manual: toca producción** |
 | 12 | `proyecto-loop:loop-adopt` | Entrada brownfield | Reconstruye `.loop/` en un repo que ya existe |
 | 13 | `proyecto-loop:loop-status` | — | Lectura barata del estado (haiku, solo lectura) |
+| 14 | `proyecto-loop:loop-pitch` | — | Presentación del producto con HyperFrames, usando el design system real. **Manual** |
 
 Reusa del plugin `engineering`: `code-review` (revisión), `debug` (fix-loop),
 y `deploy-checklist`/`documentation`/`standup` al cierre. La etapa de test dejó de
 delegarse: la cubre `loop-verify`, que exige evidencia ejecutada.
 Backbone de metodología opcional: **Superpowers** (TDD, debug 4-fases, brainstorm).
+
+## Convenciones de v0.7.0
+
+- **Estructura estándar de proyecto** — monorepo con workspaces, definido en
+  `templates/estructura/monorepo.md`. Fuente única: ninguna skill la describe por su
+  cuenta. Lo que el proyecto no usa, no se crea.
+- **Matriz de dispositivos** — cada tarea se verifica con Maestro en teléfono y tablet de
+  Android e iOS. Se corren **por pares** (primero Android, después iOS), nunca los cuatro
+  vivos a la vez, y el rebuild nativo solo ocurre si cambió algo nativo.
+- **Catálogo de reglas de UI** — `references/ui-patterns.md`, con cada regla marcada
+  `[chequeable]` o `[principio]`. Lo consultan `loop-design` y `code-exec`.
+- **Estructura del archivo de Figma** — páginas fijas numeradas y frames nombrados
+  `<id de historia> · <Pantalla> · <estado>`, que es la clave del mapa que consume la
+  implementación.
 
 ## Mecanismo de estado
 

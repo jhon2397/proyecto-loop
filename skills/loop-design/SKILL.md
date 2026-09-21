@@ -77,6 +77,14 @@ H-03 · Checkout · carga
 H-03 · Checkout · error
 ```
 
+El patrón es `<id de historia> · <Pantalla> · <estado>`, con ` · ` (espacio,
+punto medio, espacio) como separador.
+
+Los estados tienen **nombres canónicos y sin acentos**, porque son claves de
+búsqueda y no texto de interfaz: `default`, `vacio`, `carga`, `error`. Escribilos
+así aunque en prosa lleven tilde — un acento de más rompe la búsqueda de la etapa
+que viene, y el fallo es silencioso.
+
 `H-03` es el id de historia de `.loop/analysis.md`. Con eso la cadena queda cerrada:
 historia → frame → fila en `design.md` → tarea en `plan.md` → componente en `packages/ui`.
 
@@ -149,7 +157,7 @@ Cuando el usuario apruebe, escribí el artefacto que consume la implementación:
 ```markdown
 | Pantalla | Nodo de Figma | Historia | Estados |
 |----------|---------------|----------|---------|
-| <nombre> | <url del nodo> | <id>     | vacío / carga / error |
+| <nombre> | <url del nodo> | <id>     | vacio / carga / error |
 ```
 
 Sin este mapa el resto del loop no sabe qué implementar contra qué, y vuelve a improvisar.

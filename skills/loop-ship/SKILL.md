@@ -43,6 +43,22 @@ formas más rápidas de romperle el día a otro sistema.
   (crear bases o roles): esos permisos alcanzarían también a las bases de los otros
   proyectos que compartan el clúster.
 
+## 2.1 Dónde vive Supabase
+
+Leé `supabase_hosting` de `.loop/state.md` **antes** de armar el despliegue. Cambia qué
+se levanta:
+
+- **self-hosted** — el despliegue incluye los servicios de Supabase en el compose del
+  proyecto, detrás del reverse proxy. Verificá que `infra/` exista y que el ADR
+  correspondiente esté escrito: si el proyecto se scaffoldeó como cloud y alguien cambió
+  de idea sin registrarlo, te vas a enterar en producción. Contemplá backups de la base
+  desde el primer despliegue, no después.
+- **cloud** — no se levanta Supabase: el despliegue solo necesita las credenciales del
+  proyecto gestionado en el entorno. `infra/` no debería existir.
+
+Si el campo está vacío o dice `n/a` y el proyecto tiene backend, **pará**: desplegar sin
+saber dónde vive la base es cómo se termina con dos fuentes de datos.
+
 ## 3. Red entre contenedores: por nombre de servicio
 Los contenedores se hablan por una **red de Docker compartida y nombre de servicio**
 (`http://<servicio>:<puerto>`).

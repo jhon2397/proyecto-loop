@@ -30,6 +30,12 @@ Si `AskUserQuestion` no está disponible, hacé
 la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno.
 
 ## 0. Idempotencia (siempre primero)
+- **¿El loop viene adentro del repo?** Comprobá que exista `.claude/loop/VERSION`. Si
+  existe, el proyecto nació de la plantilla y corre igual en la nube que en local. Si **no**
+  existe, este proyecto depende del plugin instalado en esta máquina y **no va a funcionar
+  en una sesión cloud**, donde los plugins no cargan. Decilo, recomendá crear el repo con
+  "Use this template" desde la plantilla o correr `loop-actualizar`, y seguí solo si el
+  usuario confirma que quiere un proyecto atado a la máquina local.
 - Si ya existe `.loop/state.md`, **no re-scaffoldees**: lee el estado, informa en
   qué etapa está y sugiere la skill correspondiente. Solo continúa si el usuario
   pide reinicializar explícitamente; preguntáselo con `AskUserQuestion`.

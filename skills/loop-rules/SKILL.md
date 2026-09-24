@@ -16,9 +16,10 @@ effort: low
 - Si `.claude/rules/` ya tiene contenido, **completa el delta**, no reescribas.
 
 ## 1. Elegir
-Del catálogo del plugin `dev-substrate` (carpeta `rules/`) elige SOLO lo que el stack
-de `stack.md` realmente usa. Los presets de `presets/*.txt` son un punto de partida
-razonable según la plataforma:
+Del catálogo `${CLAUDE_PLUGIN_ROOT}/plugins/dev-substrate/rules/` elige SOLO lo que el
+stack de `stack.md` realmente usa. Los presets de
+`${CLAUDE_PLUGIN_ROOT}/plugins/dev-substrate/presets/` son un punto de partida razonable
+según la plataforma:
 
 | platform de state.md | preset |
 |----------------------|--------|
@@ -26,8 +27,8 @@ razonable según la plataforma:
 | web | `web-saas.txt` |
 | full-stack | `web-saas.txt` + `mobile-expo.txt` (sin duplicar) |
 
-Si el plugin `dev-substrate` no está instalado, **dilo y sigue sin reglas**. No
-inventes el contenido de una regla que no pudiste leer.
+Si el catálogo no existe en esa ruta, **dilo y sigue sin reglas**. No inventes el
+contenido de una regla que no pudiste leer.
 
 ## 2. Anclar (paso obligatorio)
 Copia cada regla elegida a `.claude/rules/<categoría>/<archivo>.md` y **ajusta su

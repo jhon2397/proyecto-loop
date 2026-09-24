@@ -151,3 +151,43 @@ def test_limpia_temporales_huerfanos(plugin, tmp_path):
     huerfano.write_text("basura\n")
     vendorear.vendorear(plugin, destino)
     assert not list((destino / ".claude").glob(".vendoreo-*"))
+
+
+def test_trae_tercero_por_sha_con_su_licencia(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    d = destino / ".claude/skills/skill-ajena"
+    assert (d / "SKILL.md").read_text().startswith("---\nname: skill-ajena")
+    assert (d / "LICENSE").read_text() == "MIT License\n"
+    terceros_md = (destino / ".claude/loop/TERCEROS.md").read_text()
+    assert "skill-ajena" in terceros_md and repo_tercero["skill-ajena"]["sha"] in terceros_md
+
+
+def test_el_codigo_de_terceros_no_se_reescribe(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    t = (destino / ".claude/skills/skill-ajena/SKILL.md").read_text()
+    assert "${CLAUDE_PLUGIN_ROOT}" in t
+
+
+def test_rechaza_tercero_si_el_nombre_declarado_no_coincide(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    repo_tercero["otra-cosa"] = repo_tercero.pop("skill-ajena")
+    with pytest.raises(SystemExit, match="otra-cosa"):
+        vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    # el rechazo ocurre antes de tocar nada: el vendoreo anterior sigue entero
+    assert (destino / ".claude/loop/VERSION").read_text() == "9.9.9\n"
+
+
+def test_revendorear_reemplaza_al_tercero(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    assert (destino / ".claude/skills/skill-ajena/LICENSE").is_file()
+
+
+def test_sin_terceros_lo_deja_dicho(plugin, tmp_path):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    assert "Ninguna" in (destino / ".claude/loop/TERCEROS.md").read_text()

@@ -24,6 +24,7 @@ import argparse
 import json
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -162,7 +163,55 @@ def desactivar_plugins_globales(destino: Path) -> None:
     p.write_text(json.dumps(datos, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def vendorear(raiz: Path, destino: Path) -> list[str]:
+def obtener_tercero(url: str, sha: str, cache: Path) -> Path:
+    """Trae el repo de origen en un commit exacto: por SHA, nunca por rama."""
+    d = cache / sha
+    if not (d / ".git").is_dir():
+        d.mkdir(parents=True, exist_ok=True)
+        for cmd in (
+            ["git", "init", "-q"],
+            ["git", "fetch", "-q", "--depth", "1", url, sha],
+            ["git", "checkout", "-q", "--detach", "FETCH_HEAD"],
+        ):
+            subprocess.run(cmd, cwd=d, check=True)
+    return d
+
+
+def nombre_declarado(skill_md: Path) -> str | None:
+    m = re.search(r"^name:\s*(\S+)", leer_texto(skill_md), re.M)
+    return m.group(1) if m else None
+
+
+def planificar_terceros(terceros: dict, cache: Path) -> list[tuple[Path, str, dict]]:
+    """Trae cada skill de terceros y confirma que declare el nombre esperado."""
+    plan: list[tuple[Path, str, dict]] = []
+    for nombre, t in sorted(terceros.items()):
+        repo = obtener_tercero(t["url"], t["sha"], cache)
+        real = nombre_declarado(repo / t["ruta"] / "SKILL.md")
+        if real != nombre:
+            raise SystemExit(f"{nombre}: la skill en {t['ruta']} declara name={real!r}")
+        if not (repo / "LICENSE").is_file():
+            raise SystemExit(f"{nombre}: el repo de origen no tiene LICENSE")
+        plan.append((repo, f".claude/skills/{nombre}", t))
+    return plan
+
+
+def escribir_terceros_md(loop: Path, plan: list[tuple[Path, str, dict]]) -> None:
+    lineas = ["# Skills de terceros vendoreadas", ""]
+    if not plan:
+        lineas.append("Ninguna. Este vendoreo se hizo sin skills de terceros.")
+    else:
+        lineas += ["Copiadas sin modificar desde su repo de origen, fijadas por commit.",
+                   "Cada una trae su `LICENSE`.", "",
+                   "| Skill | Origen | Commit | Licencia |", "|---|---|---|---|"]
+        for _, rel, t in plan:
+            lineas.append(f"| `{rel.rsplit('/', 1)[1]}` | {t['url']} | "
+                          f"`{t['sha']}` | {t['licencia']} |")
+    (loop / "TERCEROS.md").write_text("\n".join(lineas) + "\n", encoding="utf-8")
+
+
+def vendorear(raiz: Path, destino: Path, terceros: dict | None = None,
+              cache: Path | None = None) -> list[str]:
     """Arma o actualiza el .claude/ de `destino`. Devuelve las rutas gestionadas."""
     claude = destino / ".claude"
     loop = destino / PREFIJO_LOOP
@@ -171,13 +220,15 @@ def vendorear(raiz: Path, destino: Path) -> list[str]:
                if manifiesto.exists() else set())
     validar_manifiesto(previas)
     plan = planificar(raiz)
+    plan_terceros = planificar_terceros(terceros, cache) if terceros else []
 
     # Antes de tocar nada: no pisar lo que el proyecto creó por su cuenta.
-    for _, rel, _ in plan:
+    for rel in [r for _, r, _ in plan] + [r for _, r, _ in plan_terceros]:
         if (destino / rel).exists() and rel not in previas:
             raise SystemExit(f"{rel} ya existe y no es del loop: no se pisa")
 
-    rechazar_enlaces(destino, previas | {PREFIJO_LOOP} | {rel for _, rel, _ in plan})
+    rechazar_enlaces(destino, previas | {PREFIJO_LOOP} | {rel for _, rel, _ in plan}
+                     | {rel for _, rel, _ in plan_terceros})
 
     # 1. Armar el vendoreo completo en un temporal, en el mismo disco para que
     #    el reemplazo sea un rename. Si algo falla acá, el proyecto no se tocó.
@@ -196,10 +247,15 @@ def vendorear(raiz: Path, destino: Path) -> list[str]:
             else:
                 copiar_archivo(origen, temporal / rel, prefijo)
             gestionadas.append(rel)
+        for repo, rel, t in plan_terceros:
+            shutil.copytree(repo / t["ruta"], temporal / rel)  # código ajeno: sin reescribir
+            shutil.copy2(repo / "LICENSE", temporal / rel / "LICENSE")
+            gestionadas.append(rel)
         for r in RECURSOS:
             copiar(raiz / r, temporal / PREFIJO_LOOP / r, prefijo_de(r))
         (temporal / PREFIJO_LOOP / "VERSION").write_text(
             leer_version(raiz) + "\n", encoding="utf-8")
+        escribir_terceros_md(temporal / PREFIJO_LOOP, plan_terceros)
         (temporal / PREFIJO_LOOP / "MANIFIESTO").write_text(
             "\n".join(gestionadas) + "\n", encoding="utf-8")
 
@@ -222,10 +278,16 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Vendorea el loop en un proyecto.")
     ap.add_argument("--destino", required=True, type=Path, help="raíz del proyecto")
     ap.add_argument("--origen", type=Path, default=RAIZ, help="raíz de proyecto-loop")
+    ap.add_argument("--sin-terceros", action="store_true",
+                    help="no bajar skills de terceros (para probar sin red)")
     a = ap.parse_args(argv)
-    rutas = vendorear(a.origen.resolve(), a.destino.resolve())
-    print(f"vendoreado: {len(rutas)} skills y agentes · versión "
-          f"{leer_version(a.origen)} → {a.destino}/.claude")
+    origen = a.origen.resolve()
+    terceros = (None if a.sin_terceros
+                else json.loads((origen / "terceros.json").read_text(encoding="utf-8")))
+    with tempfile.TemporaryDirectory() as cache:
+        rutas = vendorear(origen, a.destino.resolve(), terceros, Path(cache))
+    print(f"vendoreado: {len(rutas)} rutas · versión {leer_version(origen)} "
+          f"· {len(terceros or {})} de terceros → {a.destino}/.claude")
     return 0
 
 

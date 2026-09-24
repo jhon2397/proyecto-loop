@@ -1,0 +1,14 @@
+{
+  "design-taste-frontend": {
+    "url": "https://github.com/Leonxlnx/taste-skill.git",
+    "sha": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+    "ruta": "skills/taste-skill",
+    "licencia": "MIT"
+  },
+  "react-native-best-practices": {
+    "url": "https://github.com/callstackincubator/agent-skills.git",
+    "sha": "61e6e7dfdf3a8ee862254c200d751fcb1fb863dc",
+    "ruta": "skills/react-native-best-practices",
+    "licencia": "MIT"
+  }
+}

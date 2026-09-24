@@ -125,3 +125,29 @@ def test_copia_fallida_deja_intacto_el_vendoreo_anterior(plugin, tmp_path):
     assert not list((destino / ".claude").glob(".vendoreo-*"))
     roto.unlink()
     vendorear.vendorear(plugin, destino)  # y la corrida siguiente se recupera sola
+
+
+def test_no_borra_a_traves_de_un_enlace_simbolico(plugin, tmp_path):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    afuera = tmp_path / "afuera"
+    afuera.mkdir()
+    (afuera / "valioso.txt").write_text("no me borres\n")
+    etapa = destino / ".claude/skills/etapa"
+    shutil.rmtree(etapa)
+    etapa.symlink_to(afuera, target_is_directory=True)
+    with pytest.raises(SystemExit, match="enlace simbólico"):
+        vendorear.vendorear(plugin, destino)
+    assert (afuera / "valioso.txt").read_text() == "no me borres\n"
+    assert etapa.is_symlink()
+    assert (destino / ".claude/loop/VERSION").read_text() == "9.9.9\n"
+
+
+def test_limpia_temporales_huerfanos(plugin, tmp_path):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    huerfano = destino / ".claude/.vendoreo-viejo/skills/x.md"
+    huerfano.parent.mkdir(parents=True)
+    huerfano.write_text("basura\n")
+    vendorear.vendorear(plugin, destino)
+    assert not list((destino / ".claude").glob(".vendoreo-*"))

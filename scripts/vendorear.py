@@ -14,7 +14,9 @@ ajenas de .claude/settings.json no se tocan.
 
 Es transaccional: arma todo el vendoreo nuevo en un directorio temporal, y
 solo si terminó sin errores reemplaza lo anterior. Si algo falla, el proyecto
-queda como estaba.
+queda como estaba: esa garantía cubre el armado. El reemplazo final son varios
+renames en el mismo disco, y un corte justo ahí puede dejarlo a medias; en ese
+caso, volver a correr el script lo repara.
 """
 from __future__ import annotations
 
@@ -25,6 +27,7 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
+from typing import Iterable
 
 RAIZ = Path(__file__).resolve().parent.parent
 
@@ -115,6 +118,21 @@ def validar_manifiesto(previas: set[str]) -> None:
                              "gestione. No se borró nada; revisá el archivo a mano.")
 
 
+def rechazar_enlaces(destino: Path, rels: Iterable[str]) -> None:
+    """Aborta si una ruta gestionada o alguno de sus ancestros es un enlace simbólico.
+
+    shutil.rmtree tira un OSError crudo al borrar a través de un symlink en la
+    fase de swap; mejor cortar acá, antes de armar el temporal y de borrar nada.
+    """
+    for rel in rels:
+        partes = Path(rel).parts
+        for i in range(1, len(partes) + 1):
+            parcial = destino / Path(*partes[:i])
+            if parcial.is_symlink():
+                raise SystemExit(f"{parcial.relative_to(destino)}: es un enlace simbólico; "
+                                 "el loop no borra a través de enlaces. El proyecto no se tocó.")
+
+
 def planificar(raiz: Path) -> list[tuple[Path, str, str]]:
     """Qué skills y agentes van a dónde: (origen, destino relativo, prefijo)."""
     plan: list[tuple[Path, str, str]] = []
@@ -159,9 +177,16 @@ def vendorear(raiz: Path, destino: Path) -> list[str]:
         if (destino / rel).exists() and rel not in previas:
             raise SystemExit(f"{rel} ya existe y no es del loop: no se pisa")
 
+    rechazar_enlaces(destino, previas | {PREFIJO_LOOP} | {rel for _, rel, _ in plan})
+
     # 1. Armar el vendoreo completo en un temporal, en el mismo disco para que
     #    el reemplazo sea un rename. Si algo falla acá, el proyecto no se tocó.
     claude.mkdir(parents=True, exist_ok=True)
+    # Un corte a mitad de una corrida anterior pudo dejar un temporal sin
+    # reemplazar; se limpia antes de arrancar para que no lo levante un commit.
+    for viejo in claude.glob(".vendoreo-*"):
+        if viejo.is_dir() and not viejo.is_symlink():
+            shutil.rmtree(viejo)
     temporal = Path(tempfile.mkdtemp(prefix=".vendoreo-", dir=claude))
     try:
         gestionadas: list[str] = []

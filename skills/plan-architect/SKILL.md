@@ -22,7 +22,8 @@ trazables.
 ## 0. Reanudar
 - Lee `.loop/state.md` y `.loop/analysis.md`. Si `plan.md` ya existe,
   **actualízalo** (añade/replanifica tareas) en vez de reescribir; conserva el
-  estado `[x]/[~]` de tareas ya tocadas.
+  estado `[x]/[~]/[d]/[!]` de tareas ya tocadas. Una tarea `[d]` conserva también su
+  fila en `.loop/deuda-dispositivos.md`: replanificar no salda deuda.
 
 ## 1. Arquitectura
 - Define la arquitectura de alto nivel. Apóyate en `engineering:architecture`

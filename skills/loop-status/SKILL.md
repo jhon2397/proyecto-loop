@@ -17,7 +17,7 @@ avanzás el loop. Es para retomar después de días sin gastar contexto.
 
 ## 1. Leer
 - `.loop/state.md` — etapa, tarea activa, iteración, última skill, bitácora.
-- `.loop/plan.md` — cuántas tareas `[x]`, `[~]`, `[ ]`, `[!]`.
+- `.loop/plan.md` — cuántas tareas `[x]`, `[~]`, `[ ]`, `[!]`, `[d]`.
 - `.loop/review-log.md` — hallazgos abiertos y su severidad.
 
 Si no existe `.loop/`, decilo y sugerí `project-init` (proyecto nuevo) o
@@ -28,9 +28,14 @@ Si no existe `.loop/`, decilo y sugerí `project-init` (proyecto nuevo) o
 Proyecto · etapa · tarea activa (iteración N)
 Plan: X de Y cerradas · Z pendientes · W bloqueadas
 Hallazgos abiertos: N (la severidad más alta primero)
+Deuda de dispositivos: N tareas en [d] (solo si deuda_dispositivos > 0)
 Última actividad: <fecha> · <qué pasó>
 Siguiente paso sugerido: <skill de la etapa actual>
 ```
+
+Si `deuda_dispositivos` (en `state.md`) no es cero, mostrala con las tareas listadas
+en `.loop/deuda-dispositivos.md`. No bloquea el reporte, pero tiene que verse: es
+deuda con nombre, no un detalle menor.
 
 Si hay tareas `[!]` (bloqueadas) o hallazgos críticos, esos van primero: es lo
 único que puede estar frenando todo.

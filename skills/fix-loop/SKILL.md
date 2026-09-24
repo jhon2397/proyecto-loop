@@ -55,6 +55,7 @@ Cierras el sub-bucle Test/Revisión → Corrección → Test hasta que la tarea 
 - Actualiza `state.md`: `ultima_skill = fix-loop`, **etapa = test** (para reverificar)
   o, si ya reverificaste y está verde, deja listo para cerrar la tarea, bitácora.
 - Si todos los hallazgos de la tarea están cerrados y los tests pasan, indica que la
-  tarea puede marcarse `[x]` y devolver control a `project-loop`.
+  tarea puede cerrarse: `[x]`, o `[d]` si el entorno no puede correr los cuatro
+  dispositivos (ver `loop-verify`, sección 1.6); y devolver control a `project-loop`.
 - **Devolvé solo un resumen** (máx. ~10 líneas): hallazgos cerrados y abiertos, commits,
   y si el re-test quedó verde o rojo (con el error principal en una línea).

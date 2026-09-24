@@ -22,7 +22,10 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 ## 0. Reanudar
 - Lee `.loop/state.md` y `.loop/plan.md`.
 - Toma la **primera tarea `[ ]` pendiente** cuyas dependencias (`depende_de`) estén
-  todas en `[x]`. Si el usuario nombró una tarea concreta, usa esa (valida deps).
+  todas en `[x]` o en `[d]`. Una tarea en `[d]` está verde en código, así que sus
+  dependientes pueden avanzar; la deuda de dispositivos se salda aparte (ver
+  `loop-verify`, sección 1.6) y sigue bloqueando la entrega. Si el usuario nombró una
+  tarea concreta, usa esa (valida deps).
 - Si no hay tareas pendientes, informa "plan completo" y sugiere `engineering:deploy-checklist`.
 - Marca la tarea como `[~]` (en progreso) en `plan.md` y ponla como `tarea_activa`
   en `state.md`.

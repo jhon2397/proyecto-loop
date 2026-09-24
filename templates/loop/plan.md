@@ -1,7 +1,8 @@
 # Plan de Implementación
 
 > Output de `plan-architect`. `code-exec` toma la primera tarea `[ ]` (pendiente)
-> respetando dependencias. Marca `[~]` en progreso, `[x]` hecha, `[!]` bloqueada.
+> respetando dependencias. Marca `[~]` en progreso, `[x]` hecha, `[!]` bloqueada, y `[d]`
+> verde en código pero sin verificar en dispositivos (ver `loop-verify`, sección 1.6).
 
 ## Arquitectura (resumen)
 <diagrama/decisión de alto nivel; detalle en adr/>

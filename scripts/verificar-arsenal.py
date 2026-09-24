@@ -95,7 +95,7 @@ def main():
 
     # 5. state.md declara los campos que las skills dan por sentados.
     estado = open(ESTADO).read()
-    for campo in ("mobile", "supabase_hosting", "matriz_dispositivos"):
+    for campo in ("mobile", "supabase_hosting", "matriz_dispositivos", "deuda_dispositivos"):
         if f"**{campo}:**" not in estado:
             errores.append(f"state.md no declara el campo `{campo}`")
 

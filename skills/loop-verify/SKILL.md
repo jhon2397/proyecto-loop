@@ -32,8 +32,10 @@ Guarda la salida completa en `.loop/test-<TAREA>.log`.
 
 Si `state.md` dice `mobile: si`, la tarea **no cierra** hasta que su flow pase en los
 cuatro dispositivos de la matriz (los ids están en `.loop/stack.md`). No hay dispositivo
-primario ni verificación diferida: un layout que rompe solo en tablet, descubierto al
-final, ya tiene cinco pantallas construidas encima.
+primario, y la única verificación diferida es la de la sección 1.6 (entorno que no puede
+correr los cuatro dispositivos, con la deuda registrada); en un entorno completo, un
+layout que rompe solo en tablet, descubierto al final, ya tiene cinco pantallas
+construidas encima.
 
 **Los dispositivos se corren por pares, nunca los cuatro juntos.** Medido: cuatro
 emuladores vivos a la vez dejan la máquina sin memoria para los builds que la propia
@@ -84,8 +86,40 @@ le basta el contrato de test/typecheck/lint.
 Un rojo en cualquier dispositivo manda la tarea a `fix-loop`, y al volver se reverifica en
 **los cuatro**, no solo en el que falló.
 
-Si un dispositivo no arranca, el estado es **bloqueado**, no verde: decilo y explicá qué
-falta. Nunca declares verde un dispositivo en el que no corriste el flow.
+Si un dispositivo no arranca en un entorno completo (ver 1.6), el estado es **bloqueado**,
+no verde: decilo y explicá qué falta. Nunca declares verde un dispositivo en el que no
+corriste el flow.
+
+## 1.6 Sin entorno completo de dispositivos: la tarea queda en `[d]`
+
+**Un entorno cuenta como completo solo si puede correr los cuatro dispositivos**:
+`emulator -list-avds` (Android) **y** `xcrun simctl list devices` (iOS) tienen que
+responder. En una sesión cloud, que corre en Ubuntu, no responde ninguno; en una máquina
+Linux con el SDK de Android responde uno solo. **Verificar la mitad de la matriz no es
+verificarla.**
+
+Si `state.md` dice `mobile: si` y el entorno no está completo:
+
+1. Corré igual tests, typecheck y lint (sección 1).
+2. Si pasan, la tarea **no** se marca `[x]`: se marca **`[d]`** en `plan.md`, verde en
+   código y sin verificar en dispositivos.
+3. Agregá una fila a `.loop/deuda-dispositivos.md` (creala si no existe):
+
+   ```markdown
+   | Tarea | Pantallas | Entorno donde quedó |
+   |---|---|---|
+   | T-00X | H-03 · Checkout | sesión cloud |
+   ```
+
+4. Sumá uno a `deuda_dispositivos` en `state.md`.
+
+**Saldar la deuda:** en un entorno completo, corré la matriz de la sección 1.5 para cada
+tarea de `.loop/deuda-dispositivos.md`. Si pasa, `[d]` pasa a `[x]`, se saca su fila y se
+resta uno a `deuda_dispositivos`. Si falla, la tarea vuelve a `correccion` como cualquier
+rojo.
+
+`[d]` no es un verde a medias ni un rojo: es una deuda con nombre. **Nunca la conviertas
+en `[x]` sin haber corrido los cuatro dispositivos.**
 
 ## 2. Cotejar contra el plan
 Los "tests esperados" de la tarea en `plan.md` tienen que existir de verdad y haber
@@ -97,6 +131,8 @@ prometía no es una tarea terminada.
 - **Verde** = comando ejecutado + exit 0 + los tests esperados presentes. Nada más cuenta.
 - **Rojo** → registra los hallazgos en `.loop/review-log.md`, pon `etapa = correccion`
   y devuelve control para que entre `fix-loop`.
+- **Deuda** (`[d]`) → solo cuando el entorno no puede correr los cuatro dispositivos y
+  el resto quedó verde. Ver 1.6.
 
 Nunca declares verde algo que no ejecutaste. Si no pudiste correr el comando, el
 estado es **bloqueado**, no verde: decilo y explicá qué falta.

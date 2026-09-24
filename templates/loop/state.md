@@ -19,6 +19,7 @@
 - **ultima_skill:** <nombre>    # qué skill escribió por última vez
 - **timestamp:** <YYYY-MM-DD>
 - **matriz_dispositivos:** <estado de los 4: listos | parcial (cuáles) | sin preparar>
+- **deuda_dispositivos:** <n>   # tareas en [d]: verdes en código, sin verificar en dispositivos
 
 ## Artefactos
 - analysis.md: pendiente | listo

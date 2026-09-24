@@ -11,6 +11,10 @@ regenera la plantilla y la skill loop-actualizar.
 Solo gestiona lo suyo: lo que quedó listado en .claude/loop/MANIFIESTO. Las
 reglas que instaló loop-rules, las skills propias del proyecto y las claves
 ajenas de .claude/settings.json no se tocan.
+
+Es transaccional: arma todo el vendoreo nuevo en un directorio temporal, y
+solo si terminó sin errores reemplaza lo anterior. Si algo falla, el proyecto
+queda como estaba.
 """
 from __future__ import annotations
 
@@ -19,6 +23,7 @@ import json
 import re
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -39,6 +44,8 @@ RECURSOS = (
     "plugins/dev-substrate/presets",
     "plugins/dev-substrate/templates",
 )
+# Las únicas raíces cuyo contenido el loop gestiona, y por lo tanto puede borrar.
+RAICES_GESTIONADAS = (".claude/skills", ".claude/agents")
 PLUGINS_GLOBALES = (
     "proyecto-loop@proyecto-loop-local",
     "dev-substrate@proyecto-loop-local",
@@ -59,21 +66,53 @@ def prefijo_de(ruta_relativa: str) -> str:
     return PREFIJO_LOOP
 
 
+def leer_texto(f: Path) -> str:
+    """Lee un archivo de texto del plugin, o aborta nombrando el que falló."""
+    try:
+        return f.read_text(encoding="utf-8")
+    except UnicodeDecodeError as e:
+        raise SystemExit(f"{f}: no es UTF-8 válido ({e.reason}). "
+                         "El proyecto no se tocó.") from None
+
+
+def copiar_archivo(origen: Path, destino: Path, prefijo: str) -> None:
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    if origen.suffix in TEXTO:
+        destino.write_text(reescribir(leer_texto(origen), prefijo), encoding="utf-8")
+    else:
+        shutil.copy2(origen, destino)
+
+
 def copiar(origen: Path, destino: Path, prefijo: str) -> None:
     """Copia un árbol reescribiendo los archivos de texto; el resto, byte a byte."""
     for f in sorted(origen.rglob("*")):
-        if not f.is_file():
-            continue
-        dst = destino / f.relative_to(origen)
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        if f.suffix in TEXTO:
-            dst.write_text(reescribir(f.read_text(), prefijo))
-        else:
-            shutil.copy2(f, dst)
+        if f.is_file():
+            copiar_archivo(f, destino / f.relative_to(origen), prefijo)
+
+
+def borrar(p: Path) -> None:
+    if p.is_dir():
+        shutil.rmtree(p)
+    elif p.exists():
+        p.unlink()
 
 
 def leer_version(raiz: Path) -> str:
-    return json.loads((raiz / ".claude-plugin/plugin.json").read_text())["version"]
+    return json.loads((raiz / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["version"]
+
+
+def validar_manifiesto(previas: set[str]) -> None:
+    """Un manifiesto solo puede listar entradas directas de RAICES_GESTIONADAS.
+
+    Una entrada que se sale de ahí —`..`, una ruta absoluta, otra carpeta— haría
+    que el re-vendoreo borrara algo que no es suyo. Se aborta sin tocar nada.
+    """
+    for rel in sorted(previas):
+        partes = Path(rel).parts
+        if (Path(rel).is_absolute() or ".." in partes or len(partes) != 3
+                or "/".join(partes[:2]) not in RAICES_GESTIONADAS):
+            raise SystemExit(f"MANIFIESTO inválido: {rel!r} no es una ruta que el loop "
+                             "gestione. No se borró nada; revisá el archivo a mano.")
 
 
 def planificar(raiz: Path) -> list[tuple[Path, str, str]]:
@@ -97,52 +136,60 @@ def planificar(raiz: Path) -> list[tuple[Path, str, str]]:
 def desactivar_plugins_globales(destino: Path) -> None:
     """Que en local corra la copia vendoreada y no la del plugin global."""
     p = destino / ".claude/settings.json"
-    datos = json.loads(p.read_text()) if p.exists() else {}
+    datos = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
     habilitados = datos.setdefault("enabledPlugins", {})
     for plugin in PLUGINS_GLOBALES:
         habilitados[plugin] = False
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(datos, indent=2, ensure_ascii=False) + "\n")
+    p.write_text(json.dumps(datos, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def vendorear(raiz: Path, destino: Path) -> list[str]:
     """Arma o actualiza el .claude/ de `destino`. Devuelve las rutas gestionadas."""
+    claude = destino / ".claude"
     loop = destino / PREFIJO_LOOP
     manifiesto = loop / "MANIFIESTO"
-    previas = set(manifiesto.read_text().split()) if manifiesto.exists() else set()
+    previas = (set(manifiesto.read_text(encoding="utf-8").split())
+               if manifiesto.exists() else set())
+    validar_manifiesto(previas)
     plan = planificar(raiz)
 
-    # Antes de borrar nada: no pisar lo que el proyecto creó por su cuenta.
+    # Antes de tocar nada: no pisar lo que el proyecto creó por su cuenta.
     for _, rel, _ in plan:
         if (destino / rel).exists() and rel not in previas:
             raise SystemExit(f"{rel} ya existe y no es del loop: no se pisa")
 
-    for rel in previas:
-        p = destino / rel
-        if p.is_dir():
-            shutil.rmtree(p)
-        elif p.exists():
-            p.unlink()
-    if loop.exists():
-        shutil.rmtree(loop)
+    # 1. Armar el vendoreo completo en un temporal, en el mismo disco para que
+    #    el reemplazo sea un rename. Si algo falla acá, el proyecto no se tocó.
+    claude.mkdir(parents=True, exist_ok=True)
+    temporal = Path(tempfile.mkdtemp(prefix=".vendoreo-", dir=claude))
+    try:
+        gestionadas: list[str] = []
+        for origen, rel, prefijo in plan:
+            if origen.is_dir():
+                copiar(origen, temporal / rel, prefijo)
+            else:
+                copiar_archivo(origen, temporal / rel, prefijo)
+            gestionadas.append(rel)
+        for r in RECURSOS:
+            copiar(raiz / r, temporal / PREFIJO_LOOP / r, prefijo_de(r))
+        (temporal / PREFIJO_LOOP / "VERSION").write_text(
+            leer_version(raiz) + "\n", encoding="utf-8")
+        (temporal / PREFIJO_LOOP / "MANIFIESTO").write_text(
+            "\n".join(gestionadas) + "\n", encoding="utf-8")
 
-    gestionadas: list[str] = []
-    for origen, rel, prefijo in plan:
-        if origen.is_dir():
-            copiar(origen, destino / rel, prefijo)
-        else:
+        # 2. Recién ahora se reemplaza: borrar lo gestionado antes y mover lo nuevo.
+        for rel in previas:
+            borrar(destino / rel)
+        borrar(loop)
+        for rel in gestionadas + [PREFIJO_LOOP]:
             dst = destino / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
-            dst.write_text(reescribir(origen.read_text(), prefijo))
-        gestionadas.append(rel)
-
-    for r in RECURSOS:
-        copiar(raiz / r, loop / r, prefijo_de(r))
+            (temporal / rel).rename(dst)
+    finally:
+        shutil.rmtree(temporal, ignore_errors=True)
 
     desactivar_plugins_globales(destino)
-    loop.mkdir(parents=True, exist_ok=True)
-    (loop / "VERSION").write_text(leer_version(raiz) + "\n")
-    manifiesto.write_text("\n".join(gestionadas) + "\n")
     return gestionadas
 
 

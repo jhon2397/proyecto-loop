@@ -97,3 +97,31 @@ def test_rechaza_skill_duplicada_entre_plugins(plugin, tmp_path):
     otra.write_text("---\nname: etapa\n---\n")
     with pytest.raises(SystemExit, match="duplicada"):
         vendorear.vendorear(plugin, tmp_path / "proyecto")
+
+
+def test_manifiesto_que_se_sale_del_arbol_no_borra_nada(plugin, tmp_path):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    afuera = tmp_path / "afuera.txt"
+    afuera.write_text("no me borres\n")
+    m = destino / ".claude/loop/MANIFIESTO"
+    m.write_text(m.read_text() + "../afuera.txt\n")
+    with pytest.raises(SystemExit, match="MANIFIESTO inválido"):
+        vendorear.vendorear(plugin, destino)
+    assert afuera.read_text() == "no me borres\n"
+    assert (destino / ".claude/skills/etapa/SKILL.md").is_file()
+
+
+def test_copia_fallida_deja_intacto_el_vendoreo_anterior(plugin, tmp_path):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    roto = plugin / "skills/etapa/roto.md"
+    roto.write_bytes(b"\xff\xfe esto no es utf-8")
+    with pytest.raises(SystemExit, match="roto.md"):
+        vendorear.vendorear(plugin, destino)
+    assert (destino / ".claude/loop/VERSION").read_text() == "9.9.9\n"
+    assert (destino / ".claude/loop/MANIFIESTO").is_file()
+    assert (destino / ".claude/skills/etapa/SKILL.md").is_file()
+    assert not list((destino / ".claude").glob(".vendoreo-*"))
+    roto.unlink()
+    vendorear.vendorear(plugin, destino)  # y la corrida siguiente se recupera sola

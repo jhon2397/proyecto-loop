@@ -166,14 +166,28 @@ def desactivar_plugins_globales(destino: Path) -> None:
 def obtener_tercero(url: str, sha: str, cache: Path) -> Path:
     """Trae el repo de origen en un commit exacto: por SHA, nunca por rama."""
     d = cache / sha
-    if not (d / ".git").is_dir():
+    marcador = d / ".completo"
+    # git init crea d/.git antes del fetch: si quedó a medias por un corte,
+    # el marcador no está y hay que rehacer el clon desde cero.
+    if d.exists() and not marcador.is_file():
+        shutil.rmtree(d)
+    if not marcador.is_file():
         d.mkdir(parents=True, exist_ok=True)
         for cmd in (
             ["git", "init", "-q"],
             ["git", "fetch", "-q", "--depth", "1", url, sha],
             ["git", "checkout", "-q", "--detach", "FETCH_HEAD"],
         ):
-            subprocess.run(cmd, cwd=d, check=True)
+            try:
+                subprocess.run(cmd, cwd=d, check=True, capture_output=True, text=True)
+            except subprocess.CalledProcessError as e:
+                stderr = (e.stderr or "").strip()
+                detalle = f" stderr: {stderr[:500]}" if stderr else ""
+                raise SystemExit(
+                    f"{url}: falló '{' '.join(cmd)}' para el commit {sha}. "
+                    f"El proyecto no se tocó.{detalle}"
+                ) from None
+        marcador.touch()
     return d
 
 
@@ -187,7 +201,11 @@ def planificar_terceros(terceros: dict, cache: Path) -> list[tuple[Path, str, di
     plan: list[tuple[Path, str, dict]] = []
     for nombre, t in sorted(terceros.items()):
         repo = obtener_tercero(t["url"], t["sha"], cache)
-        real = nombre_declarado(repo / t["ruta"] / "SKILL.md")
+        skill_md = repo / t["ruta"] / "SKILL.md"
+        if not skill_md.is_file():
+            raise SystemExit(f"{nombre}: no hay SKILL.md en {t['ruta']} del commit "
+                             f"{t['sha']}. El proyecto no se tocó.")
+        real = nombre_declarado(skill_md)
         if real != nombre:
             raise SystemExit(f"{nombre}: la skill en {t['ruta']} declara name={real!r}")
         if not (repo / "LICENSE").is_file():
@@ -213,6 +231,9 @@ def escribir_terceros_md(loop: Path, plan: list[tuple[Path, str, dict]]) -> None
 def vendorear(raiz: Path, destino: Path, terceros: dict | None = None,
               cache: Path | None = None) -> list[str]:
     """Arma o actualiza el .claude/ de `destino`. Devuelve las rutas gestionadas."""
+    if terceros and cache is None:
+        with tempfile.TemporaryDirectory() as tmp:
+            return vendorear(raiz, destino, terceros, Path(tmp))
     claude = destino / ".claude"
     loop = destino / PREFIJO_LOOP
     manifiesto = loop / "MANIFIESTO"
@@ -221,6 +242,12 @@ def vendorear(raiz: Path, destino: Path, terceros: dict | None = None,
     validar_manifiesto(previas)
     plan = planificar(raiz)
     plan_terceros = planificar_terceros(terceros, cache) if terceros else []
+    rels_propias = {rel for _, rel, _ in plan}
+    for _, rel, _ in plan_terceros:
+        if rel in rels_propias:
+            nombre = rel.rsplit("/", 1)[1]
+            raise SystemExit(f"{nombre}: el tercero tiene el mismo nombre que una skill "
+                             "del loop. El proyecto no se tocó.")
 
     # Antes de tocar nada: no pisar lo que el proyecto creó por su cuenta.
     for rel in [r for _, r, _ in plan] + [r for _, r, _ in plan_terceros]:

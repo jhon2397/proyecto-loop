@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -191,3 +192,54 @@ def test_sin_terceros_lo_deja_dicho(plugin, tmp_path):
     destino = tmp_path / "proyecto"
     vendorear.vendorear(plugin, destino)
     assert "Ninguna" in (destino / ".claude/loop/TERCEROS.md").read_text()
+
+
+def test_fetch_fallido_da_error_claro(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino)
+    repo_tercero["skill-ajena"]["sha"] = "0" * 40
+    with pytest.raises(SystemExit, match="0000000"):
+        vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    assert (destino / ".claude/loop/VERSION").read_text() == "9.9.9\n"
+
+
+def test_cache_a_medias_se_rehace(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    cache = tmp_path / "cache"
+    sha = repo_tercero["skill-ajena"]["sha"]
+    (cache / sha / ".git").mkdir(parents=True)
+    vendorear.vendorear(plugin, destino, repo_tercero, cache)
+    assert (destino / ".claude/skills/skill-ajena/SKILL.md").is_file()
+
+
+def test_ruta_sin_skill_md_da_error_claro(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    repo_tercero["skill-ajena"]["ruta"] = "skills/no-existe"
+    with pytest.raises(SystemExit, match="no hay SKILL.md"):
+        vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+
+
+def test_tercero_con_nombre_de_skill_propia(plugin, tmp_path):
+    destino = tmp_path / "proyecto"
+    d = tmp_path / "tercero-etapa"
+    (d / "skills/carpeta-distinta").mkdir(parents=True)
+    (d / "LICENSE").write_text("MIT License\n")
+    (d / "skills/carpeta-distinta/SKILL.md").write_text(
+        "---\nname: etapa\n---\nUsa `${CLAUDE_PLUGIN_ROOT}` propio.\n")
+    for cmd in (["git", "init", "-q"],
+                ["git", "add", "-A"],
+                ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "x"],
+                ["git", "config", "uploadpack.allowAnySHA1InWant", "true"]):
+        subprocess.run(cmd, cwd=d, check=True)
+    sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=d, check=True,
+                         capture_output=True, text=True).stdout.strip()
+    terceros = {"etapa": {"url": d.as_uri(), "sha": sha,
+                          "ruta": "skills/carpeta-distinta", "licencia": "MIT"}}
+    with pytest.raises(SystemExit, match="mismo nombre"):
+        vendorear.vendorear(plugin, destino, terceros, tmp_path / "cache")
+
+
+def test_terceros_sin_cache_explicito(plugin, tmp_path, repo_tercero):
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino, repo_tercero)
+    assert (destino / ".claude/skills/skill-ajena/SKILL.md").is_file()

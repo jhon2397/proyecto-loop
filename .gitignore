@@ -2,3 +2,5 @@
 *.log
 # lista local de nombres internos a vigilar (no versionar)
 scripts/nombres-internos.txt
+__pycache__/
+.pytest_cache/

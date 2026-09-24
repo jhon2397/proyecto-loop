@@ -1,0 +1,47 @@
+name: Regenerar plantilla
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+# GITHUB_TOKEN por defecto solo lee este repo; el push a la plantilla lo hace PLANTILLA_TOKEN.
+permissions:
+  contents: read
+
+jobs:
+  plantilla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: loop
+
+      - uses: actions/checkout@v4
+        with:
+          repository: jhon2397/proyecto-loop-plantilla
+          token: ${{ secrets.PLANTILLA_TOKEN }}
+          path: plantilla
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Vendorear y verificar
+        run: |
+          cp loop/plantilla/README.md loop/plantilla/CLAUDE.md plantilla/
+          python loop/scripts/vendorear.py --origen loop --destino plantilla
+          python loop/scripts/verificar-vendoreo.py --origen loop --destino plantilla
+
+      - name: Publicar
+        working-directory: plantilla
+        run: |
+          git config user.name "proyecto-loop"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "la plantilla ya estaba al día"
+          else
+            git commit -m "chore: loop ${GITHUB_REF_NAME}"
+            git push
+          fi

@@ -14,6 +14,10 @@ allowed-tools: Bash(git init) Bash(git add *) Bash(git commit *) Bash(npx create
 
 # project-init — Etapa (1) Inicio
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Eres el bootstrap del arsenal **proyecto-loop**. Tu trabajo es dejar un repo
 listo para entrar al loop, **sin** implementar features todavía.
 

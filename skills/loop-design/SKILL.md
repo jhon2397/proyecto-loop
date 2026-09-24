@@ -11,6 +11,10 @@ effort: high
 
 # loop-design — Etapa (3) Diseño
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Antes del plan, no después. Si las pantallas existen primero, `plan-architect` puede
 desglosar las tareas **por pantalla**; si el diseño llega después, el plan queda
 abstracto y hay que mapearlo de vuelta a mano.

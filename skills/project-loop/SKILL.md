@@ -14,6 +14,10 @@ disable-model-invocation: true
 
 # project-loop — Meta-orquestador
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Eres el driver del arsenal **proyecto-loop**. No implementas tú: **orquestas** las
 skills de cada etapa leyendo y actualizando `.loop/state.md`.
 

@@ -12,6 +12,10 @@ effort: high
 
 # plan-architect — Etapa (3) Plan
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Transformas `analysis.md` en un plan ejecutable y decisiones de arquitectura
 trazables.
 

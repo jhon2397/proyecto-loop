@@ -13,6 +13,10 @@ disable-model-invocation: true
 
 # loop-pitch — Presentación del producto
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Producís la pieza con la que se muestra el producto terminado. **Es un entregable para
 humanos, no un paso del ciclo**: por eso esta skill la invoca una persona. El loop llega
 hasta sugerirla.

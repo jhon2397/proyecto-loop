@@ -16,6 +16,7 @@ SKILLS = "skills/*/SKILL.md"
 LOOP = "skills/project-loop/SKILL.md"
 ESTADO = "templates/loop/state.md"
 CATALOGO = "references/ui-patterns.md"
+DEPENDENCIAS = "references/dependencias-externas.md"
 
 
 def frontmatter(path):
@@ -200,6 +201,20 @@ def main():
         )
     if "## Preguntas: pocas, y siempre con `AskUserQuestion`" not in loop:
         errores.append("`project-loop` no tiene la sección de preguntas con AskUserQuestion")
+
+    # 10. Toda skill que invoca una dependencia externa apunta a la regla de
+    #    degradación. Sin eso, en una sesión cloud la revisión ausente se saltea
+    #    callada y el loop dice "revisado" sin haber revisado.
+    deps = open(DEPENDENCIAS).read() if os.path.exists(DEPENDENCIAS) else ""
+    externas = re.findall(r"^\| `([^`]+)` \|", deps, re.M)
+    if not externas:
+        errores.append(f"{DEPENDENCIAS} no lista ninguna dependencia externa")
+    for f in sorted(glob.glob(SKILLS)):
+        texto = open(f).read()
+        usadas = [e for e in externas if f"`{e}`" in texto]
+        if usadas and "references/dependencias-externas.md" not in texto:
+            errores.append(f"`{f.split('/')[1]}` usa {', '.join(usadas)} "
+                           f"y no cita {DEPENDENCIAS}")
 
     if errores:
         print("FALLA:")

@@ -13,6 +13,10 @@ effort: high
 
 # loop-ship — Entrega al servidor
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 > **Esta skill toca producción.** No la dispara `project-loop` ni ninguna otra skill:
 > la invoca una persona. Y aun invocada, **no ejecutás nada contra el servidor sin que
 > el usuario apruebe explícitamente ese paso concreto**. Preparar los archivos es

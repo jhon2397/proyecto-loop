@@ -13,6 +13,10 @@ allowed-tools: Bash(npm run *) Bash(npx tsc *) Bash(npx eslint *) Bash(git add *
 
 # code-exec — Etapa (4) Ejecución
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 
 ## 0. Reanudar

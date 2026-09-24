@@ -53,12 +53,16 @@ pregunta: es el último mensaje de la corrida.
 - Lee `.loop/state.md`. Si no existe, no hay proyecto inicializado → sugiere `project-init`.
 - Determina la `etapa` actual y la `tarea_activa`.
 - **Comprobación de dispositivos (una sola vez por corrida).** Si `state.md` dice
-  `mobile: si`, verificá que los cuatro dispositivos de la matriz **puedan** arrancar —
-  de a pares, no los cuatro juntos — y **apagalos al terminar la comprobación**. No los
-  dejes vivos: cuatro emuladores simultáneos agotan la memoria de la máquina y los builds
-  que la verificación necesita no entran.
-- Registrá el resultado en `state.md` como `matriz_dispositivos`. **Si alguno no arranca,
-  la corrida no empieza**: es preferible fallar acá que descubrirlo en la tarea 12.
+  `mobile: si`, primero mirá si el entorno **está completo** (criterio de
+  `loop-verify`, sección 1.6). Son dos casos distintos y se tratan distinto:
+  - **Entorno incompleto** (no puede correr los cuatro, criterio de `loop-verify`
+    1.6) —por ejemplo, una sesión cloud, o una máquina con solo Android—: no es una
+    falla. Registrá `matriz_dispositivos: entorno incompleto (<qué falta>)` y seguí.
+    Las tareas de UI van a quedar en `[d]`.
+  - **Entorno completo**: verificá que los cuatro **puedan** arrancar, de a pares
+    y nunca los cuatro juntos, y apagalos al terminar. Cuatro emuladores simultáneos
+    agotan la memoria. Si alguno no arranca, **la corrida no empieza**: es preferible
+    fallar acá que descubrirlo en el gate de dispositivos de `loop-verify`.
 
 ## 1. Máquina de estados (encadena según la etapa)
 Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
@@ -81,8 +85,10 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 - **Ejecución → Revisión → Test.** Si Revisión deja hallazgos o Test queda en rojo
   → entra `fix-loop` → vuelve a Test. Repite hasta verde.
 - Cuando una tarea queda **verde y sin hallazgos abiertos**: márcala `[x]` en
-  `plan.md`, limpia `tarea_activa`, y toma la **siguiente** tarea pendiente
-  (deps satisfechas) → vuelve a `ejecucion`.
+  `plan.md` —o `[d]` si `loop-verify` la dejó en deuda por entorno incompleto (sección
+  1.6)—, limpia `tarea_activa`, y toma la **siguiente** tarea pendiente (deps
+  satisfechas) → vuelve a `ejecucion`. Con `[d]` la corrida sigue igual: la deuda se
+  salda aparte.
 - **Revisión secuencial, no simultánea:** la hace `loop-review` dentro de su subagente,
   un revisor por vez, con output a `review-log.md`. Vos recibís solo el resumen.
 
@@ -131,11 +137,18 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
   `deep-debugger`). No hay cuarta vuelta automática.
 
 ## 4. Cierre
-- Cuando no quedan tareas `[ ]` en `plan.md`: verificá primero que **el gate de arranque
-  esté verde** — la matriz de cuatro si hay mobile, la web levantada si no. Recién ahí
-  pon **etapa = entrega**, resume lo hecho (tareas cerradas, ADRs, hallazgos resueltos) y
-  **sugiere `engineering:deploy-checklist`**, después `loop-ship`, y **`loop-pitch`** si querés la
-  presentación del producto. Sumá `documentation` y `standup`/retro según corresponda.
+- Cuando no quedan tareas `[ ]` en `plan.md`, antes de nada verificá que **no quede
+  ninguna tarea `[d]`**. Si queda alguna, **no entres en `entrega`**: pará y reportá
+  cuántas y cuáles —están en `.loop/deuda-dispositivos.md`— y que se saldan corriendo
+  `loop-verify` en un entorno con los cuatro dispositivos. Después verificá que **el gate
+  de arranque esté verde** —la matriz de cuatro si hay mobile, la web levantada si no—.
+  Recién ahí pon **etapa = entrega**, resume lo hecho (tareas cerradas, ADRs, hallazgos
+  resueltos) y **sugiere `engineering:deploy-checklist`**, después `loop-ship`, y
+  **`loop-pitch`** si querés la presentación del producto. Sumá `documentation` y
+  `standup`/retro según corresponda.
+- **En el reporte de entrega, listá todas las líneas `NO VERIFICADO` de
+  `.loop/review-log.md`**: qué revisiones no corrieron por falta de una skill externa y qué
+  quedó sin evaluar. No bloquean la entrega, pero no se esconden.
 - **`loop-ship` no la disparás vos.** Toca producción: la invoca una persona. El loop
   llega hasta sugerirla.
 - Mantén la bitácora de `state.md` actualizada en cada transición para que el loop

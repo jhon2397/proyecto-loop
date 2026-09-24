@@ -88,3 +88,29 @@ def test_exige_los_terceros_que_declara_el_origen(plugin, vendoreado):
     r = correr(plugin, vendoreado)
     assert r.returncode == 1
     assert "skill-ajena" in r.stdout
+
+
+def test_archivo_no_utf8_es_falla_y_no_traceback(plugin, vendoreado):
+    (vendoreado / ".claude/loop/references/ui-patterns.md").write_bytes(
+        b"\xff\xfe no es utf-8")
+    r = correr(plugin, vendoreado, "--sin-terceros")
+    assert r.returncode == 1, r.stdout
+    assert "no es UTF-8 válido" in r.stdout
+    assert "Traceback" not in r.stderr
+
+
+def test_sin_terceros_json_avisa_y_no_aprueba(plugin, vendoreado):
+    r = correr(plugin, vendoreado)
+    assert r.returncode == 1, r.stdout
+    assert "AVISO" in r.stdout
+    assert "terceros.json" in r.stdout
+    assert "Traceback" not in r.stderr
+
+
+def test_sin_plugin_json_avisa_y_no_aprueba(plugin, vendoreado):
+    (plugin / ".claude-plugin/plugin.json").unlink()
+    r = correr(plugin, vendoreado, "--sin-terceros")
+    assert r.returncode == 1, r.stdout
+    assert "AVISO" in r.stdout
+    assert "plugin.json" in r.stdout
+    assert "Traceback" not in r.stderr

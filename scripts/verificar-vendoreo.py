@@ -56,11 +56,30 @@ def main(argv: list[str] | None = None) -> int:
 
     errores: list[str] = []
     gestionadas = manifiesto.read_text(encoding="utf-8").split()
-    terceros = ({} if a.sin_terceros
-                else json.loads((o / "terceros.json").read_text(encoding="utf-8")))
+
+    terceros_json = o / "terceros.json"
+    if a.sin_terceros:
+        terceros = {}
+    else:
+        try:
+            terceros = json.loads(terceros_json.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            print(f"AVISO: no existe {terceros_json}: no se pudo verificar el vendoreo.")
+            return 1
+        except json.JSONDecodeError:
+            print(f"AVISO: {terceros_json} no es JSON válido: no se pudo verificar el vendoreo.")
+            return 1
     de_terceros = {f".claude/skills/{n}" for n in terceros}
 
-    version = json.loads((o / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["version"]
+    plugin_json = o / ".claude-plugin/plugin.json"
+    try:
+        version = json.loads(plugin_json.read_text(encoding="utf-8"))["version"]
+    except FileNotFoundError:
+        print(f"AVISO: no existe {plugin_json}: no se pudo verificar el vendoreo.")
+        return 1
+    except json.JSONDecodeError:
+        print(f"AVISO: {plugin_json} no es JSON válido: no se pudo verificar el vendoreo.")
+        return 1
     archivo_version = loop / "VERSION"
     vendoreada = (archivo_version.read_text(encoding="utf-8").strip()
                   if archivo_version.is_file() else None)

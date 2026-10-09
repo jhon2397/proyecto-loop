@@ -70,6 +70,10 @@ tarea** va en sonnet y en subagente, para que el contexto del orquestador no cre
 - Cada etapa forkeada devuelve **un resumen**; el detalle queda en `.loop/`.
 - Tope por tarea: escalado a `deep-debugger` en `iteracion = 2`, alto en `iteracion = 3`.
 - `design:design-critique` corre solo en pantallas nuevas o con cambio de layout.
+- **El `model:` de una skill dura un turno.** Si la conversación sigue después (una
+  respuesta tuya, una pregunta en texto), vuelve el modelo de la sesión. Por eso las
+  skills preguntan con `AskUserQuestion`, que no cierra el turno. Para que el loop corra
+  barato de punta a punta, abrí la sesión en sonnet.
 
 ## Convenciones de v0.7.0
 

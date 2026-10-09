@@ -17,6 +17,14 @@ Producís la pieza con la que se muestra el producto terminado. **Es un entregab
 humanos, no un paso del ciclo**: por eso esta skill la invoca una persona. El loop llega
 hasta sugerirla.
 
+## Preguntas al usuario: siempre con `AskUserQuestion`
+Toda pregunta de esta skill (confirmar, elegir, reinicializar) va con la herramienta
+`AskUserQuestion`, **nunca en texto**. Una pregunta en texto cierra el turno, y la
+respuesta llega en un turno nuevo que ya no corre con el `model:` de esta skill sino
+con el de la sesión: el resto del trabajo se hace con otro modelo y otro costo.
+Si `AskUserQuestion` no está disponible (por ejemplo, dentro de `project-loop`), hacé
+la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno.
+
 ## 0. Precondiciones
 
 - Leé `.loop/state.md`. Si la `etapa` no es `entrega`, avisá que el producto todavía no

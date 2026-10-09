@@ -14,6 +14,14 @@ effort: high
 Conviertes una idea o lista de requerimientos en un análisis estructurado que
 `plan-architect` pueda transformar en tareas.
 
+## Preguntas al usuario: siempre con `AskUserQuestion`
+Toda pregunta de esta skill (confirmar, elegir, reinicializar) va con la herramienta
+`AskUserQuestion`, **nunca en texto**. Una pregunta en texto cierra el turno, y la
+respuesta llega en un turno nuevo que ya no corre con el `model:` de esta skill sino
+con el de la sesión: el resto del trabajo se hace con otro modelo y otro costo.
+Si `AskUserQuestion` no está disponible (por ejemplo, dentro de `project-loop`), hacé
+la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno.
+
 ## 0. Reanudar
 - Lee `.loop/state.md`. Si la etapa no es `analisis`, avisa e igual procede solo si
   el usuario lo pide (idempotente: si `analysis.md` ya existe, **complétalo/actualízalo**,

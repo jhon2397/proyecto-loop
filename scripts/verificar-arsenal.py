@@ -173,6 +173,23 @@ def main():
             elif ":" in tok and tok not in EXTERNAS | propias | {"file:line"}:
                 errores.append(f"`{n}` cita `{tok}`, que no es una skill conocida")
 
+    # 9. Una skill que fija `model:` y le pregunta algo al usuario tiene que preguntar con
+    #    AskUserQuestion. Una pregunta en texto cierra el turno y la respuesta corre con el
+    #    modelo de la sesión, no con el de la skill (medido en una corrida de project-init:
+    #    59 llamadas en opus con `model: sonnet` declarado).
+    PREGUNTAN = (
+        "project-init", "requirements-analysis", "loop-design",
+        "loop-adopt", "loop-ship", "loop-pitch",
+    )
+    for n in PREGUNTAN:
+        if n in skills and skills[n].get("model"):
+            texto = open(f"skills/{n}/SKILL.md").read()
+            if "## Preguntas al usuario: siempre con `AskUserQuestion`" not in texto:
+                errores.append(
+                    f"`{n}` fija model: y pregunta al usuario, pero le falta la sección "
+                    "de preguntas con AskUserQuestion: la respuesta correría con otro modelo"
+                )
+
     if errores:
         print("FALLA:")
         for e in errores:

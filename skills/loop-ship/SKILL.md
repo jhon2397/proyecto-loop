@@ -18,6 +18,14 @@ effort: high
 > el usuario apruebe explícitamente ese paso concreto**. Preparar los archivos es
 > seguro; conectarse y levantar contenedores no.
 
+## Preguntas al usuario: siempre con `AskUserQuestion`
+Toda pregunta de esta skill (confirmar, elegir, reinicializar) va con la herramienta
+`AskUserQuestion`, **nunca en texto**. Una pregunta en texto cierra el turno, y la
+respuesta llega en un turno nuevo que ya no corre con el `model:` de esta skill sino
+con el de la sesión: el resto del trabajo se hace con otro modelo y otro costo.
+Si `AskUserQuestion` no está disponible (por ejemplo, dentro de `project-loop`), hacé
+la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno.
+
 ## 0. Antes de empezar
 - Lee `.loop/state.md` y `.loop/stack.md`. El plan tiene que estar agotado y los
   tests en verde: desplegar con tareas abiertas no es entregar, es adelantar deuda.

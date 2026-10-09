@@ -15,6 +15,14 @@ Antes del plan, no después. Si las pantallas existen primero, `plan-architect` 
 desglosar las tareas **por pantalla**; si el diseño llega después, el plan queda
 abstracto y hay que mapearlo de vuelta a mano.
 
+## Preguntas al usuario: siempre con `AskUserQuestion`
+Toda pregunta de esta skill (confirmar, elegir, reinicializar) va con la herramienta
+`AskUserQuestion`, **nunca en texto**. Una pregunta en texto cierra el turno, y la
+respuesta llega en un turno nuevo que ya no corre con el `model:` de esta skill sino
+con el de la sesión: el resto del trabajo se hace con otro modelo y otro costo.
+Si `AskUserQuestion` no está disponible (por ejemplo, dentro de `project-loop`), hacé
+la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno.
+
 ## 0. Reanudar
 - Lee `.loop/state.md` y `.loop/analysis.md`.
 - Si `.loop/design.md` ya existe, **completá el delta** (pantallas nuevas), no rehagas.

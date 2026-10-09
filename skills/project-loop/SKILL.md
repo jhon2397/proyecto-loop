@@ -5,8 +5,10 @@ description: >-
   actual, encadenando Ejecución → Revisión → Test → (Corrección) → siguiente tarea
   hasta agotar el plan. Full-auto: para solo al fallar o al terminar. Trigger con
   "corre el loop", "automatiza el ciclo", "sigue con el proyecto", "avanza solo".
+effort: medium
+model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.6.1
+version: 0.8.0
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---
@@ -49,7 +51,7 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 | plan | `plan-architect` | reglas |
 | reglas | `loop-rules` (saltear si `.claude/rules/` ya tiene contenido) | ejecucion |
 | ejecucion | `code-exec` (siguiente tarea) | revision |
-| revision | `engineering:code-review`; **si la tarea es de UI** también `design:design-critique` + `accesslint` + `web-design-guidelines` (web) / `react-native-best-practices` (mobile) → hallazgos a `review-log.md` | test |
+| revision | `loop-review` (subagente: `engineering:code-review` y, si la tarea es de UI, los revisores de diseño/a11y) → hallazgos a `review-log.md` | test |
 | test | `loop-verify` | correccion si rojo · si verde y la tarea toca auth/tenant/dinero/secretos → seguridad · si no, cerrar tarea |
 | seguridad | `loop-security` | correccion si hay hallazgos, si no cerrar tarea |
 | correccion | `fix-loop` | test (reverificar) |
@@ -60,9 +62,8 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 - Cuando una tarea queda **verde y sin hallazgos abiertos**: márcala `[x]` en
   `plan.md`, limpia `tarea_activa`, y toma la **siguiente** tarea pendiente
   (deps satisfechas) → vuelve a `ejecucion`.
-- **Revisión secuencial, no simultánea:** corre cada revisor como paso separado con
-  output a `review-log.md`. En web: `web-design-guidelines` + `accesslint`. En mobile:
-  `react-native-best-practices` + auditoría a11y. Las tareas de UI suman `design:design-critique`.
+- **Revisión secuencial, no simultánea:** la hace `loop-review` dentro de su subagente,
+  un revisor por vez, con output a `review-log.md`. Vos recibís solo el resumen.
 
 ## 2. Estética y diseño (de primera clase, no incidental)
 - El **design system** se construye temprano (primera tarea de UI) y se documenta en
@@ -88,10 +89,25 @@ para humanos, no un paso del ciclo. La **sugerís** al llegar a entrega, nunca l
 Si una etapa te devuelve "cannot be invoked via the Skill tool", **no repliques su
 trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 
-## 3. Guardas anti-bucle infinito
-- Lleva la cuenta `iteracion` por tarea en `state.md`. Si una tarea no pasa a verde
-  tras varios ciclos de corrección, **detente** y reporta al usuario el bloqueo
-  (hallazgos abiertos, último error de test, hipótesis), marcando la tarea `[!]`.
+## 2.c Higiene de contexto (el loop corre muchas vueltas: cada token se paga N veces)
+- `code-exec`, `loop-review`, `loop-verify`, `fix-loop` y `loop-security` corren en
+  subagente y te devuelven **un resumen**. Trabajá con ese resumen.
+- **No leas** logs de test, `review-log.md` completo ni diffs en este hilo. Si necesitás
+  un dato puntual (un id de hallazgo, la etapa), leé `state.md` o hacé un `grep` dirigido.
+- No re-narres lo que hizo cada etapa: una línea en la bitácora de `state.md` alcanza.
+
+## 3. Guardas anti-bucle infinito (escalado y tope)
+- `iteracion` vive en `state.md`: la incrementa `fix-loop` en cada vuelta y vos la
+  ponés en 0 al tomar una tarea nueva. Leela al volver de cada `loop-verify` en rojo.
+- **`iteracion = 2` y sigue en rojo → escalá.** Antes del siguiente `fix-loop`, lanzá el
+  agente `dev-substrate:deep-debugger` (herramienta Agent) con la tarea, el error
+  principal y las rutas de los logs. Pedile solo causa raíz, evidencia (`file:line`) y
+  fix propuesto, en pocas líneas. El agente es de solo lectura: **vos** guardás esa
+  respuesta en `.loop/diagnostico-<TAREA>.md`, que `fix-loop` lee al arrancar. Es la única vuelta que paga opus: las anteriores ya
+  descartaron lo obvio.
+- **`iteracion = 3` y sigue en rojo → detente.** Marcá la tarea `[!]` y reportá al
+  usuario el bloqueo (hallazgos abiertos, último error de test, diagnóstico de
+  `deep-debugger`). No hay cuarta vuelta automática.
 
 ## 4. Cierre
 - Cuando no quedan tareas `[ ]` en `plan.md`: verificá primero que **el gate de arranque

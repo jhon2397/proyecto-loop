@@ -5,7 +5,9 @@ description: >-
   salida como evidencia y decide verde o rojo. No marca nada verde sin haber
   ejecutado el comando. Trigger con "verificá la tarea", "corré los tests", o vía
   project-loop.
-effort: medium
+context: fork
+model: sonnet
+effort: low
 ---
 
 # loop-verify — Etapa (7) Test
@@ -102,6 +104,10 @@ estado es **bloqueado**, no verde: decilo y explicá qué falta.
 ## 4. Cierre
 Actualiza `state.md`: `ultima_skill = loop-verify`, la etapa que corresponda y la
 ruta del log en la bitácora.
+
+**Devolvé solo el veredicto** (máx. ~10 líneas): verde / rojo / bloqueado, qué comandos
+y dispositivos corrieron, rutas de los logs y, si es rojo, los ids `H-00X` registrados.
+Nunca pegues la salida de los tests en la respuesta: está en los logs.
 
 Si la tarea quedó verde y toca autenticación, autorización, `tenant_id`/RLS, dinero,
 secretos o entrada externa, la siguiente etapa es **seguridad** (`loop-security`),

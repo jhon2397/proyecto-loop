@@ -5,7 +5,8 @@ description: >-
   repo y hace un commit atómico. Trigger con "ejecuta la siguiente tarea",
   "implementa T-00X", "avanza el plan", o invocada por project-loop. Es la etapa
   (4) Ejecución del arsenal proyecto-loop.
-effort: high
+model: sonnet
+effort: medium
 context: fork
 allowed-tools: Bash(npm run *) Bash(npx tsc *) Bash(npx eslint *) Bash(git add *) Bash(git commit *) Bash(git status *)
 ---
@@ -71,5 +72,7 @@ Skill; no las menciones como texto) las skills de diseño:
 ## 4. Cierre
 - Deja la tarea en `[~]` (NO en `[x]` todavía: se cierra al pasar test/revisión).
 - Actualiza `state.md`: `ultima_skill = code-exec`, **etapa = revision**, bitácora.
-- Sugiere la siguiente etapa: `engineering:code-review` (revisión) → luego test.
+- Sugiere la siguiente etapa: `loop-review` (revisión) → luego test.
   Si corre `project-loop`, devuelve control para que encadene revisión y test.
+- **Devolvé solo un resumen** (máx. ~10 líneas): tarea, commit, archivos tocados y
+  resultado del sanity local. Nada de diffs ni salidas de comandos completas.

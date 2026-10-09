@@ -6,7 +6,7 @@ description: >-
   "hacé el video del producto", "pitch del proyecto". Manual: la sugiere el loop al
   llegar a entrega, nunca la dispara solo.
 argument-hint: [ruta-del-proyecto]
-model: opus
+model: sonnet
 effort: high
 disable-model-invocation: true
 ---

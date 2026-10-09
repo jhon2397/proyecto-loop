@@ -6,7 +6,9 @@ description: >-
   re-dispara el test. Trigger cuando una revisión deja hallazgos o los tests están
   en rojo, o "corrige los hallazgos", "arregla el test". Es la etapa (6) Corrección
   del arsenal proyecto-loop.
-effort: high
+context: fork
+model: sonnet
+effort: medium
 ---
 
 # fix-loop — Etapa (6) Corrección
@@ -16,6 +18,11 @@ Cierras el sub-bucle Test/Revisión → Corrección → Test hasta que la tarea 
 ## 0. Reanudar
 - Lee `.loop/state.md`, `.loop/review-log.md` y la última salida de tests.
 - Identifica la `tarea_activa` y sus hallazgos abiertos (`H-00X`).
+- Si existe `.loop/diagnostico-<TAREA>.md`, léelo primero: es el diagnóstico de
+  `dev-substrate:deep-debugger` que el orquestador pidió al escalar. Partí de su causa
+  raíz en vez de volver a investigar desde cero.
+- De los logs de test leé solo la parte que falla (`tail`, `grep` del error), no el
+  archivo entero.
 
 ## 1. Priorizar
 - Ordena los hallazgos por severidad: **crítica → alta → media → baja**.
@@ -32,8 +39,9 @@ Cierras el sub-bucle Test/Revisión → Corrección → Test hasta que la tarea 
 
 ## 3. Re-test
 - Vuelve a correr los tests afectados (idealmente la suite relacionada a la tarea).
-- **Si vuelve a fallar:** quedas en etapa `correccion`, itera (incrementa
-  `iteracion` en `state.md`). No avances hasta verde.
+- **Si vuelve a fallar:** incrementa `iteracion` en `state.md`, dejá etapa `correccion`
+  y devolvé control. **No iteres dentro de esta corrida**: el escalado y el tope de
+  vueltas los decide `project-loop`. No avances hasta verde.
 - **Si pasa:** continúa al cierre.
 
 ## 4. Commit
@@ -44,3 +52,5 @@ Cierras el sub-bucle Test/Revisión → Corrección → Test hasta que la tarea 
   o, si ya reverificaste y está verde, deja listo para cerrar la tarea, bitácora.
 - Si todos los hallazgos de la tarea están cerrados y los tests pasan, indica que la
   tarea puede marcarse `[x]` y devolver control a `project-loop`.
+- **Devolvé solo un resumen** (máx. ~10 líneas): hallazgos cerrados y abiertos, commits,
+  y si el re-test quedó verde o rojo (con el error principal en una línea).

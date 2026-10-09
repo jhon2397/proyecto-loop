@@ -26,19 +26,37 @@ Native por defecto), con capa web.
 | 4 | `proyecto-loop:plan-architect` | Plan | Arquitectura + ADRs + tareas atómicas, desglosadas por pantalla |
 | 5 | `proyecto-loop:loop-rules` | Reglas | Instala las convenciones del stack desde `dev-substrate`, ancladas al repo |
 | 6 | `proyecto-loop:code-exec` | Ejecución | Implementa la siguiente tarea + commit atómico |
-| 7 | `proyecto-loop:loop-verify` | Test | Corre la verificación real, guarda evidencia en `.loop/test-*.log` |
-| 8 | `proyecto-loop:loop-security` | Seguridad | Revisa el diff si toca auth, tenant, dinero o secretos |
-| 9 | `proyecto-loop:fix-loop` | Corrección | Prioriza hallazgos, corrige, re-testea |
-| 10 | `proyecto-loop:project-loop` | Orquestador | Driver full-auto del ciclo completo |
-| 11 | `proyecto-loop:loop-ship` | Entrega | Despliegue al servidor. **Manual: toca producción** |
-| 12 | `proyecto-loop:loop-adopt` | Entrada brownfield | Reconstruye `.loop/` en un repo que ya existe |
-| 13 | `proyecto-loop:loop-status` | — | Lectura barata del estado (haiku, solo lectura) |
-| 14 | `proyecto-loop:loop-pitch` | — | Presentación del producto con HyperFrames, usando el design system real. **Manual** |
+| 7 | `proyecto-loop:loop-review` | Revisión | Corre los revisores de la tarea en subagente y deja los hallazgos en `review-log.md` |
+| 8 | `proyecto-loop:loop-verify` | Test | Corre la verificación real, guarda evidencia en `.loop/test-*.log` |
+| 9 | `proyecto-loop:loop-security` | Seguridad | Revisa el diff si toca auth, tenant, dinero o secretos |
+| 10 | `proyecto-loop:fix-loop` | Corrección | Prioriza hallazgos, corrige, re-testea |
+| 11 | `proyecto-loop:project-loop` | Orquestador | Driver full-auto del ciclo completo |
+| 12 | `proyecto-loop:loop-ship` | Entrega | Despliegue al servidor. **Manual: toca producción** |
+| 13 | `proyecto-loop:loop-adopt` | Entrada brownfield | Reconstruye `.loop/` en un repo que ya existe |
+| 14 | `proyecto-loop:loop-status` | — | Lectura barata del estado (haiku, solo lectura) |
+| 15 | `proyecto-loop:loop-pitch` | — | Presentación del producto con HyperFrames, usando el design system real. **Manual** |
 
-Reusa del plugin `engineering`: `code-review` (revisión), `debug` (fix-loop),
+Reusa del plugin `engineering`: `code-review` (dentro de `loop-review`), `debug` (fix-loop),
 y `deploy-checklist`/`documentation`/`standup` al cierre. La etapa de test dejó de
 delegarse: la cubre `loop-verify`, que exige evidencia ejecutada.
 Backbone de metodología opcional: **Superpowers** (TDD, debug 4-fases, brainstorm).
+
+## Consumo de tokens (v0.8.0)
+
+Opus se reserva para lo que corre **una vez** o es de alto impacto; lo que corre **por
+tarea** va en sonnet y en subagente, para que el contexto del orquestador no crezca.
+
+| Perfil | Skills / agentes |
+|--------|------------------|
+| opus · high | `requirements-analysis`, `plan-architect`, `loop-design`, `loop-adopt`, `security-reviewer`, `architect` |
+| opus · xhigh (solo al escalar) | `deep-debugger`, en la 2.ª vuelta roja de una tarea |
+| sonnet · subagente | `code-exec`, `loop-review`, `loop-verify`, `fix-loop` |
+| sonnet | `project-loop` (orquestador), `project-init`, `loop-rules`, `loop-ship`, `loop-pitch` |
+| haiku | `loop-status` |
+
+- Cada etapa forkeada devuelve **un resumen**; el detalle queda en `.loop/`.
+- Tope por tarea: escalado a `deep-debugger` en `iteracion = 2`, alto en `iteracion = 3`.
+- `design:design-critique` corre solo en pantallas nuevas o con cambio de layout.
 
 ## Convenciones de v0.7.0
 

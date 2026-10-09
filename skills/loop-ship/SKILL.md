@@ -7,7 +7,7 @@ description: >-
   "preparalo para el servidor", "armá el despliegue".
 argument-hint: [nombre-del-proyecto]
 disable-model-invocation: true
-model: opus
+model: sonnet
 effort: high
 ---
 

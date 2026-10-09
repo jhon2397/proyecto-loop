@@ -31,13 +31,21 @@ lo fuera.
 Si `state.md` todavía no tiene `aesthetic`, definila ahora y escribila **completa**:
 tono, densidad, tipografía y principios — no un color.
 
-Manda `frontend-design` para la dirección; `design-taste-frontend` ajusta parámetros;
-UI-UX-PRO-MAX es consulta para paletas y tipografía, no decide. Tres skills compitiendo
-en cada pantalla es cómo se llega a un diseño sin carácter.
+**Invocá de verdad** (herramienta Skill, no como texto) y en este orden:
+`anthropic-skills:frontend-design` manda la dirección; `design-taste-frontend` ajusta
+parámetros; `anthropic-skills:ui-ux-pro-max` es consulta para paletas y tipografía, no
+decide. Si `state.md` ya trae `aesthetic` de `project-init`, no las vuelvas a correr para
+redefinirla. Si una no está instalada, anotalo en la bitácora y seguí.
+Tres skills compitiendo en cada pantalla es cómo se llega a un diseño sin carácter.
 
 ## 3. Design system → `.loop/design-system.md`
 Tokens como **decisiones**, no como vibras: escala tipográfica, paleta con sus roles,
 espaciado, radios, elevación, motion. Cada uno con una línea de por qué.
+
+Los tokens de **motion** (duraciones, curvas, qué transiciones existen) salen de invocar
+`animate` (herramienta Skill), no de valores inventados. Para mobile, sumá
+`react-native-best-practices:react-native-best-practices`: el motion corre en Reanimated
+y no puede bloquear el hilo de JS.
 
 Para mobile, contemplá modo claro y oscuro y las áreas seguras desde acá: retrofitearlo
 después toca todas las pantallas.

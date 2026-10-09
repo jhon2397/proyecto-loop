@@ -41,6 +41,19 @@ y `deploy-checklist`/`documentation`/`standup` al cierre. La etapa de test dejó
 delegarse: la cubre `loop-verify`, que exige evidencia ejecutada.
 Backbone de metodología opcional: **Superpowers** (TDD, debug 4-fases, brainstorm).
 
+**Skills de apoyo por etapa (v0.8.1).** Cada etapa las invoca con la herramienta Skill y
+por su nombre completo; si una falta, lo anota en `state.md` y sigue.
+
+| Etapa | Skills |
+|-------|--------|
+| `project-init` | `superpowers:brainstorming` (idea vaga), `anthropic-skills:frontend-design`, `design-taste-frontend`, `anthropic-skills:ui-ux-pro-max`, `animate`, `react-native-best-practices:react-native-best-practices` (mobile) |
+| `requirements-analysis` | `superpowers:brainstorming` (dudas de producto) |
+| `loop-design` | las tres de diseño (si no hay `aesthetic`) + `animate` para los tokens de motion |
+| `code-exec` | UI: diseño + `animate`; lógica: `superpowers:test-driven-development` |
+
+`scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
+herramienta Skill no resuelve.
+
 ## Consumo de tokens (v0.8.0)
 
 Opus se reserva para lo que corre **una vez** o es de alto impacto; lo que corre **por

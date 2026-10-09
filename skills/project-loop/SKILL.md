@@ -8,7 +8,7 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.8.0
+version: 0.8.1
 disable-model-invocation: true
 disallowed-tools: AskUserQuestion
 ---
@@ -68,8 +68,8 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 ## 2. Estética y diseño (de primera clase, no incidental)
 - El **design system** se construye temprano (primera tarea de UI) y se documenta en
   `.loop/design-system.md`. Toda pantalla lo reusa; **nada de estilos ad-hoc**.
-- La **dirección estética** se fija UNA vez en `state.md` (`aesthetic`): `frontend-design`
-  manda, `design-taste-frontend` ajusta parámetros, `ui-ux-pro-max` es consulta. No compiten por tarea.
+- La **dirección estética** se fija UNA vez en `state.md` (`aesthetic`): `anthropic-skills:frontend-design`
+  manda, `design-taste-frontend` ajusta parámetros, `anthropic-skills:ui-ux-pro-max` es consulta. No compiten por tarea.
 - En `code-exec`, las tareas de UI **invocan explícitamente** las skills de diseño y su
   "done" exige **calidad visual**; en Revisión pasan `design:design-critique`.
 - Si te salteás esto, el loop produce UI funcional pero **plana**: el diseño es parte del "done".
@@ -113,7 +113,7 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 - Cuando no quedan tareas `[ ]` en `plan.md`: verificá primero que **el gate de arranque
   esté verde** — la matriz de cuatro si hay mobile, la web levantada si no. Recién ahí
   pon **etapa = entrega**, resume lo hecho (tareas cerradas, ADRs, hallazgos resueltos) y
-  **sugiere `deploy-checklist`**, después `loop-ship`, y **`loop-pitch`** si querés la
+  **sugiere `engineering:deploy-checklist`**, después `loop-ship`, y **`loop-pitch`** si querés la
   presentación del producto. Sumá `documentation` y `standup`/retro según corresponda.
 - **`loop-ship` no la disparás vos.** Toca producción: la invoca una persona. El loop
   llega hasta sugerirla.

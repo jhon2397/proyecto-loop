@@ -21,8 +21,11 @@ Conviertes una idea o lista de requerimientos en un análisis estructurado que
 
 ## 1. Entrada
 - Toma los requerimientos del usuario (texto, doc, o lo que dejó `project-init`).
-- Si es mobile y hay dudas de producto, puedes apoyarte en un brainstorm tipo
-  Superpowers (`/brainstorm`) si está disponible, pero **no** inventes requisitos.
+- Si `state.md` cita un documento de `superpowers:brainstorming` de `project-init`,
+  leelo primero: es la entrada.
+- Si hay dudas de producto que el usuario no resolvió, **invocá**
+  `superpowers:brainstorming` (herramienta Skill) para aclararlas, pero **no** inventes
+  requisitos. Si no está instalada, dejalas como preguntas abiertas.
 
 ## 2. Producir `analysis.md`
 Copia la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/loop/analysis.md` a `.loop/analysis.md`

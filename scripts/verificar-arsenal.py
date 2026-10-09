@@ -133,6 +133,46 @@ def main():
                 "si alguna skill la encadena, el harness la va a rechazar en medio del ciclo"
             )
 
+    # 8. Las skills de otros plugins se citan con su nombre completo. Con el nombre corto
+    #    la herramienta Skill no las encuentra y el modelo improvisa en su lugar, sin aviso.
+    #    EXTERNAS refleja los nombres tal como los lista una sesión (2026-10-09); si se suma
+    #    una skill nueva al arsenal, se agrega acá después de verla en esa lista.
+    EXTERNAS = {
+        "anthropic-skills:frontend-design",
+        "anthropic-skills:ui-ux-pro-max",
+        "react-native-best-practices:react-native-best-practices",
+        "accesslint:audit",
+        "design:design-critique",
+        "engineering:architecture",
+        "engineering:code-review",
+        "engineering:debug",
+        "engineering:deploy-checklist",
+        "engineering:system-design",
+        "figma:figma-design-to-code",
+        "figma:figma-generate-design",
+        "figma:figma-use",
+        "superpowers:brainstorming",
+        "superpowers:test-driven-development",
+    }
+    NOMBRE_CORTO = {e.split(":")[1]: e for e in EXTERNAS if e.split(":")[1] != e.split(":")[0]}
+    NOMBRE_CORTO.update({
+        "accesslint": "accesslint:audit",
+        "react-native-best-practices": "react-native-best-practices:react-native-best-practices",
+    })
+    sustrato = "plugins/dev-substrate"
+    propias = {f"proyecto-loop:{n}" for n in skills}
+    propias |= {f"dev-substrate:{os.path.basename(d)}" for d in glob.glob(f"{sustrato}/skills/*")}
+    propias |= {
+        f"dev-substrate:{os.path.basename(a)[:-3]}" for a in glob.glob(f"{sustrato}/agents/*.md")
+    }
+    for f in sorted(glob.glob(SKILLS)):
+        n = f.split("/")[1]
+        for tok in sorted(set(re.findall(r"`([a-z0-9-]+(?::[a-z0-9-]+)?)`", open(f).read()))):
+            if tok in NOMBRE_CORTO:
+                errores.append(f"`{n}` cita `{tok}`: el nombre completo es `{NOMBRE_CORTO[tok]}`")
+            elif ":" in tok and tok not in EXTERNAS | propias | {"file:line"}:
+                errores.append(f"`{n}` cita `{tok}`, que no es una skill conocida")
+
     if errores:
         print("FALLA:")
         for e in errores:

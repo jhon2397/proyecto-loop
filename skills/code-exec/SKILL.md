@@ -19,7 +19,7 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 - Lee `.loop/state.md` y `.loop/plan.md`.
 - Toma la **primera tarea `[ ]` pendiente** cuyas dependencias (`depende_de`) estén
   todas en `[x]`. Si el usuario nombró una tarea concreta, usa esa (valida deps).
-- Si no hay tareas pendientes, informa "plan completo" y sugiere `deploy-checklist`.
+- Si no hay tareas pendientes, informa "plan completo" y sugiere `engineering:deploy-checklist`.
 - Marca la tarea como `[~]` (en progreso) en `plan.md` y ponla como `tarea_activa`
   en `state.md`.
 
@@ -28,6 +28,11 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 - Pasa los datos por la **capa adaptadora** de backend (no llames a Supabase directo
   desde el dominio). Nada de pagos/email hardcodeados (Tier 2 va tras interfaz).
 - Cumple el criterio **done** y deja el código en estado testeable.
+- **Lógica sin UI** (dominio, adaptadores, servicios): **invocá**
+  `superpowers:test-driven-development` (herramienta Skill) y escribí primero el test
+  que falla. El test esperado de la tarea en `plan.md` es el primero que se escribe.
+- Si una skill que esta etapa manda invocar no está instalada, anotalo en la bitácora
+  de `state.md` y seguí. No hagas de cuenta que la corriste.
 
 ### 1.1 ¿La tarea toca UI? → el diseño NO es opcional
 Si la tarea crea o modifica pantallas/componentes visibles, el diseño es parte del
@@ -49,9 +54,13 @@ Skill; no las menciones como texto) las skills de diseño:
 - **UI-009 es la contraparte de los estados del diseño.** Si la pantalla tiene los tres
   estados en Figma (default, vacio, carga, error) pero el código solo implementa el camino
   feliz, la tarea **no** está terminada.
-- **Web:** `frontend-design` (dirección) + `design-taste-frontend` (anti-template);
-  `ui-ux-pro-max` solo para paletas/tipografía; motion con `animate`.
-- **Mobile (RN/Expo):** `react-native-best-practices` (FlashList/perf) + `animate` (motion).
+- **Web:** `anthropic-skills:frontend-design` (dirección) + `design-taste-frontend` (anti-template);
+  `anthropic-skills:ui-ux-pro-max` solo para paletas/tipografía; motion con `animate`.
+- **Mobile (RN/Expo):** `react-native-best-practices:react-native-best-practices`
+  (FlashList/perf) + `animate` (motion).
+- **Motion en toda tarea de UI**, web o mobile: `animate` siempre que la pantalla tenga
+  transiciones, apariciones o feedback de interacción. Usá los tokens de motion de
+  `.loop/design-system.md`; no inventes duraciones por pantalla.
 - Respetá la `aesthetic` fijada en `state.md`: **una sola dirección**, sin mezclar 3 opiniones.
 - El criterio **done** de una tarea de UI incluye **calidad visual y consistencia con el
   design system**, no solo compilar/pasar tests. Pantalla fea con tests verdes = **NO** está "done".

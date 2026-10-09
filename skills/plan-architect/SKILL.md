@@ -68,7 +68,7 @@ Copia `${CLAUDE_PLUGIN_ROOT}/templates/loop/plan.md` a `.loop/plan.md` y genera
   Desglosar pantallas sin diseño es planificar a ciegas.
 - Para cada tarea de UI, el criterio **done** incluye **calidad visual + consistencia con
   el design system**, y sus checks incluyen **crítica de diseño** (`design:design-critique`)
-  y a11y (`accesslint` / `web-design-guidelines`), no solo el comportamiento.
+  y a11y (`accesslint:audit` / `web-design-guidelines`), no solo el comportamiento.
 
 ## 4. Cierre
 - Actualiza `state.md`: `plan.md = listo`, conteo de ADRs, **tarea_activa = T-001**,

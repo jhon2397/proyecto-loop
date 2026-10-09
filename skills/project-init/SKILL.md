@@ -31,6 +31,12 @@ listo para entrar al loop, **sin** implementar features todavía.
   resto del loop corre la matriz de dispositivos. Si es **sí**, el stack es **Expo**; no
   ofrezcas alternativas ni abras la discusión. Guardalo en `state.md` como `mobile`.
 - **nombre** del proyecto y **descripción** en una frase.
+- **Si la idea llega vaga** (no queda claro para quién es, qué problema resuelve o qué
+  hace la primera versión), **invocá de verdad** `superpowers:brainstorming` (con la
+  herramienta Skill, no como texto) antes de seguir. Usalo solo para fijar nombre,
+  descripción, plataforma y alcance de la primera versión; el detalle de requisitos es
+  de `requirements-analysis`. Si escribe un documento de diseño, citá su ruta en la
+  bitácora de `state.md` para que `requirements-analysis` lo tome como entrada.
 - **stack:** propón el default según platform y confirma con trade-offs breves:
   - mobile → **Expo + React Native + TypeScript** (default). Reanimated + FlashList listos.
   - web → **Next.js + TypeScript**.
@@ -47,12 +53,20 @@ Crea, de forma idempotente:
 - **CI base** (GitHub Actions): lint + typecheck + test en push/PR.
 - `README.md` esqueleto (qué es, cómo correr, cómo testear).
 - Para **mobile/Expo**: `app.json`/`app.config.ts`, navegación base, una pantalla de
-  ejemplo. Usa las convenciones de React Native Skills si está disponible.
+  ejemplo. Antes de configurar navegación, listas y animaciones, **invocá**
+  `react-native-best-practices:react-native-best-practices` (herramienta Skill) y dejá
+  el scaffold alineado con lo que dice (FlashList, Reanimated, Hermes).
 
 ## 2.5 Dirección estética (si el proyecto tiene UI)
-- Define la **dirección estética** invocando `frontend-design` (propósito, audiencia, tono)
-  y `design-taste-frontend` (anti-template); usa `ui-ux-pro-max` para paletas/tipografía.
-- No es "un color": tono, densidad, tipografía y principios. Guárdala **completa** en
+- Define la **dirección estética** con las skills de diseño. **Invocalas de verdad**, con
+  la herramienta Skill y en este orden; nombrarlas en el texto no cuenta:
+  1. `anthropic-skills:frontend-design` — manda: propósito, audiencia, tono.
+  2. `design-taste-frontend` — ajusta parámetros para que no salga genérico.
+  3. `anthropic-skills:ui-ux-pro-max` — solo consulta de paletas y tipografía; no decide.
+  4. `animate` — principios de motion (duraciones, curvas, qué se anima y qué no).
+- Si una no está instalada, anotalo en la bitácora de `state.md` y seguí con las demás.
+  No la reemplaces con tu propio criterio como si la hubieras corrido.
+- No es "un color": tono, densidad, tipografía, motion y principios. Guárdala **completa** en
   `state.md` (`aesthetic`) para que no se reinvente en cada pantalla.
 - El **design system** en sí (tokens/componentes) NO se construye aquí: `plan-architect`
   lo agenda como **primera tarea de UI** y se documenta en `.loop/design-system.md`.

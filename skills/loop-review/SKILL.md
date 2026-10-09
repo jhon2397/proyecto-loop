@@ -23,8 +23,8 @@ cada revisor no se acumule en el contexto del orquestador.
 ## 1. Revisores (secuenciales, nunca en paralelo)
 1. **Siempre:** `engineering:code-review` sobre el diff.
 2. **Si la tarea toca UI:**
-   - **Web:** `web-design-guidelines` + `accesslint`.
-   - **Mobile:** `react-native-best-practices` + auditoría a11y.
+   - **Web:** `web-design-guidelines` + `accesslint:audit`.
+   - **Mobile:** `react-native-best-practices:react-native-best-practices` + auditoría a11y.
    - **`design:design-critique` solo si la tarea crea una pantalla nueva** o cambia su
      layout. Un ajuste de una pantalla ya criticada no la repite.
    - Las reglas `[chequeable]` de `${CLAUDE_PLUGIN_ROOT}/references/ui-patterns.md` se

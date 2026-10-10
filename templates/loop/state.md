@@ -13,7 +13,7 @@
 - **autonomía:** full-auto | checkpoint-tras-review
 
 ## Estado actual
-- **etapa:** inicio | analisis | diseno | diseno-revision | plan | reglas | ejecucion | revision | test | seguridad | correccion | entrega
+- **etapa:** inicio | analisis | diseno | diseno-revision | plan | reglas | ejecucion | revision | test | seguridad | correccion | entrega | entrega-bloqueada
 - **tarea_activa:** <id y título de la tarea de plan.md, o "—">
 - **iteracion:** <n>            # nº de vuelta del loop para la tarea activa
 - **ultima_skill:** <nombre>    # qué skill escribió por última vez

@@ -113,8 +113,11 @@ Si `state.md` dice `mobile: si` y el entorno no está completo:
 
 4. Sumá uno a `deuda_dispositivos` en `state.md`.
 
-**Saldar la deuda:** en un entorno completo, corré la matriz de la sección 1.5 para cada
-tarea de `.loop/deuda-dispositivos.md`. Si pasa, `[d]` pasa a `[x]`, se saca su fila y se
+**Saldar la deuda:** `project-loop` te invoca con `saldar deuda <tarea>`. En un entorno
+completo, corré la matriz de la sección 1.5 para esa tarea de `.loop/deuda-dispositivos.md`.
+Si el flow e2e de la pantalla no existe, no hay matriz que correr y la deuda no se puede
+saldar todavía: **no escribas el flow acá**. Devolvé `bloqueado` nombrando el flow que
+falta, para que el orquestador lo agregue al plan como tarea de `code-exec`. Si pasa, `[d]` pasa a `[x]`, se saca su fila y se
 resta uno a `deuda_dispositivos`. Si falla, la tarea vuelve a `correccion` como cualquier
 rojo.
 

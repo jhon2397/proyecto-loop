@@ -55,6 +55,17 @@ por su nombre completo; si una falta, lo anota en `state.md` y sigue.
 `scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
 herramienta Skill no resuelve.
 
+## Novedades de v0.9.2
+
+- **El orquestador no implementa, tampoco para destrabar.** Deuda `[d]` → `loop-verify`
+  con `saldar deuda`; artefacto que falta (un flow e2e) → tarea nueva para `code-exec`;
+  tarea operativa contra un servidor → una persona o `loop-ship`, o un subagente si el
+  usuario la autoriza.
+- **Etapa `entrega-bloqueada`:** el alto cuando no queda tarea ejecutable pero hay `[d]`,
+  `[!]` o decisiones abiertas.
+- **Los `NO VERIFICADO` van siempre a `review-log.md`**, que es lo que lee el reporte de
+  entrega. Resúmenes de etapa de 10 líneas como máximo.
+
 ## Novedades de v0.9.1
 
 - **Lo que una etapa dice que corrió, se comprueba.** `code-exec` y `loop-review` cierran

@@ -8,7 +8,7 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.9.1
+version: 0.9.2
 disable-model-invocation: true
 ---
 
@@ -80,6 +80,7 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 | test | `loop-verify` | correccion si rojo · si verde y la tarea toca auth/tenant/dinero/secretos → seguridad · si no, cerrar tarea |
 | seguridad | `loop-security` | correccion si hay hallazgos, si no cerrar tarea |
 | correccion | `fix-loop` | test (reverificar) |
+| entrega-bloqueada | — **alto**: no queda tarea ejecutable, pero hay `[d]`, `[!]` o decisiones abiertas. Listá qué bloquea y qué hace falta para destrabarlo | ejecucion o test cuando algo se destrabe · entrega cuando no quede nada |
 
 ### Reglas del bucle interno (la clave del loop)
 - **Ejecución → Revisión → Test.** Si Revisión deja hallazgos o Test queda en rojo
@@ -125,7 +126,10 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 
 ## 2.d Lo que una etapa dice que corrió, se comprueba
 `code-exec` y `loop-review` cierran su resumen con la línea
-`Skills invocadas: <lista | ninguna>`. Leela al volver de cada una:
+`Skills invocadas: <lista | ninguna>`. Leela al volver de cada una, **antes de disparar
+la etapa siguiente**. Las dos escriben sus `NO VERIFICADO` en `.loop/review-log.md`; si
+el resumen dice que lo anotó en otro lado (la bitácora de `state.md`, por ejemplo), no
+cuenta: el reporte de entrega lee solo `review-log.md`, así que la línea la agregás vos.
 
 - **`loop-review` sin `engineering:code-review` en la lista** (o sin la línea): la revisión
   de código no corrió. Agregá vos a `.loop/review-log.md` la línea
@@ -138,6 +142,27 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 
 Estas líneas no frenan la corrida. Salen en el reporte de entrega, que es donde una
 persona decide si alcanza.
+
+## 2.e Vos no implementás, tampoco para destrabar
+Cuando el plan se traba, lo natural es resolverlo en este hilo: escribir el flow que
+falta, entrar al servidor, correr la matriz. No lo hagas. Medido: una corrida trabada
+gastó 33 llamadas del orquestador sin lanzar una sola etapa. Cada caso tiene su dueño:
+
+- **Una tarea en `[d]` y el entorno ya puede correr los cuatro dispositivos** → la salda
+  `loop-verify`, invocada con el argumento `saldar deuda <tarea>`.
+- **Falta un artefacto que el gate necesita** (el flow e2e de una pantalla, un seed) → es
+  una tarea: agregala a `plan.md` con su "done" y su test, y despachala con `code-exec`.
+- **Una tarea operativa contra un servidor o un ambiente** (alta de un cliente, migración
+  en DEV o PROD, deploy) → una persona, o `loop-ship`. No es del ciclo: reportala en el alto.
+- **Una decisión de producto o un `[!]`** → el usuario, con `AskUserQuestion`.
+
+Si el usuario te autoriza explícitamente una tarea operativa, **delegala a un subagente**
+(herramienta Agent) con el encargo exacto y pedile un resumen corto. En este hilo quedan
+el encargo y el resultado, no los comandos.
+
+Si después de eso no queda nada ejecutable, poné **etapa = `entrega-bloqueada`** y hacé
+el alto de la tabla. No inventes otro nombre de etapa: lo que no está en la enumeración
+de `state.md` no lo entiende la próxima corrida.
 
 ## 3. Guardas anti-bucle infinito (escalado y tope)
 - `iteracion` vive en `state.md`: la incrementa `fix-loop` en cada vuelta y vos la
@@ -154,8 +179,8 @@ persona decide si alcanza.
 
 ## 4. Cierre
 - Cuando no quedan tareas `[ ]` en `plan.md`, antes de nada verificá que **no quede
-  ninguna tarea `[d]`**. Si queda alguna, **no entres en `entrega`**: pará y reportá
-  cuántas y cuáles —están en `.loop/deuda-dispositivos.md`— y que se saldan corriendo
+  ninguna tarea `[d]`**. Si queda alguna, **no entres en `entrega`**: poné
+  `entrega-bloqueada` (sección 2.e), pará y reportá cuántas y cuáles —están en `.loop/deuda-dispositivos.md`— y que se saldan corriendo
   `loop-verify` en un entorno con los cuatro dispositivos. Después verificá que **el gate
   de arranque esté verde** —la matriz de cuatro si hay mobile, la web levantada si no—.
   Recién ahí pon **etapa = entrega**, resume lo hecho (tareas cerradas, ADRs, hallazgos

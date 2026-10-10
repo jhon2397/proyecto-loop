@@ -41,8 +41,9 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
   esperado de la tarea en `plan.md` es el primero que se escribe. Escribir tests por tu
   cuenta en el mismo commit no es lo mismo: la skill fija el orden.
 - Si una skill que esta etapa manda invocar no está disponible, o no la invocaste,
-  registralo como `NO VERIFICADO` según `dependencias-externas.md` y seguí. No hagas de
-  cuenta que la corriste.
+  agregá la línea `NO VERIFICADO` **a `.loop/review-log.md`**, con el formato de
+  `dependencias-externas.md`, y seguí. En la bitácora de `state.md` no alcanza: el reporte
+  de entrega lee solo `review-log.md`. No hagas de cuenta que la corriste.
 
 ### 1.1 ¿La tarea toca UI? → el diseño NO es opcional
 Si la tarea crea o modifica pantallas/componentes visibles, el diseño es parte del
@@ -94,8 +95,10 @@ Skill; no las menciones como texto) las skills de diseño:
 - Actualiza `state.md`: `ultima_skill = code-exec`, **etapa = revision**, bitácora.
 - Sugiere la siguiente etapa: `loop-review` (revisión) → luego test.
   Si corre `project-loop`, devuelve control para que encadene revisión y test.
-- **Devolvé solo un resumen** (máx. ~10 líneas): tarea, commit, archivos tocados y
-  resultado del sanity local. Nada de diffs ni salidas de comandos completas.
+- **Devolvé solo un resumen de 10 líneas como máximo**, contando la de las skills:
+  tarea, commit, resultado del sanity local en una línea, y lo que quedó pendiente. Los
+  archivos tocados y el detalle de cada chequeo están en el commit y en `state.md`: no
+  los repitas. Si no entra en 10 líneas, sobra detalle.
 - **La última línea del resumen es obligatoria y literal**, con los nombres exactos que
   pasaste a la herramienta Skill en esta corrida:
 

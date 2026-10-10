@@ -236,6 +236,14 @@ def main():
     if "## 2.d Lo que una etapa dice que corrió, se comprueba" not in loop:
         errores.append("`project-loop` no comprueba la línea `Skills invocadas:` de las etapas")
 
+    # 13. El orquestador no implementa. Sin esta sección, cuando el plan se traba resuelve
+    #     en su propio hilo (medido: 33 llamadas sin lanzar una etapa) y escribe etapas
+    #     que no existen en la enumeración.
+    if "## 2.e Vos no implementás, tampoco para destrabar" not in loop:
+        errores.append("`project-loop` no tiene la sección 2.e (el orquestador no implementa)")
+    if ".loop/review-log.md" not in open("skills/code-exec/SKILL.md").read():
+        errores.append("`code-exec` no manda sus NO VERIFICADO a .loop/review-log.md")
+
     if errores:
         print("FALLA:")
         for e in errores:

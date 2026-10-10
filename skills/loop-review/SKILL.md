@@ -61,8 +61,10 @@ con su nombre. Nada más cuenta.
 
 ## 3. Cierre
 - Actualiza `state.md`: `ultima_skill = loop-review`, **etapa = test**, bitácora.
-- **Devolvé solo el resumen** (máx. ~10 líneas): cantidad de hallazgos por severidad y
-  los ids. El detalle vive en `review-log.md`; no lo repitas.
+- **Devolvé solo un resumen de 10 líneas como máximo**, contando la de las skills:
+  cantidad de hallazgos por severidad, los ids, una línea por cada hallazgo alto o medio,
+  y qué quedó `NO VERIFICADO`. Los bajos van solo por id. El detalle vive en
+  `review-log.md`; no lo repitas.
 - **La última línea del resumen es obligatoria y literal**, con los nombres exactos que
   pasaste a la herramienta Skill:
 

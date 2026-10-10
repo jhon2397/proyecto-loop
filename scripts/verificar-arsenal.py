@@ -190,6 +190,17 @@ def main():
                     "de preguntas con AskUserQuestion: la respuesta correría con otro modelo"
                 )
 
+    # 9b. El orquestador tampoco puede bloquear AskUserQuestion: sus checkpoints le piden
+    #     respuesta al usuario y, en texto, esa respuesta corre con el modelo de la sesión.
+    loop_fm = skills.get("project-loop", {})
+    if "AskUserQuestion" in str(loop_fm.get("disallowed-tools", "")):
+        errores.append(
+            "`project-loop` bloquea AskUserQuestion: sus checkpoints preguntarían en texto "
+            "y el resto de la corrida saldría del modelo de la skill"
+        )
+    if "## Preguntas: pocas, y siempre con `AskUserQuestion`" not in loop:
+        errores.append("`project-loop` no tiene la sección de preguntas con AskUserQuestion")
+
     if errores:
         print("FALLA:")
         for e in errores:

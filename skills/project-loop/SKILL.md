@@ -8,9 +8,8 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.8.2
+version: 0.8.3
 disable-model-invocation: true
-disallowed-tools: AskUserQuestion
 ---
 
 # project-loop — Meta-orquestador
@@ -27,6 +26,24 @@ skills de cada etapa leyendo y actualizando `.loop/state.md`.
   retomá en `plan` cuando el usuario apruebe.
 - Si `state.md` dice `autonomía = checkpoint-tras-review`, párate tras cada revisión
   a esperar el OK del usuario antes de testear/seguir.
+
+## Preguntas: pocas, y siempre con `AskUserQuestion`
+Full-auto no significa preguntar en texto: significa preguntar poco. Solo hay tres
+momentos en que le hablás al usuario esperando respuesta, y en los tres usás
+`AskUserQuestion` (opciones concretas; el usuario siempre puede escribir otra):
+1. **El checkpoint `diseno-revision`** — "Aprobar el diseño" / "Pedir cambios".
+2. **`autonomía = checkpoint-tras-review`** — "Seguir" / "Corregir antes".
+3. **Bloqueantes críticos** que deja una etapa (por ejemplo, preguntas abiertas de
+   `requirements-analysis` marcadas como bloqueantes).
+
+Por qué: el `model:` de esta skill dura un turno. Una pregunta en texto cierra el turno
+y la respuesta corre con el modelo de la sesión — medido: 129 llamadas del orquestador
+en opus contra 14 en sonnet, porque cada aprobación se pidió en texto. `AskUserQuestion`
+no cierra el turno y el loop sigue en sonnet.
+
+Fuera de esos tres casos no preguntes nada: decidí con el plan y `state.md`, y anotá la
+decisión en la bitácora. El reporte final (plan agotado o tarea `[!]`) no es una
+pregunta: es el último mensaje de la corrida.
 
 ## 0. Arranque
 - Lee `.loop/state.md`. Si no existe, no hay proyecto inicializado → sugiere `project-init`.

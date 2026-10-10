@@ -23,6 +23,7 @@ Native por defecto), con capa web.
 | 1 | `proyecto-loop:project-init` | Inicio | Scaffold + tooling + CI + Tier 1 (Sentry/Supabase) + arranca `.loop/` |
 | 2 | `proyecto-loop:requirements-analysis` | Análisis | Épicas/historias, criterios, riesgos, preguntas abiertas |
 | 3 | `proyecto-loop:loop-design` | Diseño | Dirección estética, design system y pantallas en Figma; deja el mapa pantalla ↔ nodo |
+| 3b | `proyecto-loop:loop-presentacion` | Presentación | Con las pantallas aprobadas: guion, storyboard en Figma y pieza animada con HyperFrames |
 | 4 | `proyecto-loop:plan-architect` | Plan | Arquitectura + ADRs + tareas atómicas, desglosadas por pantalla |
 | 5 | `proyecto-loop:loop-rules` | Reglas | Instala las convenciones del stack desde `dev-substrate`, ancladas al repo |
 | 6 | `proyecto-loop:code-exec` | Ejecución | Implementa la siguiente tarea + commit atómico |
@@ -60,6 +61,10 @@ herramienta Skill no resuelve.
 - **La propuesta estética se ve en Figma el primer día.** `project-init` invoca
   `loop-design` en modo `propuesta`: 3 variantes de la dirección sobre 2 pantallas
   representativas, a elegir antes del análisis.
+- **La presentación del producto, antes de construirlo.** Etapa nueva `loop-presentacion`,
+  entre la aprobación del diseño y el plan: guion, storyboard en el mismo archivo de Figma
+  (con las pantallas reales como instancias) y pieza animada con HyperFrames. Pregunta
+  antes de renderizar. `loop-pitch` la retoma al entregar, con el producto real.
 - **Base de estilo mobile** (`references/mobile-style.md`): toda app mobile parte del
   mismo lenguaje visual —superficies blandas, navegación flotante, mucho aire— y del
   mismo rigor de sistema —tokens de una fuente, preset por superficie, estado con texto,
@@ -104,7 +109,7 @@ tarea** va en sonnet y en subagente, para que el contexto del orquestador no cre
 
 | Perfil | Skills / agentes |
 |--------|------------------|
-| opus · high | `requirements-analysis`, `plan-architect`, `loop-design`, `loop-adopt`, `security-reviewer`, `architect` |
+| opus · high | `requirements-analysis`, `plan-architect`, `loop-design`, `loop-presentacion`, `loop-adopt`, `security-reviewer`, `architect` |
 | opus · xhigh (solo al escalar) | `deep-debugger`, en la 2.ª vuelta roja de una tarea |
 | sonnet · subagente | `code-exec`, `loop-review`, `loop-verify`, `fix-loop` |
 | sonnet | `project-loop` (orquestador), `project-init`, `loop-rules`, `loop-ship`, `loop-pitch` |

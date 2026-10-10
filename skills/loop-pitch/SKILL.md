@@ -36,6 +36,10 @@ la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno
 - HyperFrames necesita **FFmpeg** y Node 22+. Si `ffmpeg -version` no responde, pará y
   decilo: sin eso no hay render.
 
+- Si `docs/pitch/` ya tiene la presentación que armó `loop-presentacion` desde el diseño,
+  **partí de ella**: mismo guion y mismo storyboard, con las capturas del producto real
+  en lugar de los frames de Figma. No empieces de cero.
+
 ## 1. De dónde sale el contenido (no lo inventes)
 
 | Qué | De dónde |

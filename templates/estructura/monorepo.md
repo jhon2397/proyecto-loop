@@ -20,7 +20,7 @@ Monorepo con npm workspaces.
 ├── infra/                   docker-compose de self-host (solo si el hosting es self-hosted)
 ├── e2e/                     flows de Maestro para la matriz de dispositivos
 ├── docs/
-│   └── pitch/               presentación HyperFrames (loop-pitch)
+│   └── pitch/               presentación del producto (loop-presentacion desde el diseño; loop-pitch al entregar)
 └── .github/workflows/
 ```
 

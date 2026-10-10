@@ -181,7 +181,7 @@ def main():
     #    59 llamadas en opus con `model: sonnet` declarado).
     PREGUNTAN = (
         "project-init", "requirements-analysis", "loop-design",
-        "loop-adopt", "loop-ship", "loop-pitch",
+        "loop-adopt", "loop-ship", "loop-pitch", "loop-presentacion",
     )
     for n in PREGUNTAN:
         if n in skills and skills[n].get("model"):

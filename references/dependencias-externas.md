@@ -44,7 +44,7 @@ están disponibles también en la nube.
 | `engineering:system-design` | plan-architect | diseño del sistema | no — la provee la app |
 | `engineering:deploy-checklist` | loop-ship, code-exec, project-loop | checklist previo a desplegar | no — la provee la app |
 | `design:design-critique` | plan-architect, loop-review | usabilidad, jerarquía (UI-007) y consistencia | no — la provee la app |
-| `figma:figma-use` | loop-design | escritura correcta en Figma | no — la provee la app |
+| `figma:figma-use` | loop-design, loop-presentacion | escritura correcta en Figma | no — la provee la app |
 | `figma:figma-generate-design` | loop-design | traducir una pantalla a Figma | no — la provee la app |
 | `figma:figma-design-to-code` | code-exec | valores exactos del diseño al implementar | no — la provee la app |
 | `anthropic-skills:frontend-design` | code-exec, loop-design, project-init, project-loop | dirección estética | no |
@@ -54,7 +54,7 @@ están disponibles también en la nube.
 | `accesslint:audit` | plan-architect, loop-review | accesibilidad | no — sin licencia |
 | `documentation` | project-loop | documentación al cierre | no |
 | `standup` | project-loop | resumen de cierre | no |
-| `hyperframes` | loop-pitch | render de la presentación del producto | no — solo local |
+| `hyperframes` | loop-presentacion, loop-pitch | la presentación animada del producto | no — solo local |
 | `design-taste-frontend` | code-exec, loop-design, project-init, project-loop | que el diseño no parezca una plantilla | **sí** |
 | `react-native-best-practices:react-native-best-practices` | code-exec, loop-design, loop-review, project-init | rendimiento y buenas prácticas de React Native | **sí** — vendoreada se cita `react-native-best-practices` (el vendoreo reescribe el nombre) |
 | `superpowers:brainstorming` | project-init, requirements-analysis | aclarar una idea vaga o dudas de producto | no |

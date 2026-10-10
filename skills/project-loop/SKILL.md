@@ -27,7 +27,7 @@ skills de cada etapa leyendo y actualizando `.loop/state.md`.
   corrección no logra resolver tras reintentos razonables, (b) se agota el plan, o
   (c) `etapa = diseno-revision`: el diseño está listo y espera que una persona lo
   revise. Ese alto **no es una falla**: reportá el link de Figma y qué se armó, y
-  retomá en `plan` cuando el usuario apruebe.
+  retomá en `presentacion` cuando el usuario apruebe.
 - Si `state.md` dice `autonomía = checkpoint-tras-review`, párate tras cada revisión
   a esperar el OK del usuario antes de testear/seguir.
 
@@ -72,7 +72,8 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 | inicio | `project-init` | analisis |
 | analisis | `requirements-analysis` | diseno |
 | diseno | `loop-design` (saltear si el proyecto no tiene UI) | diseno-revision |
-| diseno-revision | — **alto de checkpoint**: entregá el link de Figma y esperá | plan |
+| diseno-revision | — **alto de checkpoint**: entregá el link de Figma y esperá | presentacion |
+| presentacion | `loop-presentacion` (saltear si el proyecto no tiene UI) | plan |
 | plan | `plan-architect` | reglas |
 | reglas | `loop-rules` (saltear si `.claude/rules/` ya tiene contenido) | ejecucion |
 | ejecucion | `code-exec` (siguiente tarea) | revision |
@@ -113,6 +114,8 @@ disparás. Toca producción.
 
 `loop-pitch` es la otra excepción: renderizar video es caro en tiempo y es un entregable
 para humanos, no un paso del ciclo. La **sugerís** al llegar a entrega, nunca la disparás.
+No la confundas con `loop-presentacion`, que sí es una etapa: corre una vez, con las
+pantallas aprobadas, y pregunta antes de renderizar.
 
 Si una etapa te devuelve "cannot be invoked via the Skill tool", **no repliques su
 trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.

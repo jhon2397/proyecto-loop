@@ -114,6 +114,7 @@ fallos difíciles de depurar. Para traducir una pantalla concreta a Figma, apoya
 ├── 03 · Web             pantallas web
 ├── 04 · Flows           cómo se encadenan las pantallas
 ├── 05 · Opciones        variantes a elegir (ver 4.4)
+├── 06 · Presentación    storyboard de la presentación del producto (lo arma loop-presentacion)
 └── 99 · Archive         descartes: no se borran, pero no se implementan
 ```
 

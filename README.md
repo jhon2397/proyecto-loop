@@ -35,6 +35,7 @@ Native por defecto), con capa web.
 | 13 | `proyecto-loop:loop-adopt` | Entrada brownfield | Reconstruye `.loop/` en un repo que ya existe |
 | 14 | `proyecto-loop:loop-status` | — | Lectura barata del estado (haiku, solo lectura) |
 | 15 | `proyecto-loop:loop-pitch` | — | Presentación del producto con HyperFrames, usando el design system real. **Manual** |
+| 16 | `proyecto-loop:loop-actualizar` | — | Trae una versión nueva del loop a un proyecto con el loop vendoreado |
 
 Reusa del plugin `engineering`: `code-review` (dentro de `loop-review`), `debug` (fix-loop),
 y `deploy-checklist`/`documentation`/`standup` al cierre. La etapa de test dejó de
@@ -53,6 +54,18 @@ por su nombre completo; si una falta, lo anota en `state.md` y sigue.
 
 `scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
 herramienta Skill no resuelve.
+
+## Novedades de v0.9.0: el loop en la nube
+
+- **Vendoreo:** `scripts/vendorear.py` copia el loop al `.claude/` de un proyecto, para que
+  corra en una sesión cloud sin los plugins de la máquina. Las skills de terceros viajan
+  fijadas por commit y con su licencia (`terceros.json`); sus citas pasan a nombre corto.
+- **Degradación explícita:** si una skill externa no está, la etapa deja una línea
+  `NO VERIFICADO` en `review-log.md` y `project-loop` la lista en la entrega
+  (`references/dependencias-externas.md`).
+- **Deuda de dispositivos `[d]`:** una tarea verde en código pero sin la matriz de cuatro
+  dispositivos avanza, y la deuda bloquea la entrega.
+- **`loop-actualizar`** y la plantilla que se regenera con cada tag.
 
 ## Consumo de tokens (v0.8.0)
 

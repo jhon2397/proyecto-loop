@@ -38,8 +38,8 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 - **Lógica sin UI** (dominio, adaptadores, servicios): **invocá**
   `superpowers:test-driven-development` (herramienta Skill) y escribí primero el test
   que falla. El test esperado de la tarea en `plan.md` es el primero que se escribe.
-- Si una skill que esta etapa manda invocar no está instalada, anotalo en la bitácora
-  de `state.md` y seguí. No hagas de cuenta que la corriste.
+- Si una skill que esta etapa manda invocar no está disponible, registralo como `NO VERIFICADO` según `dependencias-externas.md` y seguí.
+  No hagas de cuenta que la corriste.
 
 ### 1.1 ¿La tarea toca UI? → el diseño NO es opcional
 Si la tarea crea o modifica pantallas/componentes visibles, el diseño es parte del

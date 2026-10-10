@@ -11,6 +11,10 @@ effort: high
 
 # requirements-analysis — Etapa (2) Análisis
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Conviertes una idea o lista de requerimientos en un análisis estructurado que
 `plan-architect` pueda transformar en tareas.
 

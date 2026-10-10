@@ -82,7 +82,8 @@ Crea, de forma idempotente:
   2. `design-taste-frontend` — ajusta parámetros para que no salga genérico.
   3. `anthropic-skills:ui-ux-pro-max` — solo consulta de paletas y tipografía; no decide.
   4. `animate` — principios de motion (duraciones, curvas, qué se anima y qué no).
-- Si una no está instalada, anotalo en la bitácora de `state.md` y seguí con las demás.
+- Si una no está disponible, registralo como `NO VERIFICADO` según
+  `dependencias-externas.md` y seguí con las demás.
   No la reemplaces con tu propio criterio como si la hubieras corrido.
 - No es "un color": tono, densidad, tipografía, motion y principios. Guárdala **completa** en
   `state.md` (`aesthetic`) para que no se reinvente en cada pantalla.

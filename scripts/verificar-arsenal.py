@@ -217,6 +217,14 @@ def main():
             errores.append(f"`{f.split('/')[1]}` usa {', '.join(usadas)} "
                            f"y no cita {DEPENDENCIAS}")
 
+    # 11. Toda skill externa que una etapa cita (chequeo 8) tiene su fila en la tabla de
+    #     dependencias (chequeo 10). Si falta, en la nube nadie sabe qué dejó sin revisar.
+    for f in sorted(glob.glob(SKILLS)):
+        texto = open(f).read()
+        for e in sorted(EXTERNAS):
+            if f"`{e}`" in texto and e not in externas:
+                errores.append(f"`{f.split('/')[1]}` cita `{e}`, que no tiene fila en {DEPENDENCIAS}")
+
     if errores:
         print("FALLA:")
         for e in errores:

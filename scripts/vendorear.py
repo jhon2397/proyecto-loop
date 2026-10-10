@@ -59,9 +59,16 @@ NAMESPACE_PROPIO = re.compile(r"\b(?:proyecto-loop|dev-substrate):(?=[a-z])")
 TEXTO = {".md", ".txt", ".json", ".yaml", ".yml"}
 
 
-def reescribir(texto: str, prefijo: str) -> str:
-    """Adapta un archivo del plugin para que viva dentro de un proyecto."""
-    return NAMESPACE_PROPIO.sub("", texto.replace("${CLAUDE_PLUGIN_ROOT}", prefijo))
+def reescribir(texto: str, prefijo: str, vendoreadas: tuple[str, ...] = ()) -> str:
+    """Adapta un archivo del plugin para que viva dentro de un proyecto.
+
+    Las skills de terceros vendoreadas viven en .claude/skills/<nombre>, sin el
+    namespace del plugin que las trae en la máquina local: sus citas pasan a corto.
+    """
+    texto = NAMESPACE_PROPIO.sub("", texto.replace("${CLAUDE_PLUGIN_ROOT}", prefijo))
+    for nombre in vendoreadas:
+        texto = re.sub(rf"(?<![\w-])[a-z0-9-]+:{re.escape(nombre)}(?![\w-])", nombre, texto)
+    return texto
 
 
 def prefijo_de(ruta_relativa: str) -> str:
@@ -79,19 +86,22 @@ def leer_texto(f: Path) -> str:
                          "El proyecto no se tocó.") from None
 
 
-def copiar_archivo(origen: Path, destino: Path, prefijo: str) -> None:
+def copiar_archivo(origen: Path, destino: Path, prefijo: str,
+                   vendoreadas: tuple[str, ...] = ()) -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
     if origen.suffix in TEXTO:
-        destino.write_text(reescribir(leer_texto(origen), prefijo), encoding="utf-8")
+        destino.write_text(reescribir(leer_texto(origen), prefijo, vendoreadas),
+                           encoding="utf-8")
     else:
         shutil.copy2(origen, destino)
 
 
-def copiar(origen: Path, destino: Path, prefijo: str) -> None:
+def copiar(origen: Path, destino: Path, prefijo: str,
+           vendoreadas: tuple[str, ...] = ()) -> None:
     """Copia un árbol reescribiendo los archivos de texto; el resto, byte a byte."""
     for f in sorted(origen.rglob("*")):
         if f.is_file():
-            copiar_archivo(f, destino / f.relative_to(origen), prefijo)
+            copiar_archivo(f, destino / f.relative_to(origen), prefijo, vendoreadas)
 
 
 def borrar(p: Path) -> None:
@@ -268,18 +278,19 @@ def vendorear(raiz: Path, destino: Path, terceros: dict | None = None,
     temporal = Path(tempfile.mkdtemp(prefix=".vendoreo-", dir=claude))
     try:
         gestionadas: list[str] = []
+        vendoreadas = tuple(rel.rsplit("/", 1)[1] for _, rel, _ in plan_terceros)
         for origen, rel, prefijo in plan:
             if origen.is_dir():
-                copiar(origen, temporal / rel, prefijo)
+                copiar(origen, temporal / rel, prefijo, vendoreadas)
             else:
-                copiar_archivo(origen, temporal / rel, prefijo)
+                copiar_archivo(origen, temporal / rel, prefijo, vendoreadas)
             gestionadas.append(rel)
         for repo, rel, t in plan_terceros:
             shutil.copytree(repo / t["ruta"], temporal / rel)  # código ajeno: sin reescribir
             shutil.copy2(repo / "LICENSE", temporal / rel / "LICENSE")
             gestionadas.append(rel)
         for r in RECURSOS:
-            copiar(raiz / r, temporal / PREFIJO_LOOP / r, prefijo_de(r))
+            copiar(raiz / r, temporal / PREFIJO_LOOP / r, prefijo_de(r), vendoreadas)
         (temporal / PREFIJO_LOOP / "VERSION").write_text(
             leer_version(raiz) + "\n", encoding="utf-8")
         escribir_terceros_md(temporal / PREFIJO_LOOP, plan_terceros)

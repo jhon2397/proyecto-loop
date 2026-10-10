@@ -8,7 +8,7 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.8.3
+version: 0.9.0
 disable-model-invocation: true
 ---
 

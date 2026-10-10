@@ -243,3 +243,29 @@ def test_terceros_sin_cache_explicito(plugin, tmp_path, repo_tercero):
     destino = tmp_path / "proyecto"
     vendorear.vendorear(plugin, destino, repo_tercero)
     assert (destino / ".claude/skills/skill-ajena/SKILL.md").is_file()
+
+
+def test_nombre_de_plugin_de_un_tercero_vendoreado_pasa_a_corto():
+    # En la máquina local el tercero vive en su plugin (`plugin:skill`); vendoreado
+    # vive en .claude/skills/<skill>, sin namespace. Si la cita no se reescribe, la
+    # herramienta Skill no lo encuentra en la nube aunque la copia esté ahí.
+    t = ("`react-native-best-practices:react-native-best-practices` y "
+         "`otro:react-native-best-practices-extra` y `engineering:code-review`")
+    assert vendorear.reescribir(t, ".claude/loop", ("react-native-best-practices",)) == (
+        "`react-native-best-practices` y "
+        "`otro:react-native-best-practices-extra` y `engineering:code-review`")
+
+
+def test_cita_a_un_tercero_no_vendoreado_queda_igual():
+    t = "`react-native-best-practices:react-native-best-practices`"
+    assert vendorear.reescribir(t, ".claude/loop") == t
+
+
+def test_las_skills_del_loop_citan_al_tercero_vendoreado_por_nombre_corto(
+        plugin, tmp_path, repo_tercero):
+    (plugin / "skills/etapa/SKILL.md").write_text(
+        "---\nname: etapa\n---\nInvocá `algun-plugin:skill-ajena`.\n")
+    destino = tmp_path / "proyecto"
+    vendorear.vendorear(plugin, destino, repo_tercero, tmp_path / "cache")
+    t = (destino / ".claude/skills/etapa/SKILL.md").read_text()
+    assert "Invocá `skill-ajena`." in t

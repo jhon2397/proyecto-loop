@@ -12,6 +12,10 @@ context: fork
 
 # loop-review — Etapa (7) Revisión
 
+> **Skills externas:** esta etapa invoca skills que no son del loop. Antes de usar
+> cualquiera, seguí `${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`: si no
+> está disponible en este entorno, se registra como NO VERIFICADO, nunca se saltea callada.
+
 Revisás **la tarea activa**, no el repo. Corrés en un subagente para que la salida de
 cada revisor no se acumule en el contexto del orquestador.
 
@@ -30,8 +34,9 @@ cada revisor no se acumule en el contexto del orquestador.
    - Las reglas `[chequeable]` de `${CLAUDE_PLUGIN_ROOT}/references/ui-patterns.md` se
      chequean contra el diff; no hace falta releer el catálogo entero si ya lo cita la tarea.
 
-Invocá cada revisor de verdad (herramienta Skill). Si uno no está instalado, anotalo en
-la bitácora y seguí con los demás: no lo reemplaces con tu opinión.
+Invocá cada revisor de verdad (herramienta Skill). Si uno no está disponible,
+registralo como `NO VERIFICADO` en `review-log.md` con lo concreto que quedó sin evaluar
+y seguí con los demás: no lo reemplaces con tu opinión.
 
 ## 2. Registrar
 - Cada hallazgo va a `.loop/review-log.md` → **Abiertos**, con id `H-00X`, severidad,

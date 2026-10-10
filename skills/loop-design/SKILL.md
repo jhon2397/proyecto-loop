@@ -47,7 +47,7 @@ tono, densidad, tipografía y principios — no un color.
 `anthropic-skills:frontend-design` manda la dirección; `design-taste-frontend` ajusta
 parámetros; `anthropic-skills:ui-ux-pro-max` es consulta para paletas y tipografía, no
 decide. Si `state.md` ya trae `aesthetic` de `project-init`, no las vuelvas a correr para
-redefinirla. Si una no está instalada, anotalo en la bitácora y seguí.
+redefinirla. Si una no está disponible, registralo como `NO VERIFICADO` según `dependencias-externas.md` y seguí.
 Tres skills compitiendo en cada pantalla es cómo se llega a un diseño sin carácter.
 
 ## 3. Design system → `.loop/design-system.md`

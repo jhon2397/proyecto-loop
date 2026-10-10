@@ -118,7 +118,7 @@ def main():
 
     # 7. Los puntos de entrada manuales llevan el flag; y ninguno está encadenado.
     ENTRADAS = ("project-loop", "loop-adopt", "loop-status", "loop-ship", "loop-pitch",
-                "loop-actualizar")
+                "loop-actualizar", "loop-doctor")
     for n in ENTRADAS:
         if n not in skills:
             errores.append(f"falta la skill de entrada `{n}`")
@@ -182,6 +182,7 @@ def main():
     PREGUNTAN = (
         "project-init", "requirements-analysis", "loop-design",
         "loop-adopt", "loop-ship", "loop-pitch", "loop-presentacion",
+        "loop-doctor",
     )
     for n in PREGUNTAN:
         if n in skills and skills[n].get("model"):

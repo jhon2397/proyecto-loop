@@ -8,7 +8,7 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.10.0
+version: 0.11.0
 disable-model-invocation: true
 ---
 
@@ -107,7 +107,7 @@ Dispara la skill correspondiente y, al volver, relee `state.md` y continúa:
 Una skill que **vos encadenás** no puede llevar `disable-model-invocation: true`: ese
 flag la reserva para invocación humana y el harness te la va a rechazar en medio del
 ciclo. El flag es para **puntos de entrada** (`project-loop`, `loop-adopt`,
-`loop-ship`, `loop-status`, `loop-pitch`), no para etapas.
+`loop-ship`, `loop-status`, `loop-pitch`, `loop-doctor`), no para etapas.
 
 `loop-ship` es la excepción deliberada: la **sugerís** al llegar a entrega, nunca la
 disparás. Toca producción.

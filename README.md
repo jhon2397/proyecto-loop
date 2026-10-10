@@ -36,6 +36,7 @@ Native por defecto), con capa web.
 | 13 | `proyecto-loop:loop-adopt` | Entrada brownfield | Reconstruye `.loop/` en un repo que ya existe |
 | 14 | `proyecto-loop:loop-status` | — | Lectura barata del estado (haiku, solo lectura) |
 | 15 | `proyecto-loop:loop-pitch` | — | Presentación del producto con HyperFrames, usando el design system real. **Manual** |
+| 17 | `proyecto-loop:loop-doctor` | — | Verifica que la máquina tenga todo lo que el loop usa e instala lo que falta; actualiza el plugin. **Manual** |
 | 16 | `proyecto-loop:loop-actualizar` | — | Trae una versión nueva del loop a un proyecto con el loop vendoreado |
 
 Reusa del plugin `engineering`: `code-review` (dentro de `loop-review`), `debug` (fix-loop),
@@ -55,6 +56,12 @@ por su nombre completo; si una falta, lo anota en `state.md` y sigue.
 
 `scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
 herramienta Skill no resuelve.
+
+## Novedades de v0.11.0
+
+- **`loop-doctor`** y `herramientas/preparar-maquina.sh`: una máquina nueva queda lista
+  con un comando. Cada cosa sale como `OK`, `FALTA`, `AVISO` o `NO VERIFICADO`, e instala
+  plugins, skills sueltas, herramientas y variables de entorno.
 
 ## Novedades de v0.10.0
 
@@ -151,8 +158,28 @@ Toda skill **lee** el estado y **escribe** su salida → el loop es reanudable.
 
 O corre las skills una a una siguiendo la columna "Etapa".
 
-## Instalación (local)
+## Instalación en una máquina nueva
 
-Registrado como marketplace local en `~/.claude/settings.json`
-(`extraKnownMarketplaces` + `enabledPlugins`). Verifica con `/plugin` en una sesión
-interactiva de Claude Code.
+1. Agregar el marketplace e instalar el plugin. Desde la app de escritorio: **+ → Add
+   marketplace from GitHub** → `jhon2397/proyecto-loop`, e instalar `proyecto-loop` y
+   `dev-substrate`. O desde la terminal:
+
+   ```bash
+   claude plugin marketplace add https://github.com/jhon2397/proyecto-loop.git
+   claude plugin install proyecto-loop@proyecto-loop-local
+   claude plugin install dev-substrate@proyecto-loop-local
+   ```
+
+2. Abrir una sesión nueva y correr **`/proyecto-loop:loop-doctor`**. Verifica plugins,
+   skills de apoyo, herramientas, entorno y Figma, y ofrece instalar lo que falta.
+
+El verificador también corre solo, sin sesión:
+
+```bash
+bash herramientas/preparar-maquina.sh              # verifica
+bash herramientas/preparar-maquina.sh --instalar   # instala lo que se puede
+bash herramientas/preparar-maquina.sh --actualizar # trae la última versión del loop
+```
+
+No instala Xcode, Docker Desktop, los emuladores de Android, la conexión de Figma ni las
+skills que provee la cuenta: las informa y dice dónde se resuelven.

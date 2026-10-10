@@ -44,6 +44,7 @@ FUENTES = (
 RECURSOS = (
     "templates",
     "references",
+    "herramientas",
     "plugins/dev-substrate/rules",
     "plugins/dev-substrate/presets",
     "plugins/dev-substrate/templates",

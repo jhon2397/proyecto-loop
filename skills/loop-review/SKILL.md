@@ -25,6 +25,11 @@ cada revisor no se acumule en el contexto del orquestador.
   No leas archivos que el diff no toca salvo para entender una llamada concreta.
 
 ## 1. Revisores (secuenciales, nunca en paralelo)
+
+**Tu primera acción de esta sección es una llamada a la herramienta Skill con
+`engineering:code-review`.** No leas el diff a fondo antes: el revisor lo lee. Si
+empezás por analizarlo vos, ya estás haciendo la revisión que no te toca.
+
 1. **Siempre:** `engineering:code-review` sobre el diff.
 2. **Si la tarea toca UI:**
    - **Web:** `web-design-guidelines` + `accesslint:audit`.
@@ -34,9 +39,18 @@ cada revisor no se acumule en el contexto del orquestador.
    - Las reglas `[chequeable]` de `${CLAUDE_PLUGIN_ROOT}/references/ui-patterns.md` se
      chequean contra el diff; no hace falta releer el catálogo entero si ya lo cita la tarea.
 
-Invocá cada revisor de verdad (herramienta Skill). Si uno no está disponible,
-registralo como `NO VERIFICADO` en `review-log.md` con lo concreto que quedó sin evaluar
-y seguí con los demás: no lo reemplaces con tu opinión.
+### Qué cuenta como "corrió"
+Un revisor **corrió** solo si en esta corrida hiciste una llamada a la herramienta Skill
+con su nombre. Nada más cuenta.
+
+- Leer el diff vos y opinar no es `engineering:code-review`: es una **revisión propia**.
+  No existe el revisor "inline". Si `review-log.md` tiene entradas anteriores que dicen
+  `(inline)`, son el error que esta regla corrige: no las imites.
+- Si un revisor no está disponible, o no lo invocaste, va una línea `NO VERIFICADO` en
+  `review-log.md` con lo concreto que quedó sin evaluar
+  (`${CLAUDE_PLUGIN_ROOT}/references/dependencias-externas.md`).
+- Lo que encuentres por tu cuenta se registra igual, con fuente **`revisión propia`**.
+  Nunca con el nombre de una skill que no invocaste.
 
 ## 2. Registrar
 - Cada hallazgo va a `.loop/review-log.md` → **Abiertos**, con id `H-00X`, severidad,
@@ -47,5 +61,12 @@ y seguí con los demás: no lo reemplaces con tu opinión.
 
 ## 3. Cierre
 - Actualiza `state.md`: `ultima_skill = loop-review`, **etapa = test**, bitácora.
-- **Devolvé solo el resumen** (máx. ~10 líneas): cantidad de hallazgos por severidad,
-  los ids, y qué revisores corrieron. El detalle vive en `review-log.md`; no lo repitas.
+- **Devolvé solo el resumen** (máx. ~10 líneas): cantidad de hallazgos por severidad y
+  los ids. El detalle vive en `review-log.md`; no lo repitas.
+- **La última línea del resumen es obligatoria y literal**, con los nombres exactos que
+  pasaste a la herramienta Skill:
+
+  `Skills invocadas: <lista separada por comas, o "ninguna">`
+
+  `project-loop` la lee. Sin esa línea, o con una skill que no invocaste, la revisión
+  cuenta como no verificada.

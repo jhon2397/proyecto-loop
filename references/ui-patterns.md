@@ -14,6 +14,7 @@ humano— o **[principio]** —orienta el diseño pero la evalúa una persona o
 que la revisión automática dé falsos verdes.
 
 Fuentes: tanda 1, cards de `@munoz.graphic`. Tanda 2, cards de `@northlav.studio`.
+Tanda 3, pedido directo de Gabriel (2026-10-10).
 
 ---
 
@@ -152,3 +153,29 @@ el camino feliz.
 `.loop/design.md` ya exige diseñar por pantalla (vacío, carga, error). Si la pantalla
 tiene los tres estados en Figma pero el código solo implementa el feliz, la tarea no
 está terminada.
+
+---
+
+## UI-010 · Nada de formularios inline  ·  [chequeable]
+
+**Qué.** Un formulario de alta o de edición **no se abre dentro de la fila, la tabla, la
+lista o la tarjeta** donde vive el dato. Va en su propio contenedor: pantalla, panel
+lateral o diálogo, con título, sus campos y sus acciones de guardar y cancelar.
+
+No son formularios inline, y siguen permitidos: el buscador y los filtros de un listado
+(UI-008), y un control único que aplica al instante sin "guardar" —un interruptor, una
+casilla, un selector de estado—.
+
+**Por qué.** Una fila no tiene lugar para lo que un formulario necesita: etiquetas,
+requisitos visibles (UI-006), el error debajo de cada campo (UI-005) y el estado de
+carga de la acción (UI-009). Al abrirse cambia el alto de la fila y desplaza el resto
+del listado, y en teléfono o tablet los campos no entran. Además deja dos formas de
+editar lo mismo —en la fila y en el detalle— que con el tiempo validan distinto.
+
+**Cómo se verifica.** En Figma: ningún frame de listado, tabla o tarjeta tiene un
+estado con campos de texto editables y un botón de guardar adentro de un ítem. En
+código: el componente que dibuja una fila, celda, ítem de lista o tarjeta no contiene
+campos de texto, áreas de texto ni selectores ligados a un guardado; la acción "Editar"
+o "Nuevo" navega o abre un panel o diálogo. Dos o más campos editables dentro de un
+ítem, o uno solo con botón de guardar, es un hallazgo.
+

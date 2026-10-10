@@ -20,6 +20,17 @@ Antes de invocar una skill de esta tabla, comprobá que esté disponible. Si no 
 3. Seguí con la etapa. Estas líneas **no bloquean** la entrega, pero `project-loop` las
    lista en el reporte de entrega.
 
+### Disponible pero no invocada
+
+La misma regla vale si la skill estaba y la etapa no la llamó. Una skill **corrió** solo
+si hubo una llamada a la herramienta Skill con su nombre; leer el diff y opinar es una
+revisión propia del agente, no la skill. En ese caso la línea es:
+
+   `NO VERIFICADO — <skill> no se invocó. Quedó sin evaluar: <qué>.`
+
+y lo que el agente haya encontrado por su cuenta se registra con fuente `revisión propia`.
+No existe el modo "inline": si no hubo llamada, no hubo skill.
+
 Las marcadas como vendoreadas viajan dentro del proyecto (ver `.claude/loop/TERCEROS.md`):
 están disponibles también en la nube.
 

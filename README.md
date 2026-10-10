@@ -55,6 +55,15 @@ por su nombre completo; si una falta, lo anota en `state.md` y sigue.
 `scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
 herramienta Skill no resuelve.
 
+## Novedades de v0.9.1
+
+- **Lo que una etapa dice que corrió, se comprueba.** `code-exec` y `loop-review` cierran
+  su resumen con `Skills invocadas: …`, con los nombres que de verdad pasaron a la
+  herramienta Skill. Si falta la que la tarea pedía, `project-loop` deja una línea
+  `NO VERIFICADO` que sale en la entrega. No existe el revisor "inline".
+- **UI-010 · Nada de formularios inline:** alta y edición van en pantalla, panel o diálogo
+  propio, nunca dentro de una fila, lista o tarjeta.
+
 ## Novedades de v0.9.0: el loop en la nube
 
 - **Vendoreo:** `scripts/vendorear.py` copia el loop al `.claude/` de un proyecto, para que

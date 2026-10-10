@@ -225,6 +225,17 @@ def main():
             if f"`{e}`" in texto and e not in externas:
                 errores.append(f"`{f.split('/')[1]}` cita `{e}`, que no tiene fila en {DEPENDENCIAS}")
 
+    # 12. Lo que una etapa dice que corrió tiene que poder comprobarse. Medido: en 30
+    #     corridas forkeadas, ninguna invocó una skill y varias anotaron
+    #     "engineering:code-review (inline)". La línea `Skills invocadas:` es el contrato
+    #     entre la etapa y el orquestador; sin ella, el nombre de una skill no prueba nada.
+    CONTRATO = "`Skills invocadas: <lista separada por comas, o \"ninguna\">`"
+    for n in ("code-exec", "loop-review"):
+        if CONTRATO not in open(f"skills/{n}/SKILL.md").read():
+            errores.append(f"`{n}` no cierra su resumen con la línea {CONTRATO}")
+    if "## 2.d Lo que una etapa dice que corrió, se comprueba" not in loop:
+        errores.append("`project-loop` no comprueba la línea `Skills invocadas:` de las etapas")
+
     if errores:
         print("FALLA:")
         for e in errores:

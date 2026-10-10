@@ -8,7 +8,7 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.9.0
+version: 0.9.1
 disable-model-invocation: true
 ---
 
@@ -122,6 +122,22 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 - **No leas** logs de test, `review-log.md` completo ni diffs en este hilo. Si necesitás
   un dato puntual (un id de hallazgo, la etapa), leé `state.md` o hacé un `grep` dirigido.
 - No re-narres lo que hizo cada etapa: una línea en la bitácora de `state.md` alcanza.
+
+## 2.d Lo que una etapa dice que corrió, se comprueba
+`code-exec` y `loop-review` cierran su resumen con la línea
+`Skills invocadas: <lista | ninguna>`. Leela al volver de cada una:
+
+- **`loop-review` sin `engineering:code-review` en la lista** (o sin la línea): la revisión
+  de código no corrió. Agregá vos a `.loop/review-log.md` la línea
+  `NO VERIFICADO — engineering:code-review no se invocó. Quedó sin evaluar: el diff de <tarea>.`
+  y seguí. No la relances: una segunda vuelta cuesta lo mismo y no garantiza nada.
+- **`code-exec` con "ninguna"** en una tarea de UI, o de lógica sin UI: misma línea, con la
+  skill que la tarea pedía (diseño, motion o `superpowers:test-driven-development`).
+- **Nunca copies a la bitácora el nombre de una skill que no esté en esa línea.** Un
+  resumen que dice "revisó code-review (inline)" describe una revisión propia del agente.
+
+Estas líneas no frenan la corrida. Salen en el reporte de entrega, que es donde una
+persona decide si alcanza.
 
 ## 3. Guardas anti-bucle infinito (escalado y tope)
 - `iteracion` vive en `state.md`: la incrementa `fix-loop` en cada vuelta y vos la

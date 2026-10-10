@@ -158,7 +158,9 @@ Antes de dar una pantalla por armada, pasala por
 `${CLAUDE_PLUGIN_ROOT}/references/ui-patterns.md`. Las reglas marcadas `[chequeable]` son
 condiciones, no sugerencias: campos con caja y no línea, placeholder con ejemplos reales
 del dominio, botones con el verbo de la acción, validación por campo, requisitos visibles
-antes del error, filtros a la vista, y estado del sistema en toda acción asincrónica.
+antes del error, filtros a la vista, estado del sistema en toda acción asincrónica, y
+**nada de formularios inline** (UI-010): cada alta o edición tiene su frame propio
+—pantalla, panel lateral o diálogo—, nunca campos editables dentro de una fila o tarjeta.
 
 Las marcadas `[principio]` orientan pero no se verifican solas: las evalúa la persona en
 el checkpoint.

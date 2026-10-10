@@ -35,11 +35,14 @@ Implementas **una** tarea del plan, no más, y la dejas lista para revisión.
 - Pasa los datos por la **capa adaptadora** de backend (no llames a Supabase directo
   desde el dominio). Nada de pagos/email hardcodeados (Tier 2 va tras interfaz).
 - Cumple el criterio **done** y deja el código en estado testeable.
-- **Lógica sin UI** (dominio, adaptadores, servicios): **invocá**
-  `superpowers:test-driven-development` (herramienta Skill) y escribí primero el test
-  que falla. El test esperado de la tarea en `plan.md` es el primero que se escribe.
-- Si una skill que esta etapa manda invocar no está disponible, registralo como `NO VERIFICADO` según `dependencias-externas.md` y seguí.
-  No hagas de cuenta que la corriste.
+- **Lógica sin UI** (dominio, adaptadores, servicios): **antes de editar el primer
+  archivo de código**, llamá a la herramienta Skill con
+  `superpowers:test-driven-development` y escribí primero el test que falla. El test
+  esperado de la tarea en `plan.md` es el primero que se escribe. Escribir tests por tu
+  cuenta en el mismo commit no es lo mismo: la skill fija el orden.
+- Si una skill que esta etapa manda invocar no está disponible, o no la invocaste,
+  registralo como `NO VERIFICADO` según `dependencias-externas.md` y seguí. No hagas de
+  cuenta que la corriste.
 
 ### 1.1 ¿La tarea toca UI? → el diseño NO es opcional
 Si la tarea crea o modifica pantallas/componentes visibles, el diseño es parte del
@@ -56,7 +59,8 @@ Skill; no las menciones como texto) las skills de diseño:
   `${CLAUDE_PLUGIN_ROOT}/references/ui-patterns.md`. Las reglas `[chequeable]` son
   condiciones del "done", no sugerencias. Las que más se olvidan al implementar:
   **UI-005** (validación por campo, no un banner global al enviar), **UI-006** (los
-  requisitos visibles antes del error), y **UI-009** (toda acción asincrónica muestra
+  requisitos visibles antes del error), **UI-010** (nada de formularios inline: alta y
+  edición van en pantalla, panel o diálogo propio) y **UI-009** (toda acción asincrónica muestra
   estado de carga en su control y termina en éxito o error accionable).
 - **UI-009 es la contraparte de los estados del diseño.** Si la pantalla tiene los tres
   estados en Figma (default, vacio, carga, error) pero el código solo implementa el camino
@@ -92,3 +96,7 @@ Skill; no las menciones como texto) las skills de diseño:
   Si corre `project-loop`, devuelve control para que encadene revisión y test.
 - **Devolvé solo un resumen** (máx. ~10 líneas): tarea, commit, archivos tocados y
   resultado del sanity local. Nada de diffs ni salidas de comandos completas.
+- **La última línea del resumen es obligatoria y literal**, con los nombres exactos que
+  pasaste a la herramienta Skill en esta corrida:
+
+  `Skills invocadas: <lista separada por comas, o "ninguna">`

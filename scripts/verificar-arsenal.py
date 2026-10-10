@@ -244,6 +244,17 @@ def main():
     if ".loop/review-log.md" not in open("skills/code-exec/SKILL.md").read():
         errores.append("`code-exec` no manda sus NO VERIFICADO a .loop/review-log.md")
 
+    # 14. La base de estilo mobile existe y la citan las tres etapas que deciden cómo se ve
+    #     una pantalla. Si una deja de citarla, esa etapa vuelve a improvisar el estilo.
+    BASE_MOBILE = "references/mobile-style.md"
+    if not os.path.exists(BASE_MOBILE):
+        errores.append(f"falta {BASE_MOBILE}")
+    for n in ("project-init", "loop-design", "code-exec"):
+        if BASE_MOBILE not in open(f"skills/{n}/SKILL.md").read():
+            errores.append(f"`{n}` no cita {BASE_MOBILE}")
+    if "`proyecto-loop:loop-design`" not in open("skills/project-init/SKILL.md").read():
+        errores.append("`project-init` no invoca a loop-design para la propuesta estética en Figma")
+
     if errores:
         print("FALLA:")
         for e in errores:

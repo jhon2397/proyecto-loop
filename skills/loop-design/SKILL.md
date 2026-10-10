@@ -30,6 +30,34 @@ la pregunta en texto como **último** mensaje y no sigas trabajando en ese turno
 ## 0. Reanudar
 - Lee `.loop/state.md` y `.loop/analysis.md`.
 - Si `.loop/design.md` ya existe, **completá el delta** (pantallas nuevas), no rehagas.
+- Si te invocaron con el argumento **`propuesta`**, seguí la sección 0.5 y nada más.
+
+## 0.5 Modo propuesta (lo invoca `project-init`, antes del análisis)
+El proyecto recién nace y todavía no hay historias. El objetivo es que la persona **vea**
+la dirección estética en Figma el primer día, no que la lea en un párrafo.
+
+1. Sección 1 (Figma conectado). Si no lo está, **no frenes el arranque del proyecto**:
+   anotá en la bitácora de `state.md` que la propuesta quedó pendiente y devolvé control.
+   La vas a hacer vos misma al entrar en la etapa `diseno`.
+2. Sección 2: tomá la `aesthetic` que dejó `project-init` como punto de partida.
+3. Sección 4.1: creá el archivo del proyecto con sus páginas.
+4. Elegí **2 pantallas representativas** a partir de la descripción y los requerimientos
+   iniciales de `state.md`: la que el usuario va a ver más (un inicio o un listado) y la
+   que más pesa en la tarea principal (un detalle o un alta). Con datos del dominio real,
+   no "Lorem ipsum" ni "Producto 1".
+5. Armá las **3 variantes** de la sección 4.4 sobre esas 2 pantallas, en `05 · Opciones`,
+   lado a lado. En mobile las tres respetan la base de
+   `${CLAUDE_PLUGIN_ROOT}/references/mobile-style.md` y se diferencian en lo que la base
+   deja libre: paleta, tipografía y elemento firma. Solo teléfono: la tablet se diseña
+   en la etapa `diseno`.
+6. Pedí la elección con `AskUserQuestion`: una opción por variante, con su nombre y en
+   una línea qué la distingue, y el link de Figma en la pregunta.
+7. Promové la elegida: sus variables a `00 · Foundations`, las descartadas a
+   `99 · Archive`. Escribí en `state.md` la `aesthetic` definitiva y el campo `figma`
+   (link y fileKey del archivo).
+
+No armes más pantallas ni escribas `design.md`: eso es de la etapa `diseno`, cuando
+existan las historias. Devolvé un resumen corto con el link y la variante elegida.
 
 ## 1. Precondición: Figma conectado
 Comprobá que las herramientas del MCP de Figma respondan. Si piden autorización,
@@ -42,6 +70,11 @@ lo fuera.
 ## 2. Dirección estética (una vez, y no se discute más)
 Si `state.md` todavía no tiene `aesthetic`, definila ahora y escribila **completa**:
 tono, densidad, tipografía y principios — no un color.
+
+**Si el proyecto tiene mobile, la dirección parte de
+`${CLAUDE_PLUGIN_ROOT}/references/mobile-style.md`.** Leelo antes de proponer nada. Fija
+la forma, los patrones y la disciplina; vos decidís paleta, tipografía y el elemento
+firma del producto. Una propuesta que calca las referencias no cumple la base.
 
 **Invocá de verdad** (herramienta Skill, no como texto) y en este orden:
 `anthropic-skills:frontend-design` manda la dirección; `design-taste-frontend` ajusta
@@ -60,7 +93,9 @@ Los tokens de **motion** (duraciones, curvas, qué transiciones existen) salen d
 y no puede bloquear el hilo de JS.
 
 Para mobile, contemplá modo claro y oscuro y las áreas seguras desde acá: retrofitearlo
-después toca todas las pantallas.
+después toca todas las pantallas. Fijá como decisión cada valor que la base mobile da
+como punto de partida (radios, márgenes, objetivos táctiles) y anotá qué **preset** usa
+cada pantalla: app de cliente o app de operación.
 
 ## 4. Figma
 
@@ -137,7 +172,9 @@ vistazo; con dos, si ninguna convence no hay a dónde ir.
 - **La dirección estética, una sola vez.** Al arrancar, 3 propuestas de look completo
   —tipografía, paleta, densidad, radios, motion— aplicadas sobre las **mismas 2 pantallas
   representativas**, para que la comparación sea de dirección y no de contenido. La
-  elegida gobierna todo el resto y no se vuelve a preguntar.
+  elegida gobierna todo el resto y no se vuelve a preguntar. **Normalmente ya se hizo
+  en el arranque del proyecto** (sección 0.5): si `state.md` tiene el campo `figma` y
+  una `aesthetic` elegida, este momento está cumplido y no se repite.
 - **Donde haya duda real.** Proponé una sola opción por defecto y abrí variantes solo
   cuando la decisión no sea obvia: un patrón de navegación, una pantalla con estados que
   compiten. Cuando lo hagas, **decí por qué dudaste**. Si no podés justificarlo, no abras
@@ -161,6 +198,9 @@ del dominio, botones con el verbo de la acción, validación por campo, requisit
 antes del error, filtros a la vista, estado del sistema en toda acción asincrónica, y
 **nada de formularios inline** (UI-010): cada alta o edición tiene su frame propio
 —pantalla, panel lateral o diálogo—, nunca campos editables dentro de una fila o tarjeta.
+
+Las pantallas mobile pasan además por las reglas `[chequeable]` de
+`${CLAUDE_PLUGIN_ROOT}/references/mobile-style.md`.
 
 Las marcadas `[principio]` orientan pero no se verifican solas: las evalúa la persona en
 el checkpoint.

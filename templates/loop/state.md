@@ -9,7 +9,8 @@
 - **mobile:** si | no                                   # lo PREGUNTA project-init, no lo infiere
 - **supabase_hosting:** self-hosted | cloud | n/a       # dónde corre Supabase en PRODUCCIÓN
 - **stack:** <p.ej. Expo/React Native + Supabase>
-- **aesthetic:** <dirección estética COMPLETA: tono, densidad, tipografía, principios (frontend-design + design-taste-frontend). No solo un color.>
+- **aesthetic:** <dirección estética COMPLETA: tono, densidad, tipografía, principios (frontend-design + design-taste-frontend). No solo un color. En mobile parte de references/mobile-style.md.>
+- **figma:** <link y fileKey del archivo de diseño del proyecto, o "pendiente">   # lo deja loop-design
 - **autonomía:** full-auto | checkpoint-tras-review
 
 ## Estado actual

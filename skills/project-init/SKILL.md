@@ -85,6 +85,10 @@ Crea, de forma idempotente:
 - Si una no está disponible, registralo como `NO VERIFICADO` según
   `dependencias-externas.md` y seguí con las demás.
   No la reemplaces con tu propio criterio como si la hubieras corrido.
+- **Si el proyecto tiene mobile, la dirección parte de
+  `${CLAUDE_PLUGIN_ROOT}/references/mobile-style.md`**: leelo antes de invocar las skills
+  y pasales esa base como restricción. Fija forma, patrones y disciplina; las skills
+  deciden paleta, tipografía y el elemento firma de este producto.
 - No es "un color": tono, densidad, tipografía, motion y principios. Guárdala **completa** en
   `state.md` (`aesthetic`) para que no se reinvente en cada pantalla.
 - El **design system** en sí (tokens/componentes) NO se construye aquí: `plan-architect`
@@ -130,6 +134,18 @@ Supabase o solo apuntar a un proyecto cloud.
   el código, pero sin credenciales los dos son inertes. `activo` lo pone quien verifica
   que un evento real llegó.
 - Commit atómico: `chore: scaffold inicial + tooling + tier1 + loop state`.
+
+## 4.5 La propuesta estética, en Figma, el primer día (si el proyecto tiene UI)
+Una dirección estética escrita no se puede evaluar: hay que verla. Con `.loop/state.md`
+ya creado y commiteado, **invocá `proyecto-loop:loop-design` con el argumento
+`propuesta`** (herramienta Skill). Arma el archivo de Figma del proyecto con 3 variantes
+de la dirección sobre 2 pantallas representativas, le pide al usuario que elija y deja
+la elegida en `state.md` (`aesthetic` definitiva y campo `figma`).
+
+- Va **después** del scaffold y del commit: si Figma no está conectado, el proyecto ya
+  quedó armado y la propuesta queda pendiente para la etapa `diseno`.
+- No la reemplaces por una descripción en texto ni por una pantalla en código.
+- Commit aparte: `docs(loop): dirección estética elegida`.
 
 ## 5. Cierre
 Confirma qué se creó (lista breve), el commit, y **decí explícitamente qué queda

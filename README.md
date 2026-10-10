@@ -55,6 +55,16 @@ por su nombre completo; si una falta, lo anota en `state.md` y sigue.
 `scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
 herramienta Skill no resuelve.
 
+## Novedades de v0.10.0
+
+- **La propuesta estética se ve en Figma el primer día.** `project-init` invoca
+  `loop-design` en modo `propuesta`: 3 variantes de la dirección sobre 2 pantallas
+  representativas, a elegir antes del análisis.
+- **Base de estilo mobile** (`references/mobile-style.md`): toda app mobile parte del
+  mismo lenguaje visual —superficies blandas, navegación flotante, mucho aire— y del
+  mismo rigor de sistema —tokens de una fuente, preset por superficie, estado con texto,
+  iconos vectoriales—. Cada producto decide paleta, tipografía y su elemento firma.
+
 ## Novedades de v0.9.2
 
 - **El orquestador no implementa, tampoco para destrabar.** Deuda `[d]` → `loop-verify`

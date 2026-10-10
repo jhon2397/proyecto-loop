@@ -70,6 +70,10 @@ Skill; no las menciones como texto) las skills de diseño:
   `anthropic-skills:ui-ux-pro-max` solo para paletas/tipografía; motion con `animate`.
 - **Mobile (RN/Expo):** `react-native-best-practices:react-native-best-practices`
   (FlashList/perf) + `animate` (motion).
+- **Mobile:** la pantalla cumple las reglas `[chequeable]` de
+  `${CLAUDE_PLUGIN_ROOT}/references/mobile-style.md` (tokens sin literales, iconos
+  vectoriales y nunca emojis, objetivos de 44 pt o más, estado con texto, barra flotante
+  sobre el área segura) y el archivo abre con el enlace a su nodo de Figma.
 - **Motion en toda tarea de UI**, web o mobile: `animate` siempre que la pantalla tenga
   transiciones, apariciones o feedback de interacción. Usá los tokens de motion de
   `.loop/design-system.md`; no inventes duraciones por pantalla.

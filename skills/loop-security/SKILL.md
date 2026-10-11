@@ -32,12 +32,26 @@ no la esquive (service_role, consultas administrativas, jobs).
 Para dinero: idempotencia, doble gasto, redondeo y unidad monetaria.
 
 ## 3. Salida
-Registra los hallazgos materiales en `.loop/review-log.md` con el mismo formato
-`H-00X` y severidad que consume `fix-loop`. Si no hay nada material, decilo
-claramente en vez de llenar la revisión con observaciones cosméticas.
+El revisor es de **solo lectura**: no puede escribir en `.loop/review-log.md`. Por eso tu
+respuesta es el registro, y `project-loop` la copia tal cual al archivo. Tiene que servir
+para eso sin edición y sin ocupar más de lo necesario (medido: de 56 a 74 líneas por
+revisión, que quedaban en el contexto del orquestador el resto de la corrida).
+
+**Formato de la respuesta: esta plantilla y nada más.**
+
+```
+Seguridad: <id de la tarea> — <sin hallazgos | N hallazgos materiales>
+- <alta|media|baja> · <archivo:línea> · <qué se puede hacer y con qué precondición> · <fix>
+Endurecimiento opcional: <hasta dos ideas en una línea, o "nada">
+```
+
+Una línea por hallazgo material, verificado o probable; decí cuál es. Sin encabezados, sin
+tablas, sin el razonamiento que te llevó ahí, sin listar lo que revisaste y estaba bien.
+Si no hay nada material, la respuesta son dos líneas.
 
 ## 4. Cierre
-- Con hallazgos abiertos → `etapa = correccion`.
+- Con hallazgos → `project-loop` los registra en `review-log.md` con id `H-00X` y pasa a
+  `etapa = correccion`.
 - Sin hallazgos → la tarea puede cerrarse.
 
 ## Nota de implementación

@@ -57,6 +57,15 @@ por su nombre completo; si una falta, lo anota en `state.md` y sigue.
 `scripts/verificar-arsenal.py` falla si una skill cita otra por un nombre corto que la
 herramienta Skill no resuelve.
 
+## Novedades de v0.11.1
+
+- **Las etapas responden con una plantilla fija** de campos de una línea, no con un
+  resumen libre. Con "máximo 10 líneas" devolvían de 18 a 43; `loop-security`, de 56 a 74.
+- **El código de una tarea del plan lo escribe `code-exec`, siempre.** La herramienta
+  Agent queda para tareas operativas.
+- **`loop-security` es de solo lectura:** devuelve una línea por hallazgo y el
+  orquestador la registra en `review-log.md`.
+
 ## Novedades de v0.11.0
 
 - **`loop-doctor`** y `herramientas/preparar-maquina.sh`: una máquina nueva queda lista

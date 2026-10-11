@@ -57,5 +57,16 @@ Cierras el sub-bucle Test/Revisión → Corrección → Test hasta que la tarea 
 - Si todos los hallazgos de la tarea están cerrados y los tests pasan, indica que la
   tarea puede cerrarse: `[x]`, o `[d]` si el entorno no puede correr los cuatro
   dispositivos (ver `loop-verify`, sección 1.6); y devolver control a `project-loop`.
-- **Devolvé solo un resumen** (máx. ~10 líneas): hallazgos cerrados y abiertos, commits,
-  y si el re-test quedó verde o rojo (con el error principal en una línea).
+- **Formato de la respuesta: esta plantilla y nada más.**
+
+  ```
+  Corrección: <id de la tarea> — iteracion <n>
+  Cerrados: <ids, o "ninguno">
+  Abiertos: <ids con el motivo en pocas palabras, o "ninguno">
+  Commits: <shas cortos>
+  Re-test: <verde | rojo> — <qué corrió, o el error principal, en una línea>
+  ```
+
+  Sin encabezados, sin listas anidadas, sin negritas, sin frases de apertura ni de
+  cierre. Cada campo ocupa **una línea**. Lo que no entra en su línea ya está escrito en
+  otro lado (el commit, `state.md`, `review-log.md`, los logs): no lo repitas.

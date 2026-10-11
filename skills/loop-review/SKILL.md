@@ -61,12 +61,21 @@ con su nombre. Nada más cuenta.
 
 ## 3. Cierre
 - Actualiza `state.md`: `ultima_skill = loop-review`, **etapa = test**, bitácora.
-- **Devolvé solo un resumen de 10 líneas como máximo**, contando la de las skills:
-  cantidad de hallazgos por severidad, los ids, una línea por cada hallazgo alto o medio,
-  y qué quedó `NO VERIFICADO`. Los bajos van solo por id. El detalle vive en
-  `review-log.md`; no lo repitas.
-- **La última línea del resumen es obligatoria y literal**, con los nombres exactos que
-  pasaste a la herramienta Skill:
+- **Formato de la respuesta: esta plantilla y nada más.**
+
+  ```
+  Revisión: <id de la tarea> — <Approve | Request Changes>
+  Hallazgos: <n> altos, <n> medios, <n> bajos — <ids H-0XX a H-0YY>
+  <una línea por cada hallazgo alto o medio: "H-0XX (media): qué pasa, en una frase">
+  NO VERIFICADO: <revisores que no corrieron, o "nada">
+  Skills invocadas: <lista separada por comas, o "ninguna">
+  ```
+
+  Los hallazgos bajos van solo dentro del rango de ids. Sin encabezados, sin listas anidadas, sin negritas, sin frases de apertura ni de
+  cierre. Cada campo ocupa **una línea**. Lo que no entra en su línea ya está escrito en
+  otro lado (el commit, `state.md`, `review-log.md`, los logs): no lo repitas.
+- **La última línea es obligatoria y literal**, con los nombres exactos que pasaste a la
+  herramienta Skill:
 
   `Skills invocadas: <lista separada por comas, o "ninguna">`
 

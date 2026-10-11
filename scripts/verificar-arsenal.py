@@ -256,6 +256,15 @@ def main():
     if "`proyecto-loop:loop-design`" not in open("skills/project-init/SKILL.md").read():
         errores.append("`project-init` no invoca a loop-design para la propuesta estética en Figma")
 
+    # 15. Las etapas forkeadas responden con una plantilla fija. Con un tope en prosa
+    #     ("máximo 10 líneas") devolvían de 18 a 74 líneas, que quedan en el contexto del
+    #     orquestador el resto de la corrida.
+    for n in ("code-exec", "loop-review", "fix-loop", "loop-verify", "loop-security"):
+        if "Formato de la respuesta: esta plantilla y nada más." not in open(f"skills/{n}/SKILL.md").read():
+            errores.append(f"`{n}` no fija la plantilla de su respuesta")
+    if "lo escribe `code-exec`, siempre" not in loop:
+        errores.append("`project-loop` no reserva la implementación de tareas a code-exec")
+
     if errores:
         print("FALLA:")
         for e in errores:

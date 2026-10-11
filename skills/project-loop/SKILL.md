@@ -8,7 +8,7 @@ description: >-
 effort: medium
 model: sonnet
 argument-hint: [ruta-del-proyecto]
-version: 0.11.0
+version: 0.11.1
 disable-model-invocation: true
 ---
 
@@ -126,6 +126,12 @@ trabajo a mano**: es un error de empaquetado del arsenal. Pará y reportalo.
 - **No leas** logs de test, `review-log.md` completo ni diffs en este hilo. Si necesitás
   un dato puntual (un id de hallazgo, la etapa), leé `state.md` o hacé un `grep` dirigido.
 - No re-narres lo que hizo cada etapa: una línea en la bitácora de `state.md` alcanza.
+- Cada etapa forkeada responde con una **plantilla fija** de campos de una línea. Si una
+  devuelve más que eso, trabajá con los campos y no copies el resto a la bitácora ni a
+  los argumentos de la etapa siguiente.
+- **`loop-security` es de solo lectura.** Sus líneas de hallazgo las registrás vos en
+  `.loop/review-log.md` → **Abiertos**, tal cual vienen, con el siguiente id `H-00X`.
+  A `fix-loop` le pasás los ids, no el texto.
 
 ## 2.d Lo que una etapa dice que corrió, se comprueba
 `code-exec` y `loop-review` cierran su resumen con la línea
@@ -162,6 +168,12 @@ gastó 33 llamadas del orquestador sin lanzar una sola etapa. Cada caso tiene su
 Si el usuario te autoriza explícitamente una tarea operativa, **delegala a un subagente**
 (herramienta Agent) con el encargo exacto y pedile un resumen corto. En este hilo quedan
 el encargo y el resultado, no los comandos.
+
+**El código de una tarea del plan lo escribe `code-exec`, siempre.** La herramienta Agent
+es para tareas operativas, no un atajo para implementar ni para hacer dos tareas a la
+vez: una tarea implementada por un subagente genérico se saltea el test primero, las
+skills de diseño y la línea `Skills invocadas:` (medido: 104 llamadas sin ninguna de las
+tres). Si el usuario pide varias cosas juntas, van una después de la otra por el ciclo.
 
 Si después de eso no queda nada ejecutable, poné **etapa = `entrega-bloqueada`** y hacé
 el alto de la tabla. No inventes otro nombre de etapa: lo que no está en la enumeración

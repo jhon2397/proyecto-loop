@@ -144,9 +144,18 @@ estado es **bloqueado**, no verde: decilo y explicá qué falta.
 Actualiza `state.md`: `ultima_skill = loop-verify`, la etapa que corresponda y la
 ruta del log en la bitácora.
 
-**Devolvé solo el veredicto** (máx. ~10 líneas): verde / rojo / bloqueado, qué comandos
-y dispositivos corrieron, rutas de los logs y, si es rojo, los ids `H-00X` registrados.
-Nunca pegues la salida de los tests en la respuesta: está en los logs.
+**Formato de la respuesta: esta plantilla y nada más.**
+
+```
+Veredicto: <verde | rojo | bloqueado | deuda [d]> — <id de la tarea>
+Corrió: <comandos y dispositivos, en una línea>
+Logs: <rutas>
+Hallazgos: <ids H-0XX registrados, o "ninguno">
+Falta: <qué impide el verde, en una línea, o "nada">
+```
+
+Sin encabezados, sin listas, sin negritas, sin frases de apertura ni de cierre. Cada campo
+ocupa **una línea**. Nunca pegues la salida de los tests en la respuesta: está en los logs.
 
 Si la tarea quedó verde y toca autenticación, autorización, `tenant_id`/RLS, dinero,
 secretos o entrada externa, la siguiente etapa es **seguridad** (`loop-security`),

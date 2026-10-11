@@ -99,11 +99,23 @@ Skill; no las menciones como texto) las skills de diseño:
 - Actualiza `state.md`: `ultima_skill = code-exec`, **etapa = revision**, bitácora.
 - Sugiere la siguiente etapa: `loop-review` (revisión) → luego test.
   Si corre `project-loop`, devuelve control para que encadene revisión y test.
-- **Devolvé solo un resumen de 10 líneas como máximo**, contando la de las skills:
-  tarea, commit, resultado del sanity local en una línea, y lo que quedó pendiente. Los
-  archivos tocados y el detalle de cada chequeo están en el commit y en `state.md`: no
-  los repitas. Si no entra en 10 líneas, sobra detalle.
-- **La última línea del resumen es obligatoria y literal**, con los nombres exactos que
-  pasaste a la herramienta Skill en esta corrida:
+- **Formato de la respuesta: esta plantilla y nada más.** Medido: con "máximo 10 líneas"
+  los resúmenes llegaban de 18 a 43 líneas, y cada una se paga en cada vuelta del
+  orquestador.
+
+  ```
+  Tarea: <id> — <título>
+  Commit: <sha corto>
+  Sanity: <verde | rojo> — <qué corrió, en una línea>
+  Pendiente: <una línea, o "nada">
+  NO VERIFICADO: <skills que no corrieron, o "nada">
+  Skills invocadas: <lista separada por comas, o "ninguna">
+  ```
+
+  Sin encabezados, sin listas anidadas, sin negritas, sin frases de apertura ni de
+  cierre. Cada campo ocupa **una línea**. Lo que no entra en su línea ya está escrito en
+  otro lado (el commit, `state.md`, `review-log.md`, los logs): no lo repitas.
+- **La última línea es obligatoria y literal**, con los nombres exactos que pasaste a la
+  herramienta Skill en esta corrida:
 
   `Skills invocadas: <lista separada por comas, o "ninguna">`

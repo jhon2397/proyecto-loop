@@ -61,7 +61,9 @@ Skill; no las menciones como texto) las skills de diseño:
   condiciones del "done", no sugerencias. Las que más se olvidan al implementar:
   **UI-005** (validación por campo, no un banner global al enviar), **UI-006** (los
   requisitos visibles antes del error), **UI-010** (nada de formularios inline: alta y
-  edición van en pantalla, panel o diálogo propio) y **UI-009** (toda acción asincrónica muestra
+  edición van en pantalla, panel o diálogo propio), **UI-011** (estados `parcial` y
+  `sin-conexion` cuando aplican), **UI-012** (confirmación proporcional al peor error),
+  **UI-013** (tablas como lista y montos completos por debajo de 640 px) y **UI-009** (toda acción asincrónica muestra
   estado de carga en su control y termina en éxito o error accionable).
 - **UI-009 es la contraparte de los estados del diseño.** Si la pantalla tiene los tres
   estados en Figma (default, vacio, carga, error) pero el código solo implementa el camino

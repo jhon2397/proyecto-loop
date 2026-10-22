@@ -89,7 +89,8 @@ Los valores numéricos son **puntos de partida**. Cada producto los fija como de
    Figma y en código. Un emoji cambia de forma en cada sistema operativo y un frame con
    emojis no es implementable.
 7. **Los tres estados, siempre.** Toda pantalla con datos tiene `vacio`, `carga` y
-   `error` diseñados e implementados, además de `default`.
+   `error` diseñados e implementados, además de `default`. En mobile suma
+   `sin-conexion`, y `parcial` si arma lo que muestra con más de una consulta (UI-011).
 8. **Claro y oscuro desde el primer día**, y áreas seguras respetadas en todos los
    bordes. La barra flotante se apoya sobre el área segura inferior, no la tapa.
 9. **Teléfono y tablet.** En tablet las tarjetas pasan a más columnas y la hoja inferior

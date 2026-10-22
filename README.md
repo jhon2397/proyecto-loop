@@ -65,6 +65,9 @@ herramienta Skill no resuelve.
   Agent queda para tareas operativas.
 - **`loop-security` es de solo lectura:** devuelve una línea por hallazgo y el
   orquestador la registra en `review-log.md`.
+- **Tres reglas de UI nuevas:** UI-011 (estados `parcial` y `sin-conexion`), UI-012
+  (confirmación proporcional al peor error de la pantalla) y UI-013 (tablas como lista y
+  montos completos por debajo de 640 px).
 
 ## Novedades de v0.11.0
 

@@ -137,9 +137,13 @@ El patrón es `<id de historia> · <Pantalla> · <estado>`, con ` · ` (espacio,
 punto medio, espacio) como separador.
 
 Los estados tienen **nombres canónicos y sin acentos**, porque son claves de
-búsqueda y no texto de interfaz: `default`, `vacio`, `carga`, `error`. Escribilos
-así aunque en prosa lleven tilde — un acento de más rompe la búsqueda de la etapa
-que viene, y el fallo es silencioso.
+búsqueda y no texto de interfaz: `default`, `vacio`, `carga`, `error`, y cuando el caso
+los produce, `parcial` y `sin-conexion` (UI-011). Escribilos así aunque en prosa lleven
+tilde — un acento de más rompe la búsqueda de la etapa que viene, y el fallo es silencioso.
+
+Antes de armar cada pantalla, anotá en `design.md` **cuál es el peor error que alguien
+puede cometer en ella** (UI-012). Esa respuesta decide dónde van las acciones
+destructivas y cuánto cuesta confirmarlas.
 
 `H-03` es el id de historia de `.loop/analysis.md`. Con eso la cadena queda cerrada:
 historia → frame → fila en `design.md` → tarea en `plan.md` → componente en `packages/ui`.

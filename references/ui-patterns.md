@@ -14,7 +14,8 @@ humano— o **[principio]** —orienta el diseño pero la evalúa una persona o
 que la revisión automática dé falsos verdes.
 
 Fuentes: tanda 1, cards de `@munoz.graphic`. Tanda 2, cards de `@northlav.studio`.
-Tanda 3, pedido directo de Gabriel (2026-10-10).
+Tanda 3, pedido directo de Gabriel (2026-10-10). Tanda 4 (2026-10-22): los huecos que dejó
+la comparación con un plugin comercial de UX; las reglas son propias.
 
 ---
 
@@ -178,4 +179,76 @@ código: el componente que dibuja una fila, celda, ítem de lista o tarjeta no c
 campos de texto, áreas de texto ni selectores ligados a un guardado; la acción "Editar"
 o "Nuevo" navega o abre un panel o diálogo. Dos o más campos editables dentro de un
 ítem, o uno solo con botón de guardar, es un hallazgo.
+
+---
+
+## UI-011 · Los estados parcial y sin conexión, cuando aplican  ·  [chequeable]
+
+**Qué.** Además de `default`, `vacio`, `carga` y `error`, una pantalla tiene dos estados
+más cuando su caso los produce:
+
+- **`parcial`** — si arma lo que muestra con más de una consulta, o carga por páginas:
+  una parte llegó y otra falló. Se muestra lo que llegó, se marca lo que falta y se
+  ofrece reintentar solo eso.
+- **`sin-conexion`** — en mobile, o en cualquier pantalla que se use en campo: sin red,
+  la pantalla dice que no hay conexión, muestra lo último que tenía (con su antigüedad) y
+  no deja disparar acciones que se van a perder en silencio.
+
+**Por qué.** Los cuatro estados básicos suponen que todo llega o nada llega. En la
+práctica lo común es lo intermedio, y sin un estado diseñado la implementación elige
+sola: o tira toda la pantalla a `error` por una consulta secundaria, o muestra datos
+viejos como si fueran actuales.
+
+**Cómo se verifica.** En Figma, una pantalla con varias fuentes de datos tiene su frame
+`parcial`, y una pantalla mobile tiene su frame `sin-conexion`. En código, el fallo de una
+consulta secundaria no reemplaza la pantalla entera por el error, y toda acción que
+necesita red está deshabilitada o encolada sin conexión, nunca descartada.
+
+---
+
+## UI-012 · La confirmación se mide por el peor error posible  ·  [chequeable]
+
+**Qué.** Antes de diseñar una pantalla se responde una pregunta: **¿cuál es el peor
+error que alguien puede cometer acá?** Las acciones que llevan a ese error se diseñan
+según cuánto cuesta deshacerlo:
+
+- **Se deshace solo** (archivar, mover) → se ejecuta y ofrece "Deshacer" por unos
+  segundos. Sin diálogo.
+- **Cuesta deshacerlo** (anular un documento, quitar un acceso) → diálogo que nombra
+  exactamente qué se afecta, con el botón en el verbo de la acción (UI-003).
+- **No se deshace** (borrar definitivamente, emitir un pago, enviar a un tercero) →
+  confirmación tipeada (el nombre o el número de lo que se afecta) y la acción fuera del
+  lugar donde se hace clic sin pensar: no al lado de la acción principal.
+
+**Por qué.** Confirmarlo todo enseña a hacer clic en "Sí" sin leer, y confirmar nada deja
+el error a un clic. La confirmación sirve cuando es proporcional a lo que se pierde.
+
+**Cómo se verifica.** `.loop/design.md` anota, por pantalla, cuál es su peor error. Toda
+acción irreversible tiene confirmación tipeada y no comparte fila con la acción
+principal. Ninguna acción que se deshace sola pide confirmación.
+
+---
+
+## UI-013 · Las tablas y los montos en pantallas angostas  ·  [chequeable]
+
+**Qué.** Por debajo de 640 px de ancho:
+
+- Una **tabla** se vuelve una lista de tarjetas: cada fila es una tarjeta con el dato que
+  la identifica arriba, el valor clave a la derecha y el resto debajo. Nunca una tabla
+  con desplazamiento horizontal como solución principal.
+- Los **montos** no se cortan ni se achican hasta ser ilegibles: van completos, con cifras
+  tabulares, y si no entran pasan a su propia línea.
+- Los **campos** ocupan el ancho completo y piden el teclado que corresponde (numérico
+  para montos y cantidades, correo, teléfono).
+- Las **acciones principales** quedan al alcance del pulgar, en una barra inferior que
+  respeta el área segura.
+
+**Por qué.** La tabla de escritorio achicada es lo primero que se rompe en un teléfono: se
+desplaza en dos ejes, se pierde la columna que identifica la fila y los montos quedan
+cortados. Es justo la información que alguien fue a buscar.
+
+**Cómo se verifica.** Toda pantalla con tabla tiene su variante angosta diseñada (frame de
+teléfono en `02 · Mobile` o un frame web de menos de 640 px) y el código la implementa
+con la lista, no con desplazamiento horizontal. Todo campo de monto o cantidad declara el
+teclado numérico.
 
